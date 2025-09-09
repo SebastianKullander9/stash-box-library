@@ -4,6 +4,9 @@ import { AppService } from "./app.service";
 import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
 import { ResourceModule } from "./resources/resource.module";
+import { UserModule } from "./resources/user.module";
+import { TagModule } from "./resources/tag.module";
+import { CategoryModule } from "./resources/category.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 
 @Module({
@@ -16,6 +19,9 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 			debug: true,
 		}),
 		ResourceModule,
+		UserModule,
+		TagModule,
+		CategoryModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

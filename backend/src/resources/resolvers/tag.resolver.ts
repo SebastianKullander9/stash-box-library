@@ -1,6 +1,7 @@
-import { Resolver, Query, Args } from "@nestjs/graphql";
+import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
 import { TagType } from "src/graphql/types/tag.type";
 import { PrismaService } from "../../prisma/prisma.service";
+import { CreateTagInput, UpdateTagInput } from "src/graphql/inputs/tag.input";
 
 @Resolver(() => TagType)
 export class TagResolver {
@@ -25,6 +26,55 @@ export class TagResolver {
 				resources: {
 					include: { category: true, tags: true, user: true },
 				},
+			},
+		});
+	}
+
+	@Mutation(() => TagType)
+	async createTag(@Args("input") input: CreateTagInput): Promise<TagType> {
+		const existingTag = await this.prisma.tag.findUnique({
+			where: { name: input.name },
+		});
+
+		if (existingTag) {
+			throw new Error(`Tag with name "${input.name}" already exists.`);
+		}
+
+		return this.prisma.tag.create({
+			data: { name: input.name },
+			include: {
+				resources: { include: { category: true, tags: true, user: true } },
+			},
+		});
+	}
+
+	@Mutation(() => TagType)
+	async updateTag(@Args("input") input: UpdateTagInput): Promise<TagType> {
+		if (input.name) {
+			const existingTag = await this.prisma.tag.findUnique({
+				where: { name: input.name },
+			});
+
+			if (existingTag && existingTag.id !== input.id) {
+				throw new Error(`Tag with name "${input.name}" already exists.`);
+			}
+		}
+
+		return this.prisma.tag.update({
+			where: { id: input.id },
+			data: { name: input.name },
+			include: {
+				resources: { include: { category: true, tags: true, user: true } },
+			},
+		});
+	}
+
+	@Mutation(() => TagType)
+	async deleteTag(@Args("id") id: string): Promise<TagType> {
+		return this.prisma.tag.delete({
+			where: { id },
+			include: {
+				resources: { include: { category: true, tags: true, user: true } },
 			},
 		});
 	}

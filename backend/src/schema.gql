@@ -26,6 +26,7 @@ type ResourceType {
   description: String
   fileUrl: String!
   category: CategoryType
+  categoryName: String
   tags: [TagType!]
   user: UserType
 }
@@ -33,4 +34,74 @@ type ResourceType {
 type Query {
   resources: [ResourceType!]!
   resource(id: String!): [ResourceType!]
+  users: [UserType!]!
+  user(id: String!): UserType
+  tags: [TagType!]!
+  tag(id: String!): TagType
+  categories: [CategoryType!]!
+  category(id: String!): CategoryType
+}
+
+type Mutation {
+  createResource(input: CreateResourceInput!): ResourceType!
+  updateResource(input: UpdateResourceInput!): ResourceType!
+  createUser(input: CreateUserInput!): UserType!
+  updateUser(input: UpdateUserInput!): UserType!
+  deleteUser(id: String!): UserType!
+  createTag(input: CreateTagInput!): TagType!
+  updateTag(input: UpdateTagInput!): TagType!
+  deleteTag(id: String!): TagType!
+  createCategory(input: CreateCategoryInput!): CategoryType!
+  updateCategory(input: UpdateCategoryInput!): CategoryType!
+  deleteCategory(id: String!): CategoryType!
+}
+
+input CreateResourceInput {
+  title: String!
+  description: String
+  fileUrl: String!
+  categoryId: ID
+  categoryName: String
+  tagNames: [String!]
+  userId: ID
+}
+
+input UpdateResourceInput {
+  id: ID!
+  title: String
+  description: String
+  fileUrl: String
+  categoryId: ID
+  categoryName: String
+  tagNames: [String!]
+  userId: ID
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  email: String
+  password: String
+}
+
+input CreateTagInput {
+  name: String!
+}
+
+input UpdateTagInput {
+  id: ID!
+  name: String
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input UpdateCategoryInput {
+  id: ID!
+  name: String
 }

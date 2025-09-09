@@ -20,6 +20,9 @@ export class ResourceType {
 	@Field(() => CategoryType, { nullable: true })
 	category?: CategoryType | null;
 
+	@Field({ nullable: true })
+	categoryName?: string;
+
 	@Field(() => [TagType], { nullable: true })
 	tags: TagType[] | null;
 
