@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CategoryType {
+  id: ID!
+  name: String!
+  resources: [ResourceType]
+}
+
+type TagType {
+  id: ID!
+  name: String!
+  resources: [ResourceType]
+}
+
+type UserType {
+  id: ID!
+  email: String!
+  resources: [ResourceType]
+}
+
+type ResourceType {
+  id: ID!
+  title: String!
+  description: String
+  fileUrl: String!
+  category: CategoryType
+  tags: [TagType!]
+  user: UserType
+}
+
+type Query {
+  resources: [ResourceType!]!
+  resource(id: String!): [ResourceType!]
+}
