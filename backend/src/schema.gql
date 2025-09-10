@@ -17,6 +17,7 @@ type TagType {
 type UserType {
   id: ID!
   email: String!
+  role: String!
   resources: [ResourceType]
 }
 
@@ -45,6 +46,7 @@ type Query {
 type Mutation {
   createResource(input: CreateResourceInput!): ResourceType!
   updateResource(input: UpdateResourceInput!): ResourceType!
+  deleteResource(id: String!): ResourceType!
   createUser(input: CreateUserInput!): UserType!
   updateUser(input: UpdateUserInput!): UserType!
   deleteUser(id: String!): UserType!
@@ -54,6 +56,7 @@ type Mutation {
   createCategory(input: CreateCategoryInput!): CategoryType!
   updateCategory(input: UpdateCategoryInput!): CategoryType!
   deleteCategory(id: String!): CategoryType!
+  login(email: String!, password: String!): String!
 }
 
 input CreateResourceInput {
@@ -80,12 +83,14 @@ input UpdateResourceInput {
 input CreateUserInput {
   email: String!
   password: String!
+  role: String!
 }
 
 input UpdateUserInput {
   id: ID!
   email: String
   password: String
+  role: String
 }
 
 input CreateTagInput {

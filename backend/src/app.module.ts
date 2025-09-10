@@ -8,6 +8,7 @@ import { UserModule } from "./resources/user.module";
 import { TagModule } from "./resources/tag.module";
 import { CategoryModule } from "./resources/category.module";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
 	imports: [
@@ -17,11 +18,13 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 			autoSchemaFile: join(process.cwd(), "src/schema.gql"),
 			playground: true,
 			debug: true,
+			context: ({ req }: { req: Request }) => ({ req }),
 		}),
 		ResourceModule,
 		UserModule,
 		TagModule,
 		CategoryModule,
+		AuthModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

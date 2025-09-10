@@ -5,6 +5,10 @@ import {
 	CreateCategoryInput,
 	UpdateCategoryInput,
 } from "src/graphql/inputs/category.input";
+import { GqlAuthGuard } from "src/auth/guards/graphql-auth";
+import { RolesGuard } from "src/auth/guards/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
+import { UseGuards } from "@nestjs/common";
 
 @Resolver(() => CategoryType)
 export class CategoryResolver {
@@ -34,6 +38,8 @@ export class CategoryResolver {
 	}
 
 	@Mutation(() => CategoryType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async createCategory(
 		@Args("input") input: CreateCategoryInput,
 	): Promise<CategoryType> {
@@ -56,6 +62,8 @@ export class CategoryResolver {
 	}
 
 	@Mutation(() => CategoryType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async updateCategory(
 		@Args("input") input: UpdateCategoryInput,
 	): Promise<CategoryType> {
@@ -81,6 +89,8 @@ export class CategoryResolver {
 	}
 
 	@Mutation(() => CategoryType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async deleteCategory(@Args("id") id: string): Promise<CategoryType> {
 		return this.prisma.category.delete({
 			where: { id },

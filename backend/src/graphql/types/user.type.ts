@@ -12,6 +12,9 @@ export class UserType {
 	@HideField()
 	password: string;
 
+	@Field({ defaultValue: "USER" })
+	role?: string;
+
 	@Field(() => [ResourceType], { nullable: "itemsAndList" })
 	resources?: ResourceType[] | null;
 }

@@ -5,6 +5,17 @@ import {
 	CreateResourceInput,
 	UpdateResourceInput,
 } from "src/graphql/inputs/resource.input";
+import { UseGuards } from "@nestjs/common";
+import { CurrentUser } from "src/auth/current-user.decorator";
+import { GqlAuthGuard } from "src/auth/guards/graphql-auth";
+import { RolesGuard } from "src/auth/guards/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
+
+interface CurrentUserType {
+	userId: string;
+	email: string;
+	role: string;
+}
 
 @Resolver(() => ResourceType)
 export class ResourceResolver {
@@ -26,8 +37,11 @@ export class ResourceResolver {
 	}
 
 	@Mutation(() => ResourceType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async createResource(
 		@Args("input") input: CreateResourceInput,
+		@CurrentUser() user: CurrentUserType,
 	): Promise<ResourceType> {
 		let categoryIdToUse = input.categoryId;
 
@@ -63,7 +77,7 @@ export class ResourceResolver {
 				description: input.description,
 				fileUrl: input.fileUrl,
 				categoryId: categoryIdToUse,
-				userId: input.userId,
+				userId: user.userId,
 				tags: {
 					connect: connectTags.length > 0 ? connectTags : undefined,
 				},
@@ -77,6 +91,8 @@ export class ResourceResolver {
 	}
 
 	@Mutation(() => ResourceType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async updateResource(
 		@Args("input") input: UpdateResourceInput,
 	): Promise<ResourceType> {
@@ -120,6 +136,20 @@ export class ResourceResolver {
 				userId: input.userId,
 				tags: input.tagNames ? { set: tagsToConnect } : undefined,
 			},
+			include: {
+				category: true,
+				tags: true,
+				user: true,
+			},
+		});
+	}
+
+	@Mutation(() => ResourceType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
+	async deleteResource(@Args("id") id: string): Promise<ResourceType> {
+		return this.prisma.resource.delete({
+			where: { id },
 			include: {
 				category: true,
 				tags: true,

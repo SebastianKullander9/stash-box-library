@@ -7,6 +7,9 @@ export class CreateUserInput {
 
 	@Field()
 	password: string;
+
+	@Field()
+	role: string;
 }
 
 @InputType()
@@ -19,4 +22,7 @@ export class UpdateUserInput {
 
 	@Field({ nullable: true })
 	password?: string;
+
+	@Field({ nullable: true })
+	role?: string;
 }
