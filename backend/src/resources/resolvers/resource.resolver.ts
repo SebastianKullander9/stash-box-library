@@ -10,6 +10,8 @@ import { CurrentUser } from "src/auth/current-user.decorator";
 import { GqlAuthGuard } from "src/auth/guards/graphql-auth";
 import { RolesGuard } from "src/auth/guards/roles.guard";
 import { Roles } from "src/auth/roles.decorator";
+import { S3Service } from "src/s3/s3.service";
+import GraphQLUpload, { FileUpload } from "graphql-upload/GraphQLUpload.mjs";
 
 interface CurrentUserType {
 	userId: string;
@@ -19,20 +21,23 @@ interface CurrentUserType {
 
 @Resolver(() => ResourceType)
 export class ResourceResolver {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private s3Service: S3Service,
+	) {}
 
 	@Query(() => [ResourceType])
 	async resources(): Promise<ResourceType[]> {
 		return this.prisma.resource.findMany({
-			include: { category: true, tags: true, user: true },
+			include: { category: true, tags: true, user: true, files: true },
 		});
 	}
 
-	@Query(() => [ResourceType], { nullable: true })
+	@Query(() => ResourceType, { nullable: true })
 	async resource(@Args("id") id: string): Promise<ResourceType | null> {
 		return this.prisma.resource.findUnique({
 			where: { id },
-			include: { category: true, tags: true, user: true },
+			include: { category: true, tags: true, user: true, files: true },
 		});
 	}
 
@@ -71,23 +76,27 @@ export class ResourceResolver {
 			}
 		}
 
-		return this.prisma.resource.create({
+		const resource = await this.prisma.resource.create({
 			data: {
 				title: input.title,
 				description: input.description,
-				fileUrl: input.fileUrl,
+				textContent: input.textContent,
 				categoryId: categoryIdToUse,
 				userId: user.userId,
-				tags: {
-					connect: connectTags.length > 0 ? connectTags : undefined,
-				},
+				tags: connectTags.length > 0 ? { connect: connectTags } : undefined,
+				files: input.files?.length
+					? {
+							create: input.files.map((f) => ({
+								url: f.url,
+								fileType: f.fileType,
+							})),
+						}
+					: undefined,
 			},
-			include: {
-				category: true,
-				tags: true,
-				user: true,
-			},
+			include: { category: true, tags: true, user: true, files: true },
 		});
+
+		return resource;
 	}
 
 	@Mutation(() => ResourceType)
@@ -131,16 +140,20 @@ export class ResourceResolver {
 			data: {
 				title: input.title,
 				description: input.description,
-				fileUrl: input.fileUrl,
+				textContent: input.textContent,
 				categoryId: categoryIdToUse,
 				userId: input.userId,
 				tags: input.tagNames ? { set: tagsToConnect } : undefined,
+				files: input.files?.length
+					? {
+							create: input.files.map((f) => ({
+								url: f.url,
+								fileType: f.fileType,
+							})),
+						}
+					: undefined,
 			},
-			include: {
-				category: true,
-				tags: true,
-				user: true,
-			},
+			include: { category: true, tags: true, user: true, files: true },
 		});
 	}
 
@@ -150,11 +163,56 @@ export class ResourceResolver {
 	async deleteResource(@Args("id") id: string): Promise<ResourceType> {
 		return this.prisma.resource.delete({
 			where: { id },
-			include: {
-				category: true,
-				tags: true,
-				user: true,
-			},
+			include: { category: true, tags: true, user: true, files: true },
 		});
+	}
+
+	/* eslint-disable @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-argument */
+	@Mutation(() => ResourceType)
+	async uploadFiles(
+		@Args({ name: "files", type: () => [GraphQLUpload] })
+		files: Promise<FileUpload>[],
+		@Args("resourceId", { nullable: true }) resourceId?: string,
+	) {
+		const uploadedFiles = [];
+
+		for (const filePromise of files) {
+			const file: FileUpload = await filePromise;
+			const { createReadStream, filename, mimetype } = file;
+			const buffer = await this.streamToBuffer(createReadStream());
+			const url = await this.s3Service.uploadFile(filename, buffer, mimetype);
+			uploadedFiles.push({ url, fileType: mimetype });
+		}
+
+		if (!resourceId) {
+			return this.prisma.resource.create({
+				data: {
+					title: uploadedFiles[0]?.url || "Untitled",
+					files: { create: uploadedFiles },
+				},
+				include: { files: true, category: true, tags: true, user: true },
+			});
+		} else {
+			return this.prisma.resource.update({
+				where: { id: resourceId },
+				data: {
+					files: { create: uploadedFiles },
+				},
+				include: { files: true, category: true, tags: true, user: true },
+			});
+		}
+	}
+	/* eslint-enable @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-argument */
+
+	private async streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
+		const chunks = [];
+		for await (const chunk of stream) {
+			chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+		}
+		return Buffer.concat(chunks);
 	}
 }

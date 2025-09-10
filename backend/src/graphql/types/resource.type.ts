@@ -4,6 +4,15 @@ import { TagType } from "./tag.type";
 import { UserType } from "./user.type";
 
 @ObjectType()
+export class FileType {
+	@Field()
+	url: string;
+
+	@Field()
+	fileType: string;
+}
+
+@ObjectType()
 export class ResourceType {
 	@Field(() => ID)
 	id: string;
@@ -14,8 +23,8 @@ export class ResourceType {
 	@Field(() => String, { nullable: true })
 	description?: string | null;
 
-	@Field()
-	fileUrl: string;
+	@Field(() => String, { nullable: true })
+	textContent?: string | null;
 
 	@Field(() => CategoryType, { nullable: true })
 	category?: CategoryType | null;
@@ -28,4 +37,7 @@ export class ResourceType {
 
 	@Field(() => UserType, { nullable: true })
 	user?: UserType | null;
+
+	@Field(() => [FileType], { nullable: true })
+	files?: FileType[] | null;
 }

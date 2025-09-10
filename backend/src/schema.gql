@@ -21,20 +21,26 @@ type UserType {
   resources: [ResourceType]
 }
 
+type FileType {
+  url: String!
+  fileType: String!
+}
+
 type ResourceType {
   id: ID!
   title: String!
   description: String
-  fileUrl: String!
+  textContent: String
   category: CategoryType
   categoryName: String
   tags: [TagType!]
   user: UserType
+  files: [FileType!]
 }
 
 type Query {
   resources: [ResourceType!]!
-  resource(id: String!): [ResourceType!]
+  resource(id: String!): ResourceType
   users: [UserType!]!
   user(id: String!): UserType
   tags: [TagType!]!
@@ -47,6 +53,7 @@ type Mutation {
   createResource(input: CreateResourceInput!): ResourceType!
   updateResource(input: UpdateResourceInput!): ResourceType!
   deleteResource(id: String!): ResourceType!
+  uploadFiles(files: [Upload!]!, resourceId: String): ResourceType!
   createUser(input: CreateUserInput!): UserType!
   updateUser(input: UpdateUserInput!): UserType!
   deleteUser(id: String!): UserType!
@@ -62,23 +69,33 @@ type Mutation {
 input CreateResourceInput {
   title: String!
   description: String
-  fileUrl: String!
+  textContent: String
   categoryId: ID
   categoryName: String
   tagNames: [String!]
   userId: ID
+  files: [FileInput!]
+}
+
+input FileInput {
+  url: String!
+  fileType: String!
 }
 
 input UpdateResourceInput {
   id: ID!
   title: String
   description: String
-  fileUrl: String
+  textContent: String
+  files: [FileInput!]
   categoryId: ID
   categoryName: String
   tagNames: [String!]
   userId: ID
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input CreateUserInput {
   email: String!
