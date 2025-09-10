@@ -182,12 +182,13 @@ export class ResourceResolver {
 			const file: FileUpload = await filePromise;
 			const { createReadStream, filename, mimetype } = file;
 			const buffer = await this.streamToBuffer(createReadStream());
-			const url = await this.s3Service.uploadFile(filename, buffer, mimetype);
-			uploadedFiles.push({ url, fileType: mimetype });
+			const key = await this.s3Service.uploadFile(filename, buffer, mimetype);
+			uploadedFiles.push({ url: key, fileType: mimetype });
 		}
 
+		let resource;
 		if (!resourceId) {
-			return this.prisma.resource.create({
+			resource = await this.prisma.resource.create({
 				data: {
 					title: uploadedFiles[0]?.url || "Untitled",
 					files: { create: uploadedFiles },
@@ -195,14 +196,21 @@ export class ResourceResolver {
 				include: { files: true, category: true, tags: true, user: true },
 			});
 		} else {
-			return this.prisma.resource.update({
+			resource = await this.prisma.resource.update({
 				where: { id: resourceId },
-				data: {
-					files: { create: uploadedFiles },
-				},
+				data: { files: { create: uploadedFiles } },
 				include: { files: true, category: true, tags: true, user: true },
 			});
 		}
+
+		const filesWithUrls = await Promise.all(
+			resource.files.map(async (f) => ({
+				fileType: f.fileType,
+				url: await this.s3Service.getPresignedUrl(f.url, 7000),
+			})),
+		);
+
+		return { ...resource, files: filesWithUrls };
 	}
 	/* eslint-enable @typescript-eslint/no-unsafe-assignment,
     @typescript-eslint/no-unsafe-call,
