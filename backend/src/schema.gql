@@ -24,6 +24,7 @@ type UserType {
 type FileType {
   url: String!
   fileType: String!
+  fileRole: String!
 }
 
 type ResourceType {
@@ -53,7 +54,7 @@ type Mutation {
   createResource(input: CreateResourceInput!): ResourceType!
   updateResource(input: UpdateResourceInput!): ResourceType!
   deleteResource(id: String!): ResourceType!
-  uploadFiles(files: [Upload!]!, resourceId: String): ResourceType!
+  uploadFiles(files: [Upload!]!, fileRole: String!, resourceId: String): ResourceType!
   createUser(input: CreateUserInput!): UserType!
   updateUser(input: UpdateUserInput!): UserType!
   deleteUser(id: String!): UserType!
@@ -80,6 +81,7 @@ input CreateResourceInput {
 input FileInput {
   url: String!
   fileType: String!
+  fileRole: String!
 }
 
 input UpdateResourceInput {

@@ -33,4 +33,12 @@ export default tseslint.config(
 			'prettier/prettier': ['error', { useTabs: true, singleQuote: false, semi: true }],
 		},
 	},
+	{
+		files: ['**/*.spec.ts', '**/*.test.ts', '**/*.e2e-spec.ts'],
+		rules: {
+			'@typescript-eslint/no-unsafe-member-access': 'off',
+			'@typescript-eslint/no-unsafe-assignment': 'off',
+			'@typescript-eslint/no-unsafe-argument': 'off',
+		},
+	},
 );

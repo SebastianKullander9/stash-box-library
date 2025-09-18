@@ -4,6 +4,12 @@
 	"testEnvironment": "node",
 	"testRegex": ".e2e-spec.ts$",
 	"transform": {
-		"^.+\\.(t|j)s$": "ts-jest"
+	  "^.+\\.(t|j)s$": "ts-jest"
+	},
+	"setupFilesAfterEnv": ["<rootDir>/setup-jest.ts"],
+	"moduleNameMapper": {
+		"^src/(.*)$": "<rootDir>/../src/$1",
+		"^graphql-upload/GraphQLUpload.mjs$": "<rootDir>/jest-mocks/graphql-upload.ts",
+		"^graphql-upload$": "<rootDir>/jest-mocks/graphql-upload.ts"
 	}
 }

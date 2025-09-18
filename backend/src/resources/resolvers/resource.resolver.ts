@@ -89,11 +89,17 @@ export class ResourceResolver {
 							create: input.files.map((f) => ({
 								url: f.url,
 								fileType: f.fileType,
+								fileRole: f.fileRole,
 							})),
 						}
 					: undefined,
 			},
-			include: { category: true, tags: true, user: true, files: true },
+			include: {
+				category: true,
+				tags: true,
+				user: true,
+				files: true,
+			},
 		});
 
 		return resource;
@@ -149,6 +155,7 @@ export class ResourceResolver {
 							create: input.files.map((f) => ({
 								url: f.url,
 								fileType: f.fileType,
+								fileRole: f.fileRole,
 							})),
 						}
 					: undefined,
@@ -174,6 +181,7 @@ export class ResourceResolver {
 	async uploadFiles(
 		@Args({ name: "files", type: () => [GraphQLUpload] })
 		files: Promise<FileUpload>[],
+		@Args("fileRole", { type: () => String }) fileRole: string,
 		@Args("resourceId", { nullable: true }) resourceId?: string,
 	) {
 		const uploadedFiles = [];
@@ -183,7 +191,7 @@ export class ResourceResolver {
 			const { createReadStream, filename, mimetype } = file;
 			const buffer = await this.streamToBuffer(createReadStream());
 			const key = await this.s3Service.uploadFile(filename, buffer, mimetype);
-			uploadedFiles.push({ url: key, fileType: mimetype });
+			uploadedFiles.push({ url: key, fileType: mimetype, fileRole });
 		}
 
 		let resource;

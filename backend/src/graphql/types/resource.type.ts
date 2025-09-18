@@ -10,6 +10,9 @@ export class FileType {
 
 	@Field()
 	fileType: string;
+
+	@Field()
+	fileRole: string;
 }
 
 @ObjectType()

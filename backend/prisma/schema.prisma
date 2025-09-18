@@ -32,6 +32,7 @@ model File {
 	id         String     @id @default(cuid())
 	url        String
 	fileType   String
+	fileRole   String
 	resource   Resource   @relation(fields: [resourceId], references: [id])
 	resourceId String
 }

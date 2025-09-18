@@ -34,6 +34,9 @@ export class FileInput {
 
 	@Field()
 	fileType: string;
+
+	@Field()
+	fileRole: string;
 }
 
 @InputType()
