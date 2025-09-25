@@ -40,7 +40,7 @@ type ResourceType {
 }
 
 type Query {
-  resources: [ResourceType!]!
+  resources(categoryId: String, tagIds: [String!]): [ResourceType!]!
   resource(id: String!): ResourceType
   users: [UserType!]!
   user(id: String!): UserType
@@ -96,7 +96,7 @@ input UpdateResourceInput {
   userId: ID
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""Mock Upload scalar"""
 scalar Upload
 
 input CreateUserInput {

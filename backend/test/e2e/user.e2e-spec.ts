@@ -1,8 +1,9 @@
 import { INestApplication } from "@nestjs/common";
+import { TestingModule, Test } from "@nestjs/testing";
 import request from "supertest";
+import { AppModule } from "src/app.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { getJwtForUser } from "../utils/jwt";
-import { createApp } from "../utils/setup-e2e";
 import { cleanDb } from "../utils/cleanDb";
 import bcrypt from "bcrypt";
 
@@ -10,7 +11,17 @@ let app: INestApplication;
 let prisma: PrismaService;
 
 beforeAll(async () => {
-	({ app, prisma } = await createApp());
+	const moduleFixture: TestingModule = await Test.createTestingModule({
+		imports: [AppModule],
+	}).compile();
+
+	app = moduleFixture.createNestApplication();
+	await app.init();
+	prisma = app.get(PrismaService);
+});
+
+afterAll(async () => {
+	await app.close();
 });
 
 describe("UserResolver (e2e)", () => {
@@ -24,28 +35,30 @@ describe("UserResolver (e2e)", () => {
 		roles.forEach((role) => {
 			it(`should register a ${role} user`, async () => {
 				const email = `${role.toLowerCase()}user@example.com`;
+
 				const mutation = `
-			mutation {
-			  createUser(input:{
-				email: "${email}"
-				password: "password123"
-				role: "${role}"
-			  }){
-				id
-				email
-				role
-			  }
-			}
-		  `;
+          mutation {
+            createUser(input:{
+              email: "${email}"
+              password: "password123"
+              role: "${role}"
+            }){
+              id
+              email
+              role
+            }
+          }
+        `;
 
 				const res = await request(app.getHttpServer())
 					.post("/graphql")
 					.send({ query: mutation })
 					.expect(200);
+
 				expect(res.body.data.createUser).toEqual({
 					id: expect.any(String),
-					email: email,
-					role: role,
+					email,
+					role,
 				});
 			});
 		});
@@ -61,16 +74,14 @@ describe("UserResolver (e2e)", () => {
 			});
 
 			const mutation = `
-					mutation {
-						createUser(input:{
-							email: "${email}"
-							password: "password123"
-							role: "USER"
-						}) {
-							id
-						}
-					}
-				`;
+          mutation {
+            createUser(input:{
+              email: "${email}"
+              password: "password123"
+              role: "USER"
+            }) { id }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -95,10 +106,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should login an existing user", async () => {
 			const mutation = `
-					mutation {
-						login(email: "adminuser@example.com", password: "password123")
-					  }
-					`;
+          mutation {
+            login(email: "adminuser@example.com", password: "password123")
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -110,10 +121,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should fail with wrong password", async () => {
 			const mutation = `
-					mutation {
-						login(email: "adminuser@example.com", password: "wrongpass")
-					}
-				`;
+          mutation {
+            login(email: "adminuser@example.com", password: "wrongpass")
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -125,10 +136,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should fail with non-existent email", async () => {
 			const mutation = `
-					mutation {
-						login(email: "doesnotexist@example.com", password: "password123")
-					}
-				`;
+          mutation {
+            login(email: "doesnotexist@example.com", password: "password123")
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -144,6 +155,7 @@ describe("UserResolver (e2e)", () => {
 
 		beforeEach(async () => {
 			await cleanDb(prisma);
+
 			await prisma.user.create({
 				data: {
 					email: "admin@example.com",
@@ -163,21 +175,21 @@ describe("UserResolver (e2e)", () => {
 			adminToken = await getJwtForUser(app, "admin@example.com", "password123");
 		});
 
-		it("Should allow ADMIN to get all users", async () => {
+		it("should allow ADMIN to get all users", async () => {
 			const query = `
-					query {
-						users {
-							id
-							email
-							role
-							resources {
-								id
-								category { id name }
-								tags { id name }
-							}
-						}
-					}
-				`;
+          query {
+            users {
+              id
+              email
+              role
+              resources {
+                id
+                category { id name }
+                tags { id name }
+              }
+            }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -197,6 +209,7 @@ describe("UserResolver (e2e)", () => {
 
 		beforeEach(async () => {
 			await cleanDb(prisma);
+
 			const user = await prisma.user.create({
 				data: {
 					email: "user@example.com",
@@ -211,15 +224,15 @@ describe("UserResolver (e2e)", () => {
 
 		it("should allow USER to get their own data", async () => {
 			const query = `
-				query {
-				  user(id: "${userId}") {
-					id
-					email
-					role
-					resources { id category { id name } tags { id name } }
-				  }
-				}
-			  `;
+          query {
+            user(id: "${userId}") {
+              id
+              email
+              role
+              resources { id category { id name } tags { id name } }
+            }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -232,10 +245,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should return null for non-existent user", async () => {
 			const query = `
-				query {
-				  user(id: "nonexistentid") { id email role }
-				}
-			  `;
+          query {
+            user(id: "nonexistentid") { id email role }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -248,10 +261,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should fail without token", async () => {
 			const query = `
-					query {
-						user(id: "${userId}") { id email }
-					}
-				`;
+          query {
+            user(id: "${userId}") { id email }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -263,10 +276,10 @@ describe("UserResolver (e2e)", () => {
 
 		it("should fail with invalid token", async () => {
 			const query = `
-					query {
-						user(id: "${userId}") { id email }
-					}
-				`;
+          query {
+            user(id: "${userId}") { id email }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -284,6 +297,7 @@ describe("UserResolver (e2e)", () => {
 
 		beforeEach(async () => {
 			await cleanDb(prisma);
+
 			const user = await prisma.user.create({
 				data: {
 					email: "userupdate@example.com",
@@ -302,16 +316,16 @@ describe("UserResolver (e2e)", () => {
 
 		it("should allow user to update their own email", async () => {
 			const mutation = `
-					mutation {
-						updateUser(input: {
-							id: "${userId}"
-							email: "newemail@example.com"
-						}) {
-							id
-							email
-						}
-					}
-				`;
+          mutation {
+            updateUser(input: {
+              id: "${userId}"
+              email: "newemail@example.com"
+            }) {
+              id
+              email
+            }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -332,16 +346,16 @@ describe("UserResolver (e2e)", () => {
 			});
 
 			const mutation = `
-					mutation {
-						updateUser(input: {
-							id: "${other.id}"
-							email: "hack@example.com"
-						}) {
-							id
-							email
-						}
-					}
-				`;
+          mutation {
+            updateUser(input: {
+              id: "${other.id}"
+              email: "hack@example.com"
+            }) {
+              id
+              email
+            }
+          }
+        `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -354,18 +368,18 @@ describe("UserResolver (e2e)", () => {
 
 		it("should allow user to change their password", async () => {
 			const mutation = `
-					mutation {
-						updateUser(input: {
-							id: "${userId}"
-							password: "newpassword123"
-						}) {
-							id
-							email
-						}
-					}
-				`;
+          mutation {
+            updateUser(input: {
+              id: "${userId}"
+              password: "newpassword123"
+            }) {
+              id
+              email
+            }
+          }
+        `;
 
-			// update password
+			// Update password
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
 				.set("Authorization", `Bearer ${userToken}`)
@@ -374,24 +388,24 @@ describe("UserResolver (e2e)", () => {
 
 			expect(res.body.data.updateUser.id).toBe(userId);
 
-			// old password should fail
+			// Old password should fail
 			const oldLogin = `
-					mutation {
-						login(email: "userupdate@example.com", password: "password123")
-					}
-				`;
+          mutation {
+            login(email: "userupdate@example.com", password: "password123")
+          }
+        `;
 			const resOld = await request(app.getHttpServer())
 				.post("/graphql")
 				.send({ query: oldLogin })
 				.expect(200);
 			expect(resOld.body.errors).toBeDefined();
 
-			// new password should work
+			// New password should work
 			const newLogin = `
-					mutation {
-						login(email: "userupdate@example.com", password: "newpassword123")
-					}
-				`;
+          mutation {
+            login(email: "userupdate@example.com", password: "newpassword123")
+          }
+        `;
 			const resNew = await request(app.getHttpServer())
 				.post("/graphql")
 				.send({ query: newLogin })

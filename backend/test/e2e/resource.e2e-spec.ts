@@ -4,52 +4,40 @@ import request from "supertest";
 import { AppModule } from "src/app.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { S3Service } from "src/s3/s3.service";
-import { App } from "supertest/types";
 import { getJwtForUser } from "../utils/jwt";
-import { createApp } from "../utils/setup-e2e";
 import { cleanDb } from "../utils/cleanDb";
 import bcrypt from "bcrypt";
 
-let app: INestApplication<App>;
+let app: INestApplication;
 let prisma: PrismaService;
+let adminToken: string;
+let userToken: string;
 
 beforeAll(async () => {
-	({ app, prisma } = await createApp());
+	const moduleFixture: TestingModule = await Test.createTestingModule({
+		imports: [AppModule],
+	})
+		.overrideProvider(S3Service)
+		.useValue({
+			uploadFile: jest.fn().mockResolvedValue("fake-s3-key"),
+			getPresignedUrl: jest.fn().mockResolvedValue("http://fake-s3-url"),
+		})
+		.compile();
+
+	app = moduleFixture.createNestApplication();
+	await app.init();
+	prisma = app.get(PrismaService);
+});
+
+afterAll(async () => {
+	await app.close();
 });
 
 describe("ResourceResolver (e2e)", () => {
 	beforeEach(async () => {
 		await cleanDb(prisma);
-	});
 
-	let adminToken: string;
-	let userToken: string;
-
-	beforeEach(async () => {
-		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [AppModule],
-		})
-			.overrideProvider(S3Service)
-			.useValue({
-				uploadFile: jest.fn().mockResolvedValue("fake-s3-key"),
-				getPresignedUrl: jest.fn().mockResolvedValue("http://fake-s3-url"),
-			})
-			.compile();
-
-		app = moduleFixture.createNestApplication();
-		await app.init();
-		prisma = app.get(PrismaService);
-
-		// Clean DB
-		await prisma.$transaction([
-			prisma.file.deleteMany(),
-			prisma.resource.deleteMany(),
-			prisma.tag.deleteMany(),
-			prisma.category.deleteMany(),
-			prisma.user.deleteMany(),
-		]);
-
-		// Create users
+		// Create test users
 		await prisma.user.create({
 			data: {
 				email: "admin@example.com",
@@ -115,23 +103,23 @@ describe("ResourceResolver (e2e)", () => {
 	describe("Mutations", () => {
 		it("ADMIN should create a resource with new category + tags", async () => {
 			const mutation = `
-		  mutation {
-			createResource(input: {
-			  title: "Test Resource"
-			  description: "Description"
-			  textContent: "Some content"
-			  categoryName: "Books"
-			  tagNames: ["fiction", "classic"]
-			  files: [{ url: "http://example.com/file.pdf", fileType: "pdf", fileRole: "MAIN" }]
-			}) {
-			  id
-			  title
-			  category { id name }
-			  tags { id name }
-			  files { url fileType fileRole }
-			}
-		  }
-		`;
+        mutation {
+          createResource(input: {
+            title: "Test Resource"
+            description: "Description"
+            textContent: "Some content"
+            categoryName: "Books"
+            tagNames: ["fiction", "classic"]
+            files: [{ url: "http://example.com/file.pdf", fileType: "pdf", fileRole: "MAIN" }]
+          }) {
+            id
+            title
+            category { id name }
+            tags { id name }
+            files { url fileType fileRole }
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -146,12 +134,12 @@ describe("ResourceResolver (e2e)", () => {
 
 		it("USER should not be able to create resource", async () => {
 			const mutation = `
-		  mutation {
-			createResource(input: { title: "Nope", description: "Fail" }) {
-			  id
-			}
-		  }
-		`;
+        mutation {
+          createResource(input: { title: "Nope", description: "Fail" }) {
+            id
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -172,18 +160,18 @@ describe("ResourceResolver (e2e)", () => {
 			});
 
 			const mutation = `
-		  mutation {
-			updateResource(input: {
-			  id: "${resource.id}"
-			  title: "New Title"
-			  description: "Updated"
-			}) {
-			  id
-			  title
-			  description
-			}
-		  }
-		`;
+        mutation {
+          updateResource(input: {
+            id: "${resource.id}"
+            title: "New Title"
+            description: "Updated"
+          }) {
+            id
+            title
+            description
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -204,12 +192,12 @@ describe("ResourceResolver (e2e)", () => {
 			});
 
 			const mutation = `
-		  mutation {
-			updateResource(input: { id: "${resource.id}", title: "Hack" }) {
-			  id
-			}
-		  }
-		`;
+        mutation {
+          updateResource(input: { id: "${resource.id}", title: "Hack" }) {
+            id
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -230,13 +218,13 @@ describe("ResourceResolver (e2e)", () => {
 			});
 
 			const mutation = `
-		  mutation {
-			deleteResource(id: "${resource.id}") {
-			  id
-			  title
-			}
-		  }
-		`;
+        mutation {
+          deleteResource(id: "${resource.id}") {
+            id
+            title
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -251,13 +239,13 @@ describe("ResourceResolver (e2e)", () => {
 	describe("File Upload", () => {
 		it("should create a new resource with uploaded files", async () => {
 			const mutation = `
-		  mutation {
-			uploadFiles(files: [], fileRole: "MAIN") {
-			  id
-			  files { url fileType fileRole }
-			}
-		  }
-		`;
+        mutation {
+          uploadFiles(files: [], fileRole: "MAIN") {
+            id
+            files { url fileType fileRole }
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")
@@ -277,13 +265,13 @@ describe("ResourceResolver (e2e)", () => {
 			});
 
 			const mutation = `
-		  mutation {
-			uploadFiles(files: [], fileRole: "MAIN", resourceId: "${resource.id}") {
-			  id
-			  files { url fileType fileRole }
-			}
-		  }
-		`;
+        mutation {
+          uploadFiles(files: [], fileRole: "MAIN", resourceId: "${resource.id}") {
+            id
+            files { url fileType fileRole }
+          }
+        }
+      `;
 
 			const res = await request(app.getHttpServer())
 				.post("/graphql")

@@ -27,8 +27,21 @@ export class ResourceResolver {
 	) {}
 
 	@Query(() => [ResourceType])
-	async resources(): Promise<ResourceType[]> {
+	async resources(
+		@Args("categoryId", { nullable: true }) categoryId?: string,
+		@Args("tagIds", { type: () => [String], nullable: true }) tagIds?: string[],
+	): Promise<ResourceType[]> {
 		return this.prisma.resource.findMany({
+			where: {
+				...(categoryId ? { categoryId } : {}),
+				...(tagIds && tagIds.length > 0
+					? {
+							tags: {
+								some: { id: { in: tagIds } },
+							},
+						}
+					: {}),
+			},
 			include: { category: true, tags: true, user: true, files: true },
 		});
 	}
