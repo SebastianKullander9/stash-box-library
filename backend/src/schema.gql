@@ -96,7 +96,7 @@ input UpdateResourceInput {
   userId: ID
 }
 
-"""Mock Upload scalar"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input CreateUserInput {
