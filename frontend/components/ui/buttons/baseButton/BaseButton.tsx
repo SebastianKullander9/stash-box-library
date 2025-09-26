@@ -5,16 +5,17 @@ interface BaseButtonProps {
     handleMouseLeave: () => void;
     textRef: RefObject<HTMLParagraphElement | null>;
     bgRef: RefObject<HTMLDivElement | null>;
+    label: string;
 }
 
-export default function BaseButton({ handleMouseEnter, handleMouseLeave, textRef, bgRef }: BaseButtonProps) {
+export default function BaseButton({ handleMouseEnter, handleMouseLeave, textRef, bgRef, label }: BaseButtonProps) {
     return (
         <button
-            className="relative px-4 py-2 border-1 rounded-full cursor-pointer overflow-hidden"
+            className="relative w-full px-4 py-2 border-1 cursor-pointer overflow-hidden"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <p ref={textRef} className="relative z-10 text-black">Add Resource</p>
+            <p ref={textRef} className="relative z-10 text-black">{label}</p>
             <div
                 ref={bgRef}
                 className="absolute inset-0 bg-black translate-y-full"

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import BaseButton from "./BaseButton";
 
-export default function AnimatedButton() {
+export default function AnimatedButton({ label }: { label: string }) {
     const bgRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLParagraphElement>(null);
 
@@ -36,6 +36,7 @@ export default function AnimatedButton() {
             handleMouseEnter={handleMouseEnter} 
             bgRef={bgRef} 
             textRef={textRef}
+            label={label}
         />
     );
 }

@@ -1,7 +1,9 @@
+import Resources from "@/components/admin/handleResources";
+
 export default function Admin() {
     return (
-        <section>
-            <h1>Hello admin</h1>
+        <section className="w-screen h-screen">
+            <Resources />
         </section>
     );
 }

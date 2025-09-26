@@ -25,3 +25,11 @@ body, html {
   margin: 0;
   box-sizing: border-box;
 }
+
+input, textarea, select {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
