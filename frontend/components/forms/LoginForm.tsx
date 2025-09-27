@@ -24,9 +24,9 @@ export default function LoginForm({ loginAction }: LoginFormProps) {
             console.log("Logged in:", token);
         } catch (err: unknown) {
             if (err instanceof Error) {
-                setError(err.message);
+              setError(err.message);
             } else {
-                setError("Login failed");
+              setError("Unknown error");
             }
         } finally {
             setLoading(false);
