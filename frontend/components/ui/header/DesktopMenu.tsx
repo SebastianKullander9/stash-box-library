@@ -1,9 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { menuItems } from "./mockData";
 
-export default function DesktopMenu() {
+type menuItem = {
+    title: string;
+    link: string;
+}
+
+interface DesktopMenuProps {
+    menuItems: menuItem[];
+}
+
+export default function DesktopMenu({ menuItems }: DesktopMenuProps) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     return (

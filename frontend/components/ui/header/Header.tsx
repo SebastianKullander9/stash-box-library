@@ -1,6 +1,29 @@
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 
+const TEMP = [
+    {
+        title: "Inspiration",
+        link: "",
+    },
+    {
+        title: "Images",
+        link: "",
+    },
+    {
+        title: "Fonts",
+        link: "",
+    },
+    {
+        title: "Code",
+        link: "",
+    },
+    {
+        title: "Models",
+        link: "",
+    },
+]
+
 export default function Header() {
     return (
         <nav className="h-16 w-full bg-black text-white px-8 flex items-center justify-between">
@@ -8,10 +31,10 @@ export default function Header() {
                 <h1 className="text-xl font-bold">StashBox</h1>
             </div>
             <div className="h-full hidden sm:block">
-                <DesktopMenu />
+                <DesktopMenu menuItems={TEMP} />
             </div>
             <div className="block sm:hidden">
-                <MobileMenu />
+                <MobileMenu menuItems={TEMP} />
             </div>
         </nav>
     );

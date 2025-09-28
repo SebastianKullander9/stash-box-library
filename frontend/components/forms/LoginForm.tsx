@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BaseInput from "../ui/inputs/baseInput";
 import AnimatedButton from "../ui/buttons/baseButton";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
     loginAction: (email: string, password: string) => Promise<string>;
@@ -13,6 +14,7 @@ export default function LoginForm({ loginAction }: LoginFormProps) {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,8 +22,8 @@ export default function LoginForm({ loginAction }: LoginFormProps) {
         setError(null);
 
         try {
-            const token = await loginAction(email, password);
-            console.log("Logged in:", token);
+            await loginAction(email, password);
+            router.push("/admin");
         } catch (err: unknown) {
             if (err instanceof Error) {
               setError(err.message);
@@ -44,7 +46,7 @@ export default function LoginForm({ loginAction }: LoginFormProps) {
                     setState={setPassword}
                 />
                 <AnimatedButton label={loading ? "Logging in..." : "Login"} />
-                {error && <p className="text-red-500">{error}</p>}
+                {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
         </form>
     );

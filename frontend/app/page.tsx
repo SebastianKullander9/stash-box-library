@@ -6,9 +6,9 @@ export default function Home() {
     return (
         <div>
 			<Header />
-			<div className="">
+			<div className="bg-red-300">
 				<AnimatedButton label="Add Resource"/>
-				<DeleteButton />
+				<DeleteButton label="test" />
 			</div>
 			<div className="p-40">
 			</div>

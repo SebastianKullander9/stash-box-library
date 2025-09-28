@@ -20,12 +20,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "HelveticaCustom", sans-serif;
 }
 
-body, html {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 input, textarea, select {
   -webkit-appearance: none;
   appearance: none;

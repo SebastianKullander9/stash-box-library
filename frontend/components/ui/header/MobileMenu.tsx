@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { menuItems } from "./mockData";
 import HamburgerIcon from "./HamburgerIcon";
 import MobileBackdrop from "./MobileBackdrop";
 
-export default function MobileMenu() {
+type menuItem = {
+    title: string;
+    link: string;
+}
+
+interface DesktopMenuProps {
+    menuItems: menuItem[];
+}
+
+export default function MobileMenu({ menuItems }: DesktopMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
