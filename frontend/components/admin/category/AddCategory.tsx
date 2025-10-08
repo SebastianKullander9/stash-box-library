@@ -32,8 +32,8 @@ export default function CreateCategory({ createCategoryAction }: CreateCategoryP
     }
 
     return (
-        <form onSubmit={handleSubmit} className="px-8">
-            <h1>Add category</h1>
+        <form onSubmit={handleSubmit} className="p-8 border-1 flex flex-col gap-4">
+            <h1 className="text-xl font-semibold uppercase">Add category</h1>
             <BaseInput label="Category name" type="text" state={category} setState={setCategory} />
             <AnimatedButton label={loading ? "Adding category..." : "Add category"} />
             { error && <p className="text-sm text-red-500">{error}</p> }

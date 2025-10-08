@@ -43,7 +43,7 @@ export default function BaseInput({ label, type, state, setState }: BaseInputPro
                 onChange={(event) => setState(event.target.value)}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                className="border-b-1 py-2 focus:outline-none focus:ring-0 appearance-none"
+                className="w-full border-b-1 py-2 focus:outline-none focus:ring-0 appearance-none"
             />
         </div>
 

@@ -2,7 +2,7 @@
 
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
-import { CREATE_CATEGORY } from "@/graphql/mutations";
+import { CREATE_CATEGORY, UPDATE_CATEGORY } from "@/graphql/mutations";
 import { GET_CATEGORIES } from "@/graphql/queries";
 import { graphqlClient } from "@/lib/graphqlClient";
 
@@ -36,6 +36,22 @@ export async function getCategories() {
 
         return data.categories
     } catch (err: unknown) {
+        if (err instanceof ClientError) {
+            throw new Error(err?.message || "Something went wrong")
+        }
+        throw err;
+    }
+}
+
+export async function updateCategory(input: { id: string, name: string }) {
+    try {
+        const graphqlClient = await getAuthorizedClient();
+        const data = await graphqlClient.request<{
+            updateCategory: { id: string, name: string };
+        }>(UPDATE_CATEGORY, { input });
+
+        return data;
+    } catch(err: unknown) {
         if (err instanceof ClientError) {
             throw new Error(err?.message || "Something went wrong")
         }
