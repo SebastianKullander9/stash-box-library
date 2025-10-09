@@ -1,29 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 @import "tailwindcss";
 
-@font-face {
-  font-family: "HelveticaCustom";
-  src: url("/fonts/helvetica/HelveticaNeue.otf") format("openface");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+:root {
+	--color-black: #0e0e0e;
+	--color-white: #eaeaea;
 }
 
-@font-face {
-  font-family: "HelveticaCustom";
-  src: url("/fonts/helvetica/Helvetica-Heavy.otf") format("openface");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+@layer base {
+	h1 { @apply text-2xl mb-8; }
+	h2 { @apply text-xl mb-6; }
+	h3 { @apply text-lg mb-4; }
+	p { @apply text-sm mb-4}
+	label { @apply text-sm mb-4 }
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "HelveticaCustom", sans-serif;
+body { 
+	background-color: var(--color-black);
 }
 
-input, textarea, select {
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none !important;
-  box-shadow: none !important;
+.p-normal {
+	@apply text-sm mb-4;
 }
 
+.text-normal {
+	font-weight: 500;
+	@apply tracking-wider
+}
+
+.text-white {
+	color: var(--color-white);
+}
+
+.text-black {
+	color: var(--color-black);
+}
+
+p, li, a, h1, h2, h3, label {
+	font-family: "Geist", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+.main-x-padding {
+	@apply px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12;
+}
+
+.main-y-padding {
+
+}
+
+.main-gap {
+	@apply gap-4 sm:gap-4 md:gap-4 lg:gap-6 xl:gap-6;
+}
