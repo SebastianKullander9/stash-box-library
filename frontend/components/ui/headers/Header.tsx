@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Header() {
     return (
-        <header className="flex flex-row main-x-padding justify-between text-normal h-12 items-center">
+        <header className="flex flex-row main-x-padding justify-between text-normal text-white h-12 items-center">
             <div>
-                <h6>StashBox</h6>
+                <h1 className="text-sm mb-0">StashBox</h1>
             </div>
             <nav aria-label="Main navigation">
                 <ul className="flex flex-row main-gap font-weight">
