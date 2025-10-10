@@ -23,3 +23,12 @@ export const UPDATE_CATEGORY = gql`
         }
     }
 `;
+
+export const DELETE_CATEGORY = gql`
+    mutation deleteCategory($id: String!) {
+        deleteCategory(id: $id) {
+            id,
+            name
+        }
+    }
+`;

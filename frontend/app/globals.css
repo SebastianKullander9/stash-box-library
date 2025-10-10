@@ -23,6 +23,10 @@ body {
 	@apply text-sm mb-4;
 }
 
+.p-normal-nomd { 
+	@apply text-sm;
+}
+
 .text-normal {
 	font-weight: 500;
 	@apply tracking-wider

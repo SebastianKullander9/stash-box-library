@@ -6,7 +6,13 @@ type CategoryType {
   id: ID!
   name: String!
   resources: [ResourceType]
+  createdAt: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type TagType {
   id: ID!
@@ -46,7 +52,7 @@ type Query {
   user(id: String!): UserType
   tags: [TagType!]!
   tag(id: String!): TagType
-  categories: [CategoryType!]!
+  categories(orderBy: String): [CategoryType!]!
   category(id: String!): CategoryType
 }
 

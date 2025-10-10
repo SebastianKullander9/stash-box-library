@@ -15,12 +15,17 @@ export class CategoryResolver {
 	constructor(private prisma: PrismaService) {}
 
 	@Query(() => [CategoryType])
-	async categories(): Promise<CategoryType[]> {
+	async categories(
+		@Args('orderBy', { type: () => String, nullable: true }) orderBy?: 'ASC' | 'DESC'
+	): Promise<CategoryType[]> {
 		return this.prisma.category.findMany({
 			include: {
 				resources: {
 					include: { tags: true, user: true, category: true },
 				},
+			},
+				orderBy: {
+					createdAt: (orderBy || "DESC").toLowerCase() as "asc" | "desc",
 			},
 		});
 	}

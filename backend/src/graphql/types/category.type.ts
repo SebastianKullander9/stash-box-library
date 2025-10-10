@@ -11,4 +11,7 @@ export class CategoryType {
 
 	@Field(() => [ResourceType], { nullable: "itemsAndList" })
 	resources?: ResourceType[] | null;
+
+	@Field()
+  	createdAt: Date;
 }
