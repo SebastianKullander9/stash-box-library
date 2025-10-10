@@ -20,7 +20,7 @@ export async function createCategoryAction(formData: FormData) {
     } catch (err: unknown) {
         if (err instanceof ClientError) {
             const graphQLError = err.response.errors?.[0];
-            throw new Error(graphQLError?.message || "Login failed");
+            throw new Error(graphQLError?.message || "Something went wrong");
         }
         throw err;
     }
@@ -37,7 +37,7 @@ export async function getCategories() {
             GET_CATEGORIES
         );
 
-        return data.categories
+        return data.categories;
     } catch (err: unknown) {
         if (err instanceof ClientError) {
             throw new Error(err?.message || "Something went wrong")

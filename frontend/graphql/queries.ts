@@ -9,3 +9,13 @@ export const GET_CATEGORIES = gql`
         }
     }
 `;
+
+export const GET_TAGS = gql`
+    query {
+        tags(orderBy: "DESC") {
+            id
+            name
+            createdAt
+        }
+    }
+`;

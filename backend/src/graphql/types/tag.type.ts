@@ -11,4 +11,7 @@ export class TagType {
 
 	@Field(() => [ResourceType], { nullable: "itemsAndList" })
 	resources?: ResourceType[] | null;
+
+	@Field()
+  	createdAt: Date;
 }

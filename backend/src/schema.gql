@@ -18,6 +18,7 @@ type TagType {
   id: ID!
   name: String!
   resources: [ResourceType]
+  createdAt: DateTime!
 }
 
 type UserType {
@@ -50,7 +51,7 @@ type Query {
   resource(id: String!): ResourceType
   users: [UserType!]!
   user(id: String!): UserType
-  tags: [TagType!]!
+  tags(orderBy: String): [TagType!]!
   tag(id: String!): TagType
   categories(orderBy: String): [CategoryType!]!
   category(id: String!): CategoryType

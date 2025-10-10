@@ -12,8 +12,13 @@ export class TagResolver {
 	constructor(private prisma: PrismaService) {}
 
 	@Query(() => [TagType])
-	async tags(): Promise<TagType[]> {
+	async tags(
+		@Args("orderBy", { type: () => String, nullable: true }) orderBy?: string
+	): Promise<TagType[]> {
 		return this.prisma.tag.findMany({
+			orderBy: {
+				createdAt: orderBy === "DESC" ? "desc" : "asc",
+			},
 			include: {
 				resources: {
 					include: { category: true, tags: true, user: true },
