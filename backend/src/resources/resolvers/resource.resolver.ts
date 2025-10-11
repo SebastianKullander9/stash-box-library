@@ -225,9 +225,10 @@ export class ResourceResolver {
 		}
 
 		const filesWithUrls = await Promise.all(
-			resource.files.map(async (f: { fileType: string; url: string }) => ({
+			resource.files.map(async (f: { fileType: string; url: string, fileRole: string, }) => ({
 				fileType: f.fileType,
 				url: await this.s3Service.getPresignedUrl(f.url, 7000),
+				fileRole: f.fileRole
 			})),
 		);
 

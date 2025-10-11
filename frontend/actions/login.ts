@@ -2,7 +2,7 @@
 
 import { graphqlClient } from "@/lib/graphqlClient";
 import { ClientError } from "graphql-request";
-import { LOGIN } from "@/graphql/mutations";
+import { LOGIN } from "@/graphql/mutations/authMutations";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

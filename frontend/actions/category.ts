@@ -2,8 +2,8 @@
 
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
-import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "@/graphql/mutations";
-import { GET_CATEGORIES } from "@/graphql/queries";
+import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "@/graphql/mutations/categoryMutations";
+import { GET_CATEGORIES } from "@/graphql/queries/queries";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
 

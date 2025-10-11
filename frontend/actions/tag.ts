@@ -3,8 +3,8 @@
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { ClientError } from "graphql-request";
-import { GET_TAGS } from "@/graphql/queries";
-import { UPDATE_TAG, CREATE_TAG, DELETE_TAG } from "@/graphql/mutations";
+import { GET_TAGS } from "@/graphql/queries/queries";
+import { UPDATE_TAG, CREATE_TAG, DELETE_TAG } from "@/graphql/mutations/tagMutations";
 import { revalidatePath } from "next/cache";
 
 export type Tag = {
