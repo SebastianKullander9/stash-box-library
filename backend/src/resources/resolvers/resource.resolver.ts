@@ -31,27 +31,47 @@ export class ResourceResolver {
 		@Args("categoryId", { nullable: true }) categoryId?: string,
 		@Args("tagIds", { type: () => [String], nullable: true }) tagIds?: string[],
 	): Promise<ResourceType[]> {
-		return this.prisma.resource.findMany({
+		const resources = await this.prisma.resource.findMany({
 			where: {
 				...(categoryId ? { categoryId } : {}),
 				...(tagIds && tagIds.length > 0
-					? {
-							tags: {
-								some: { id: { in: tagIds } },
-							},
-						}
+					? { tags: { some: { id: { in: tagIds } } } }
 					: {}),
 			},
 			include: { category: true, tags: true, user: true, files: true },
 		});
+
+		return Promise.all(
+			resources.map(async (res) => ({
+				...res,
+				files: await Promise.all(
+					res.files.map(async (f) => ({
+						...f,
+						url: await this.s3Service.getPresignedUrl(f.url, 7000),
+					})),
+				),
+			})),
+		);
 	}
 
 	@Query(() => ResourceType, { nullable: true })
 	async resource(@Args("id") id: string): Promise<ResourceType | null> {
-		return this.prisma.resource.findUnique({
+		const res = await this.prisma.resource.findUnique({
 			where: { id },
 			include: { category: true, tags: true, user: true, files: true },
 		});
+
+		if (!res) return null;
+
+		return {
+			...res,
+			files: await Promise.all(
+				res.files.map(async (f) => ({
+					...f,
+					url: await this.s3Service.getPresignedUrl(f.url, 7000),
+				})),
+			),
+		};
 	}
 
 	@Mutation(() => ResourceType)
@@ -198,13 +218,27 @@ export class ResourceResolver {
 		@Args("resourceId", { nullable: true }) resourceId?: string,
 	) {
 		const uploadedFiles = [];
+		const extensionToMime: Record<string, string> = {
+			".ttf": "font/ttf",
+			".otf": "font/otf",
+			".glb": "model/gltf-binary",
+			".gltf": "model/gltf+json",
+			".svg": "image/svg+xml",
+			".jpg": "image/jpeg",
+			".jpeg": "image/jpeg",
+			".png": "image/png",
+		};
 
 		for (const filePromise of files) {
 			const file: FileUpload = await filePromise;
-			const { createReadStream, filename, mimetype } = file;
+			const { createReadStream, filename, mimetype: incomingMime } = file;
 			const buffer = await this.streamToBuffer(createReadStream());
-			const key = await this.s3Service.uploadFile(filename, buffer, mimetype);
-			uploadedFiles.push({ url: key, fileType: mimetype, fileRole });
+
+			const extension = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+			const mimeType = extensionToMime[extension] || incomingMime || "application/octet-stream";
+
+			const key = await this.s3Service.uploadFile(filename, buffer, mimeType);
+			uploadedFiles.push({ url: key, fileType: mimeType, fileRole });
 		}
 
 		let resource;

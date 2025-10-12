@@ -6,6 +6,7 @@ import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "@/graphql/mut
 import { GET_CATEGORIES } from "@/graphql/queries/queries";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
+import { ResourceCategory } from "@/types";
 
 export async function createCategoryAction(formData: FormData) {
     try {
@@ -26,14 +27,9 @@ export async function createCategoryAction(formData: FormData) {
     }
 }
 
-export type Category = {
-    id: string;
-    name: string;
-}
-
 export async function getCategories() {
     try {
-        const data = await graphqlClient.request<{ categories: Category[]}>(
+        const data = await graphqlClient.request<{ categories: ResourceCategory[]}>(
             GET_CATEGORIES
         );
 

@@ -1,6 +1,7 @@
 import { deleteTag, getTags } from "@/actions/tag";
 import { Tag } from "@/actions/tag";
 import BaseButton from "@/components/ui/buttons/BaseButton";
+import DeleteButton from "@/components/ui/buttons/DeleteButton";
 import Input from "@/components/ui/inputs/Input";
 import { updateTag } from "@/actions/tag";
 
@@ -25,7 +26,7 @@ export default async function TagList() {
                         </form>
                         <form action={deleteTag}>
                             <input type="hidden" name="id" value={tag.id} />
-                            <BaseButton label="Delete" background={false} type="submit" />
+                            <DeleteButton />
                         </form>
                     </li>
                 ))}

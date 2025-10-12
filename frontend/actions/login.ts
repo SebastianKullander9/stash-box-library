@@ -5,10 +5,7 @@ import { ClientError } from "graphql-request";
 import { LOGIN } from "@/graphql/mutations/authMutations";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-type LoginState={
-    error?: string;
-} | null;
+import { LoginState } from "@/types";
 
 export async function loginAction( prevState: LoginState, formData: FormData) {
     try {

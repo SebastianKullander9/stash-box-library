@@ -1,9 +1,11 @@
-import { deleteCategory, updateCategory, getCategories, Category } from "@/actions/category";
+import { deleteCategory, updateCategory, getCategories } from "@/actions/category";
+import { ResourceCategory } from "@/types";
 import BaseButton from "@/components/ui/buttons/BaseButton";
+import DeleteButton from "@/components/ui/buttons/DeleteButton";
 import Input from "@/components/ui/inputs/Input";
 
 export default async function CategoriesList() {
-    const categories: Category[] = await getCategories();
+    const categories: ResourceCategory[] = await getCategories();
 
     return (
         <div>
@@ -23,7 +25,7 @@ export default async function CategoriesList() {
                         </form>
                         <form action={deleteCategory}>
                             <input type="hidden" name="id" value={category.id} />
-                            <BaseButton label="Delete" background={false} type="submit" />
+                            <DeleteButton />
                         </form>
                     </li>
                 ))}

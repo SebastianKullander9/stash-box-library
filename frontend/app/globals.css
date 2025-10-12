@@ -51,7 +51,7 @@ p, li, a, h1, h2, h3, label {
 }
 
 .main-y-padding {
-
+	@apply py-4 sm:px-6 md:py-8 lg:py-10 xl:py-12;
 }
 
 .main-gap {

@@ -33,7 +33,7 @@ model File {
 	url        String
 	fileType   String
 	fileRole   String
-	resource   Resource   @relation(fields: [resourceId], references: [id])
+	resource   Resource   @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 	resourceId String
 }
 
