@@ -1,6 +1,6 @@
 import { getOneResource } from "@/actions/resource";
 import LinkButton from "@/components/ui/buttons/LinkButton";
-import FileRenderer from "@/components/fileRenderer/FileRenderer";
+import FileRenderer from "@/components/fileRenderer/FileRendererAdmin";
 import EditResourceForm from "@/components/forms/EditResourceForm";
 
 
