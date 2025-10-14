@@ -31,9 +31,16 @@ export class CategoryResolver {
 	}
 
 	@Query(() => CategoryType, { nullable: true })
-	async category(@Args("id") id: string): Promise<CategoryType | null> {
+	async category(
+		@Args("id", { nullable: true }) id?: string,
+  		@Args("name", { nullable: true }) name?: string
+	): Promise<CategoryType | null> {
+
+		if (!id && !name) return null;
+
+
 		return this.prisma.category.findUnique({
-			where: { id },
+			where: id ? { id } : { name },
 			include: {
 				resources: {
 					include: { tags: true, user: true, category: true },

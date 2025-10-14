@@ -28,4 +28,11 @@ export type Resource = {
     tags: ResourceTag[];
     user: ResourceUser;
     files: ResourceFile[];
+    createdAt: Date;
+}
+
+export type ResourcePage = {
+    items: Resource[];
+    totalCount: number;
+    nextOffset: number;
 }

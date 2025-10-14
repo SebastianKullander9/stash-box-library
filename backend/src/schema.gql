@@ -44,17 +44,24 @@ type ResourceType {
   tags: [TagType!]
   user: UserType
   files: [FileType!]
+  createdAt: DateTime!
+}
+
+type ResourcePage {
+  items: [ResourceType!]!
+  totalCount: Int!
+  nextOffset: Int!
 }
 
 type Query {
-  resources(categoryId: String, tagIds: [String!]): [ResourceType!]!
+  resources(categoryId: String, tagIds: [String!], limit: Int, offset: Int): ResourcePage!
   resource(id: String!): ResourceType
   users: [UserType!]!
   user(id: String!): UserType
   tags(orderBy: String): [TagType!]!
   tag(id: String!): TagType
   categories(orderBy: String): [CategoryType!]!
-  category(id: String!): CategoryType
+  category(id: String, name: String): CategoryType
 }
 
 type Mutation {

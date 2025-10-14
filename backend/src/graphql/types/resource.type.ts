@@ -43,4 +43,7 @@ export class ResourceType {
 
 	@Field(() => [FileType], { nullable: true })
 	files?: FileType[] | null;
+
+	@Field(() => Date)
+	createdAt: Date;
 }

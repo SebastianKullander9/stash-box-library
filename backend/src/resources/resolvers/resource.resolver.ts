@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Query, Args } from "@nestjs/graphql";
+import { Resolver, Mutation, Query, Args, Int } from "@nestjs/graphql";
 import { ResourceType } from "src/graphql/types/resource.type";
 import { PrismaService } from "../../prisma/prisma.service";
 import {
@@ -12,6 +12,7 @@ import { RolesGuard } from "src/auth/guards/roles.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { S3Service } from "src/s3/s3.service";
 import GraphQLUpload, { FileUpload } from "graphql-upload/GraphQLUpload.mjs";
+import { ResourcePage } from "src/graphql/types/resourcePage.type";
 
 interface CurrentUserType {
 	userId: string;
@@ -26,22 +27,36 @@ export class ResourceResolver {
 		private s3Service: S3Service,
 	) {}
 
-	@Query(() => [ResourceType])
+	@Query(() => ResourcePage)
 	async resources(
 		@Args("categoryId", { nullable: true }) categoryId?: string,
 		@Args("tagIds", { type: () => [String], nullable: true }) tagIds?: string[],
-	): Promise<ResourceType[]> {
-		const resources = await this.prisma.resource.findMany({
-			where: {
-				...(categoryId ? { categoryId } : {}),
-				...(tagIds && tagIds.length > 0
-					? { tags: { some: { id: { in: tagIds } } } }
-					: {}),
-			},
-			include: { category: true, tags: true, user: true, files: true },
-		});
+		@Args("limit", { type: () => Int, nullable: true }) limit = 20,
+		@Args("offset", { type: () => Int, nullable: true }) offset = 0,
+	): Promise<ResourcePage> {
+		const [resources, totalCount] = await Promise.all([
+			this.prisma.resource.findMany({
+				where: {
+					...(categoryId ? { categoryId } : {}),
+					...(tagIds && tagIds.length > 0
+						? { tags: { some: { id: { in: tagIds } } } }
+						: {}),
+				},
+				include: { category: true, tags: true, user: true, files: true },
+				take: limit,
+				skip: offset,
+			}),
+			this.prisma.resource.count({
+				where: {
+					...(categoryId ? { categoryId } : {}),
+					...(tagIds && tagIds.length > 0
+						? { tags: { some: { id: { in: tagIds } } } }
+						: {}),
+				},
+			}),
+		]);
 
-		return Promise.all(
+		const resourcesWithUrls = await Promise.all(
 			resources.map(async (res) => ({
 				...res,
 				files: await Promise.all(
@@ -52,6 +67,12 @@ export class ResourceResolver {
 				),
 			})),
 		);
+
+		return {
+			items: resourcesWithUrls,
+			totalCount,
+			nextOffset: offset + resourcesWithUrls.length,
+		};
 	}
 
 	@Query(() => ResourceType, { nullable: true })

@@ -57,3 +57,11 @@ p, li, a, h1, h2, h3, label {
 .main-gap {
 	@apply gap-4 sm:gap-4 md:gap-4 lg:gap-6 xl:gap-6;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

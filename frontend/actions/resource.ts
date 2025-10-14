@@ -5,9 +5,10 @@ import { ClientError } from "graphql-request";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { uploadFilesToServer } from "@/lib/uploadFiles";
 import { CREATE_RESOURCE, DELETE_RESOURCE, UPDATE_RESOURCE } from "@/graphql/mutations/resourceMutations";
-import { GET_RESOURCES, GET_ONE_RESOURCE } from "@/graphql/queries/queries";
+import { GET_RESOURCES, GET_ONE_RESOURCE, GET_RESOURCES_BY_CATEGORY } from "@/graphql/queries/queries";
 import { revalidatePath } from "next/cache";
 import { Resource } from "@/types";
+import { ResourcePage } from "@/types";
 import { redirect } from "next/navigation";
 
 export async function createResourceAction(formData: FormData) {
@@ -50,10 +51,14 @@ export async function createResourceAction(formData: FormData) {
     }
 }
 
-export async function getResources() {
+export async function getResources(limit?: number, offset?: number) {
     try {
-        const data = await graphqlClient.request<{ resources: Resource[]}>(
-            GET_RESOURCES
+        const data = await graphqlClient.request<{ resources: ResourcePage}>(
+            GET_RESOURCES,
+            {
+                limit,
+                offset
+            }
         );
 
         return data.resources;
@@ -136,3 +141,22 @@ export async function updateResource(formData: FormData) {
     }
 }
             
+export async function getResourceByCategory(categoryId: string, limit = 20, offset = 0) {
+    try {
+        const data = await graphqlClient.request<{ resources: ResourcePage }>(
+            GET_RESOURCES_BY_CATEGORY,
+            {
+                categoryId,
+                limit,
+                offset,
+            }
+        );
+
+        return data.resources;
+    } catch (err: unknown) {
+        if (err instanceof ClientError) {
+            throw new Error(err?.message || "Something went wrong");
+        }
+        throw err;
+    }
+}
