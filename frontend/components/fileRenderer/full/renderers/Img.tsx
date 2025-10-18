@@ -1,6 +1,8 @@
 import { Resource } from "@/types";
 import Image from "next/image";
 import DownloadButton from "@/components/ui/buttons/DownloadButton";
+import FormattedDate from "@/components/ui/date/FormattedDate";
+import Tags from "@/components/ui/tags/Tags";
 
 type ImageRendererProps = {
     resource: Resource;
@@ -8,13 +10,6 @@ type ImageRendererProps = {
 
 export default function Img({ resource }: ImageRendererProps) {
     console.log(resource.files[0].url)
-
-    const date = new Date(resource.createdAt);
-    const formattedDate = date.toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
 
     return (
         <div className="flex flex-col md:flex-row h-[calc(100vh-120px)] main-x-padding main-y-padding gap-12">
@@ -34,16 +29,14 @@ export default function Img({ resource }: ImageRendererProps) {
                             <h1 className="mb-0">{resource.title}</h1>
                             <p className="text-gray-400">{resource.files.length} Images</p>
                         </div>
-                        <p className="mb-0">{formattedDate}</p>
+                        <FormattedDate createdAt={resource.createdAt} />
                     </div>
                     <p>{resource.description}</p>
                     <a href={resource.textContent} target="_blank" className="underline underline-offset-3 hover:text-gray-400">View here</a>
                 </div>
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row gap-2">
-                        {resource.tags.map((tag) => (
-                            <p className="px-3 py-2 bg-[var(--color-white)] text-black inline-block rounded-full" key={tag.name}>{tag.name}</p>
-                        ))}
+                        <Tags resource={resource} />
                     </div>
                     <DownloadButton label={resource.files.length > 1 ? "images" : "image"} url="" />
                 </div>
