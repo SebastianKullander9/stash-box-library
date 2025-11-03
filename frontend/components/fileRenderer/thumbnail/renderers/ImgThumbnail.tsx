@@ -2,12 +2,12 @@ import { Resource } from "@/types";
 import Image from "next/image";
 import OpenResourceButton from "@/components/ui/buttons/OpenResourceButton";
 
-type ImageRendererProps = {
+interface ImageThumbnailProps {
     resource: Resource;
     url: string
 } 
 
-export default function Img({ resource, url }: ImageRendererProps) {
+export default function ImgThumbnail({ resource, url }: ImageThumbnailProps) {
     return (
         <div className="main-x-padding main-y-padding border-b-1 border-b-white max-w-[850px] mx-auto">
             <div className="flex flex-row justify-between items-center">
