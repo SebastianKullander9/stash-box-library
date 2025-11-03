@@ -1,4 +1,4 @@
-/*import { getResourceByCategory } from "@/actions/resource";
+import { getResourceByCategory } from "@/actions/resource";
 import { getCategoryByName } from "@/actions/category";
 import FileRendererThumbnail from "@/components/fileRenderer/thumbnail";
 
@@ -17,4 +17,4 @@ export default async function Fonts() {
             )}
         </div>
     )
-}*/
+}

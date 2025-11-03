@@ -15,7 +15,7 @@ export default function Model({ resource }: ModelProps) {
 
     return (
         <div className="text-white h-[calc(100vh-120px)] flex flex-col md:flex-row">
-            <div className="w-full md:w-3/5 h-[calc(50%-60px)] md:h-full md:h-full cursor-grab order-2 md:order-1">
+            <div className="w-full md:w-3/5 h-[calc(50%-60px)] md:h-full cursor-grab order-2 md:order-1">
                 <Canvas3d modelUrl={modelUrl} />
             </div>
 
