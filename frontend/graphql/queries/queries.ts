@@ -27,6 +27,7 @@ export const GET_RESOURCES = gql`
                 id
                 title
                 description
+                createdAt
                 category {
                     id
                     name
@@ -78,6 +79,7 @@ export const GET_RESOURCES_BY_CATEGORY = gql`
                 id
                 title
                 description
+                createdAt
                 category { id name }
                 tags { id name }
                 files { url fileType fileRole }

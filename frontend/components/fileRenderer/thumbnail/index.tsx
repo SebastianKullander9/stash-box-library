@@ -7,10 +7,12 @@ type FileRendererThumbnailProps = {
 
 export default function FileRendererThumbnail({ resources }: FileRendererThumbnailProps) {
     return (
-        <div>
+        <>
             {resources.map((resource) => (
-                <Renderer key={resource.id} resource={resource} />
+                <div key={resource.id} className="col-span-1">
+                    <Renderer resource={resource} />
+                </div>
             ))}
-        </div>
+        </>
     )
 }

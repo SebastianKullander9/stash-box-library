@@ -8,7 +8,7 @@ export default function Tags({ resource }: TagsProps) {
     return (
         <>
             {resource.tags.map((tag) => (
-                <p className="px-3 py-2 bg-[var(--color-white)] text-black inline-block rounded-full" key={tag.name}>{tag.name}</p>
+                <p className="body-smallest bg-primary-800 inline-block rounded-xl px-sm" key={tag.name}>{tag.name}</p>
             ))}
         </>
     );

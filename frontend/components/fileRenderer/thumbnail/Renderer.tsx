@@ -19,5 +19,4 @@ export default function Renderer({ resource }: RendererProps) {
     if (fileType.startsWith("font/")) return <Video resource={resource} url={url} />
 
     return <Default resource={resource} url={url} />
-    
 }
