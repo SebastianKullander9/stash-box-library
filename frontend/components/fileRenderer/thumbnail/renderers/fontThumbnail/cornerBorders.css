@@ -1,0 +1,24 @@
+.cornerBorders {
+    background: 
+        linear-gradient(to right, white 4px, transparent 4px) 0 0,
+        linear-gradient(to left, white 4px, transparent 4px) 100% 100%,
+        linear-gradient(to bottom, white 4px, transparent 4px) 0 0,
+        linear-gradient(to top, white 4px, transparent 4px) 100% 100%;
+
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+
+.cornerBorders:hover {
+    background:
+        linear-gradient(to right, #be185d 4px, transparent 4px) 0 0,
+        linear-gradient(to right, #be185d 4px, transparent 4px) 0 100%,
+        linear-gradient(to left, #be185d 4px, transparent 4px) 100% 0,
+        linear-gradient(to left, #be185d 4px, transparent 4px) 100% 100%,
+        linear-gradient(to bottom, #be185d 4px, transparent 4px) 0 0,
+        linear-gradient(to bottom, #be185d 4px, transparent 4px) 100% 0,
+        linear-gradient(to top, #be185d 4px, transparent 4px) 0 100%,
+        linear-gradient(to top, #be185d 4px, transparent 4px) 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}

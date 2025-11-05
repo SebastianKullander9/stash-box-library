@@ -9,8 +9,6 @@ interface ImageThumbnailProps {
 } 
 
 export default function ImgThumbnail({ resource, url }: ImageThumbnailProps) {
-    console.log(resource)
-
     return (
         <a 
             className="flex flex-col p-2xl bg-surface border-1 border-border rounded-sm shadow-sm gap-xl hover:border-border-strong transition-border duration-150 cursor-pointer"
