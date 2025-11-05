@@ -248,6 +248,14 @@ export class ResourceResolver {
 			".jpg": "image/jpeg",
 			".jpeg": "image/jpeg",
 			".png": "image/png",
+			".html": "text/html",
+			".css": "text/css",
+			".js": "application/javascript",
+			".mjs": "application/javascript",
+			".cjs": "application/javascript",
+			".ts": "text/typescript",
+			".tsx": "text/typescript",
+			".json": "application/json",
 		};
 
 		for (const filePromise of files) {
