@@ -1,10 +1,18 @@
-import { AdminHeader } from "@/components/ui/headers";
-import { ReactNode } from "react";
+"use server";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+import DashboardHeader from "@/components/ui/headers/dashboardHeader/DashboardHeader";
+import { ReactNode } from "react";
+import AddResourceForm from "@/components/forms/AddResourceForm";
+
+export default async function AdminLayout({ children }: { children: ReactNode }) {
     return (
         <div>
-            <main>{children}</main>
+            <DashboardHeader>
+                <AddResourceForm />
+            </DashboardHeader>
+            <main>
+                {children}
+            </main>
         </div>
     );
 }

@@ -10,8 +10,8 @@ export default function LoginForm() {
     const [state, formAction, pending] = useActionState(loginAction, null);
 
     return (
-        <form action={formAction} className="max-w-[450px] main-x-padding">
-            <h1 className="text-white text-normal text-center">Login to dashboard</h1>
+        <form action={formAction} className="min-w-[450px] flex flex-col gap-xl bg-surface p-2xl rounded-xl border-1 border-border">
+            <h1 className="heading-4 text-center whitespace-nowrap">Login to dashboard</h1>
             <Input label="Email" name="email" type="email" />
             <PasswordInput />
             {state?.error && (

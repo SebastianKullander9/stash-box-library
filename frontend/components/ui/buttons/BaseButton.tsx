@@ -9,8 +9,8 @@ export default function BaseButton({ label, type="submit", background=true, disa
     return (
         <button 
             type={type} 
-            className={`${background ? "bg-[var(--color-white)] text-black" : "bg-transparent text-white"} w-full text-normal
-            p-2 p-normal hover:bg-gray-300 transition-colors duration-200 rounded-sm cursor-pointer`}
+            className={`${background ? "bg-primary-700 text-white" : "bg-transparent text-white"} w-full text-normal
+            p-2xs body hover:bg-primary-600 transition-colors duration-150 rounded-sm cursor-pointer`}
             disabled={disabled}
         >
             {label}

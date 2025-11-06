@@ -1,7 +1,5 @@
 
-import Link from "next/link";
 import { getCategories } from "@/actions/category";
-import HamburgerMenu from "./HamburgerMenu";
 import HeaderClient from "./HeaderClient";
 
 export default async function HeaderServer() {
@@ -11,11 +9,3 @@ export default async function HeaderServer() {
         <HeaderClient categories={categories} />
     );
 }
-
-/* 
-
-*/
-
-/*
-    <HamburgerMenu categories={categories} />
-*/

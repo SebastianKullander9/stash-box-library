@@ -1,16 +1,18 @@
-import HeaderServer from "@/components/ui/headers/HeaderServer";
+import HeaderServer from "@/components/ui/headers/siteHeader/HeaderServer";
 import FilterMenu from "@/components/ui/menus/FilterMenu";
 import { ReactNode } from "react";
 import { getTags } from "@/actions/tag";
 
-export default async function AdminLayout({ children }: { children: ReactNode }) {
-    const tags = await getTags();
+export default async function PublicLayout({ children }: { children: ReactNode }) {
+    //const tags = await getTags();
 
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <HeaderServer />
-            <FilterMenu tags={tags} />
-            <main>{children}</main>
+            {/*<FilterMenu tags={tags} /> */}
+            <main className="flex flex-grow justify-center">
+                {children}
+            </main>
         </div>
     );
 }

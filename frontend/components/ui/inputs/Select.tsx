@@ -1,49 +1,37 @@
-
-
 type option = {
     id: string;
     name: string;
 }
 
-type InputProps = {
-    label?: string;
+interface SelectProps  {
+    label: string;
     name: string;
     options: option[];
-    multiple?: boolean;
     defaultValue?: option[] | string;
-    passIds?: boolean;
 }
 
-export default function Select({ label="", name, options, multiple=false, defaultValue, passIds=false }: InputProps) {
+export default function Select({ label="", name, options }: SelectProps) {
     let computedDefaultValue: string | string[] | undefined;
 
-    if (Array.isArray(defaultValue)) {
-        computedDefaultValue = defaultValue.map(opt =>
-            passIds ? opt.id : opt.name
-        );
-    } else if (typeof defaultValue === "string") {
-        computedDefaultValue = defaultValue;
-    }
-
-
     return (
-        <label htmlFor={name} className="text-normal flex flex-col text-white gap-2">{label}
-            <div className="relative">
+        <label htmlFor={name} className="text-white body">{label}
+            <div className="relative bg-white rounded-md">
                 <select
-                    className="w-full bg-[var(--color-white)] text-black p-2 rounded-sm cursor-pointer"
+                    className="w-full cursor-pointer text-background p-sm"
                     name={name}
                     id={name}
                     required
-                    size={options.length}
-                    multiple={multiple}
-                    defaultValue={computedDefaultValue}
                 >
                     {options.map((option) => (
-                        <option key={option.id} value={passIds ? option.id: option.name}>{option.name}</option>
-
+                        <option 
+                            key={option.name}
+                            value={option.id}
+                            className=""
+                        >
+                            {option.name}
+                        </option>
                     ))}
                 </select>
-                {multiple && <p className="text-[12px] text-gray-400">To select multiple options on windows/mac hold CTRL/cmd</p>}
             </div>
         </label>
     )
