@@ -6,8 +6,6 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ resources }: DashboardProps) {
-
-
     return (
         <section className="grid grid-cols-12 section-x-padding">
             <ResourceList resources={resources} />

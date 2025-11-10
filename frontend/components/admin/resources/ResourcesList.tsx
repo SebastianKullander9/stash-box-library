@@ -3,7 +3,7 @@ import { ResourcePage } from "@/types";
 import ResourceCard from "./ResourceCard";
 
 export default async function ResourcesList() {
-    const resources: ResourcePage = await getResources(20, 0);
+    const resources: ResourcePage = await getResources(100, 0);
     console.log(resources)
 
     return (

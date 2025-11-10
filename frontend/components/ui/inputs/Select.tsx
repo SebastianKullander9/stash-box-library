@@ -25,7 +25,7 @@ export default function Select({ label="", name, options }: SelectProps) {
                     {options.map((option) => (
                         <option 
                             key={option.name}
-                            value={option.id}
+                            value={option.name}
                             className=""
                         >
                             {option.name}
