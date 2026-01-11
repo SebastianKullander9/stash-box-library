@@ -9,7 +9,7 @@ export default function PasswordInput() {
     const [show, toggleShow] = useState(false);
 
     return (
-        <label htmlFor="password" className="text-normal flex flex-col text-white gap-2">Password
+        <label htmlFor="password" className="text-sm flex flex-col text-white">Password
             <div className="relative">
                 <input
                     className="w-full bg-[var(--color-white)] text-black p-2 rounded-sm"

@@ -7,10 +7,10 @@ type InputProps = {
 
 export default function Input({ label="", name, type, defaultValue }: InputProps) {
     return (
-        <label htmlFor={name} className="body">{label}
+        <label htmlFor={name} className="body text-sm">{label}
             <div>
                 <input
-                    className="rounded-md bg-white text-background p-sm w-full"
+                    className="rounded-sm bg-white text-background text-sm p-xs w-full"
                     defaultValue={defaultValue}
                     type={type}
                     name={name}

@@ -10,7 +10,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
         <div className="flex flex-col min-h-screen">
             <HeaderServer />
             {/*<FilterMenu tags={tags} /> */}
-            <main className="flex flex-grow justify-center">
+            <main className="flex flex-grow justify-center h-full">
                 {children}
             </main>
         </div>
