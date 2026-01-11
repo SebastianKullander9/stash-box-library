@@ -1,8 +1,10 @@
 import { Module } from "@nestjs/common";
 import { TagResolver } from "./resolvers/tag.resolver";
-import { PrismaService } from "src/prisma/prisma.service";
+import { TagService } from "./services/tag.service";
+import { PrismaService } from "../prisma/prisma.service";
 
 @Module({
-	providers: [TagResolver, PrismaService],
+	providers: [TagResolver, TagService, PrismaService],
+	exports: [TagService],
 })
 export class TagModule {}

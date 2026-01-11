@@ -1,8 +1,10 @@
 import { Module } from "@nestjs/common";
 import { CategoryResolver } from "./resolvers/category.resolver";
-import { PrismaService } from "src/prisma/prisma.service";
+import { CategoryService } from "./services/category.service";
+import { PrismaService } from "../prisma/prisma.service";
 
 @Module({
-	providers: [CategoryResolver, PrismaService],
+	providers: [CategoryResolver, CategoryService, PrismaService],
+	exports: [CategoryService],
 })
 export class CategoryModule {}
