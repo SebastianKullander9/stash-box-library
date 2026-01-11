@@ -264,7 +264,10 @@ export class ResourceResolver {
 			const buffer = await this.streamToBuffer(createReadStream());
 
 			const extension = filename.slice(filename.lastIndexOf(".")).toLowerCase();
-			const mimeType = extensionToMime[extension] || incomingMime || "application/octet-stream";
+			const mimeType =
+				extensionToMime[extension] ||
+				incomingMime ||
+				"application/octet-stream";
 
 			const key = await this.s3Service.uploadFile(filename, buffer, mimeType);
 			uploadedFiles.push({ url: key, fileType: mimeType, fileRole });
@@ -288,11 +291,13 @@ export class ResourceResolver {
 		}
 
 		const filesWithUrls = await Promise.all(
-			resource.files.map(async (f: { fileType: string; url: string, fileRole: string, }) => ({
-				fileType: f.fileType,
-				url: await this.s3Service.getPresignedUrl(f.url, 7000),
-				fileRole: f.fileRole
-			})),
+			resource.files.map(
+				async (f: { fileType: string; url: string; fileRole: string }) => ({
+					fileType: f.fileType,
+					url: await this.s3Service.getPresignedUrl(f.url, 7000),
+					fileRole: f.fileRole,
+				}),
+			),
 		);
 
 		return { ...resource, files: filesWithUrls };
