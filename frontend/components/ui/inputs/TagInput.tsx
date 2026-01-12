@@ -79,11 +79,11 @@ export default function TagInput({ label="", name, type="text", defaultValue, re
     }
  
     return (
-        <label className="flex flex-col body">
+        <label className="flex flex-col body text-sm">
             {label}
             <div className="relative">
                 <input
-                    className={`bg-white p-sm rounded-md w-full text-background ${showDropdown ? "rounded-bl-none" : "rounded-bl-md"}`}
+                    className={`bg-white p-xs rounded-md w-full text-background ${showDropdown ? "rounded-bl-none" : "rounded-bl-md"}`}
                     style={{ paddingRight: `${buttonWidth + 8}px` }}
                     type={type}
                     name={name}
@@ -95,7 +95,7 @@ export default function TagInput({ label="", name, type="text", defaultValue, re
                 />
 
                 <button
-                    className={`bg-primary-700 absolute right-[-1px] body p-sm rounded-tr-md  cursor-pointer hover:bg-primary-600 ${showDropdown ? "rounded-br-none" : "rounded-br-md"}`}
+                    className={`bg-primary-700 absolute right-[-1px] text-sm body p-xs rounded-tr-md  cursor-pointer hover:bg-primary-600 ${showDropdown ? "rounded-br-none" : "rounded-br-md"}`}
                     type="button"
                     ref={ref}
                     onClick={handleCreateNew}
@@ -129,7 +129,7 @@ export default function TagInput({ label="", name, type="text", defaultValue, re
                 />
             ))}
 
-            <div className="flex flex-row gap-sm">
+            <div className="flex flex-row gap-sm pt-md">
                 <Tags tags={selectedTags} removeTag={handleRemoveTag} />
             </div>
         </label>

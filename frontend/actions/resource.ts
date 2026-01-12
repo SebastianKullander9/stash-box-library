@@ -42,6 +42,7 @@ export async function createResourceAction(formData: FormData) {
         }
 
         revalidatePath("/admin/");
+		redirect("/admin");
     } catch (err: unknown) {
         if (err instanceof ClientError) {
             const graphQLError = err.response.errors?.[0];

@@ -19,13 +19,21 @@ export default async function AddResourceForm() {
         <form
             id="addResourceForm"
             action={createResourceAction}
-            className="flex flex-col gap-md"
+            className="flex flex-col py-xl gap-3xl max-w-[750px]"
         >
-            <div className="flex flex-row gap-xl">
-                <div>
+			<div className="text-center flex flex-col gap-md">
+				<h2 className="text-2xl">
+					Add a resource here
+				</h2>
+				<p className="text-text-secondary max-w-prose">
+					Just fill out the form with the required information, the resource can be anything from an image, code, website, model, etc.
+				</p>
+			</div>
+            <div className="flex flex-row gap-3xl">
+                <div className="w-1/3">
                     <FileInput label="Upload a resource" name="files"/>
                 </div>
-                <div className="w-full flex flex-col gap-md">
+                <div className="w-2/3 flex flex-col gap-md">
                     <Select label="Choose category" name="category" options={categories} />
                     <Input label="Title" name="title" type="text" />
                     <Input label="Description" name="description" type="text" />

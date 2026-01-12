@@ -48,16 +48,15 @@ export default function FileInput({ label, name="files", resetSignal}: FileInput
         <div className="flex flex-col gap-sm min-w-[230px]">
             <div>
                 <div>
-                    <p className="body">
-                        Upload resource(s)
-                    </p>
-                    <label
-                        htmlFor="file-upload-visible"
-                        className="body bg-white text-background p-sm rounded-md flex  items-center gap-sm  cursor-pointer hover:bg-gray-100 duration-150"
-                    >
-                        <CloudUpload size={28} />
-                        {label}
-                    </label>
+                    <label htmlFor="file-upload-visible" className="body text-sm">
+						{label}
+						<div
+							className="rounded-sm bg-white text-background text-sm p-xs w-full flex items-center gap-2 cursor-pointer hover:bg-gray-100 duration-150"
+						>
+							<CloudUpload size={18} />
+							<span>Choose files...</span>
+						</div>
+					</label>
                     <input
                         id="file-upload-visible"
                         className="hidden" 
@@ -76,7 +75,7 @@ export default function FileInput({ label, name="files", resetSignal}: FileInput
             </div>
             <div>
                 {selectedFiles.length === 0 ? (
-                    <p className="text-gray-500">No resource(s) uploaded...</p>
+                    <p className="text-text-secondary">No resource(s) uploaded...</p>
                 ) : (
                     <ul className="space-y-2">
                         {selectedFiles.map((file, index) => (

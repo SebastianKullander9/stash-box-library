@@ -16,7 +16,7 @@ export default function Tags({ resource, tags, removeTag=() => null }: TagsProps
 
             {tags && tags.map((tag) => (
                 <div
-                    className="body body-small px-sm py-2xs rounded-full bg-primary-800 flex flex-row items-center gap-sm" key={tag}
+                    className="body body-small px-sm py-2xs rounded-md bg-primary-800 flex flex-row items-center gap-sm" key={tag}
                 >
                     <p>{tag}</p>
                     <div 

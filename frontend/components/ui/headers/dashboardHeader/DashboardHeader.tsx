@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useLayoutEffect, useState, ReactNode } from "react";
-import AddResourceButton from "../../buttons/AddResourceButton";
 import Search from "../../inputs/Search";
-import AddResourceModal from "../../dashboard/modals/AddResourceModal";
+import BaseButton from "../../buttons/BaseButton";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
     children: ReactNode;
@@ -41,21 +41,13 @@ export default function DashboardHeader({ children }: DashboardHeaderProps) {
                 </div>
                 <div className="flex flex-row gap-xl">
                     <Search />
-                    <AddResourceButton 
-                        isModalOpen={isModalOpen}
-                        setIsModalOpen={SetIsModalOpen}
-                    />
+					<Link href="/admin/add-resource">
+						<BaseButton label="Add resource" />
+					</Link>
                 </div>
             </header>
 
             <div style={{ height: headerHeight}}/>
-
-            <AddResourceModal 
-                isModalOpen={isModalOpen}
-                setIsModalOpen={SetIsModalOpen}
-            >
-                {children}
-            </AddResourceModal>
         </> 
         
     )
