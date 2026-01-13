@@ -3,9 +3,10 @@
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { ClientError } from "graphql-request";
-import { GET_TAGS } from "@/graphql/queries/queries";
+import { GET_TAGS, GET_POPULAR_TAGS } from "@/graphql/queries/queries";
 import { UPDATE_TAG, CREATE_TAG, DELETE_TAG } from "@/graphql/mutations/tagMutations";
 import { revalidatePath } from "next/cache";
+import { PopularTag } from "@/components/ui/dashboard/cards/popularTagsCard/PopularTagsCard";
 
 export type Tag = {
     id: string;
@@ -25,6 +26,22 @@ export async function getTags() {
         }
         throw err;
     }
+}
+
+export async function getPopularTags(limit: number = 5) {
+	try {
+		const data = await graphqlClient.request<{ popularTags: PopularTag[] }>(
+			GET_POPULAR_TAGS,
+			{ limit }
+		);
+
+		return data.popularTags;
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			throw new Error(err?.message || "Something went wrong")
+		}
+		throw err;
+	}
 }
 
 export async function createTagAction(formData: FormData) {

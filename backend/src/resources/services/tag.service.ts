@@ -134,4 +134,25 @@ export class TagService {
 			},
 		});
 	}
+
+	async findPopular(limit: number = 10): Promise<Array<TagType & { resourceCount: number }>> {
+		const tags = await this.prisma.tag.findMany({
+			include: {
+				_count: {
+					select: { resources: true }
+				}
+			},
+			orderBy: {
+				resources: {
+					_count: "desc"
+				}
+			},
+			take: limit,
+		});
+
+		return tags.map(tag => ({
+			...tag,
+			resourceCount: tag._count.resources,
+		}));
+	}
 }

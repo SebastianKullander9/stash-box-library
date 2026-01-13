@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
+import { ObjectType, Field, ID, Int } from "@nestjs/graphql";
 import { ResourceType } from "./resource.type";
 
 @ObjectType()
@@ -13,5 +13,11 @@ export class TagType {
 	resources?: ResourceType[] | null;
 
 	@Field()
-  	createdAt: Date;
+	createdAt: Date;
+}
+
+@ObjectType()
+export class TagWithCountType extends TagType {
+	@Field(() => Int)
+	resourceCount: number;
 }

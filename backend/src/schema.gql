@@ -21,6 +21,14 @@ type TagType {
   createdAt: DateTime!
 }
 
+type TagWithCountType {
+  id: ID!
+  name: String!
+  resources: [ResourceType]
+  createdAt: DateTime!
+  resourceCount: Int!
+}
+
 type UserType {
   id: ID!
   email: String!
@@ -60,6 +68,7 @@ type Query {
   user(id: String!): UserType
   tags(orderBy: String): [TagType!]!
   tag(id: String!): TagType
+  popularTags(limit: Int): [TagWithCountType!]!
   categories(orderBy: String): [CategoryType!]!
   category(id: String, name: String): CategoryType
 }

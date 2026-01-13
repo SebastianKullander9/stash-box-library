@@ -1,13 +1,13 @@
-import { Resolver, Query, Mutation, Args } from "@nestjs/graphql";
+import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { UseGuards } from "@nestjs/common";
-import { TagType } from "../../graphql/types/tag.type";
+import { TagType, TagWithCountType } from "../../graphql/types/tag.type";
 import { CreateTagInput, UpdateTagInput } from "../../graphql/inputs/tag.input";
 import { GqlAuthGuard } from "../../auth/guards/graphql-auth";
 import { RolesGuard } from "../../auth/guards/roles.guard";
 import { Roles } from "../../auth/roles.decorator";
 import { TagService } from "../services/tag.service";
 
-@Resolver(() => TagType)
+@Resolver()
 export class TagResolver {
 	constructor(private readonly tagService: TagService) {}
 
@@ -43,5 +43,12 @@ export class TagResolver {
 	@Roles("ADMIN")
 	async deleteTag(@Args("id") id: string): Promise<TagType> {
 		return this.tagService.delete(id);
+	}
+
+	@Query(() => [TagWithCountType])
+	async popularTags(
+		@Args("limit", { type: () => Int, nullable: true }) limit = 10,
+	): Promise<Array<TagType & { resourceCount: number }>> {
+		return this.tagService.findPopular(limit);
 	}
 }

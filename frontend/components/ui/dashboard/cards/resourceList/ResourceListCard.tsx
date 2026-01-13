@@ -1,15 +1,15 @@
 import CardWrapper from "@/components/ui/dashboard/cardWrapper/CardWrapper";
-import { Resource } from "@/types";
+import { ResourcePage } from "@/types";
 import ResourceRow from "./ResourceRow";
 
 interface ResourceListProps {
-    resources: Resource[];
+    resources: ResourcePage;
 }
 
-export default function ResourceList({ resources }: ResourceListProps) {
+export default function ResourceListCard({ resources }: ResourceListProps) {
     return (
         <CardWrapper colSpan="col-span-12">
-            <div className="py-xl flex flex-col gap-sm">
+            <div className="flex flex-col gap-sm">
                 <h3 className="heading-6">
                     All resources
                 </h3>
@@ -21,7 +21,7 @@ export default function ResourceList({ resources }: ResourceListProps) {
                         <div>Created</div>
                     </div>
                     <div>
-                        {resources.map((resource, index) => (
+                        {resources.items.map((resource, index) => (
                             <ResourceRow
                                 key={`${resource.title} ${index}`}
                                 resource={resource}

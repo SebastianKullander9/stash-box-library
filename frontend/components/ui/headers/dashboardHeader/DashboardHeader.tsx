@@ -10,7 +10,7 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ children }: DashboardHeaderProps) {
-    const [headerHeight, setHeaderHeight] = useState(64);
+    const [headerHeight, setHeaderHeight] = useState(87);
     const [isModalOpen, SetIsModalOpen] = useState(false); 
     const ref = useRef<HTMLDivElement>(null);
 

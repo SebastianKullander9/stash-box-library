@@ -20,6 +20,16 @@ export const GET_TAGS = gql`
     }
 `;
 
+export const GET_POPULAR_TAGS = gql`
+	query PopularTags($limit: Int) {
+		popularTags(limit: $limit) {
+			id
+			name
+			resourceCount
+		}
+	}
+`;
+
 export const GET_RESOURCES = gql`
     query GetAllResources($limit: Int, $offset: Int) {
         resources(limit: $limit, offset: $offset) {
