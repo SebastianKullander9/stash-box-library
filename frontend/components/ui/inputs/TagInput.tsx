@@ -86,7 +86,6 @@ export default function TagInput({ label="", name, type="text", defaultValue, re
                     className={`bg-white p-xs rounded-md w-full text-background ${showDropdown ? "rounded-bl-none" : "rounded-bl-md"}`}
                     style={{ paddingRight: `${buttonWidth + 8}px` }}
                     type={type}
-                    name={name}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     defaultValue={defaultValue}

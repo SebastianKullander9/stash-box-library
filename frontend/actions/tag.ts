@@ -28,7 +28,7 @@ export async function getTags() {
     }
 }
 
-export async function getPopularTags(limit: number = 5) {
+export async function getPopularTags(limit: number = 9) {
 	try {
 		const data = await graphqlClient.request<{ popularTags: PopularTag[] }>(
 			GET_POPULAR_TAGS,
