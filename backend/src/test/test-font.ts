@@ -6,9 +6,9 @@ function testFont() {
 	const fontService = new FontService();
 
 	// Read a font file from your local system
-	const fontPath = path.join(__dirname, "PPPangaia-bold.otf");
+	const fontPath = path.join(__dirname, "PPPangaia-medium.otf");
 	const buffer = fs.readFileSync(fontPath);
-	
+
 	// Convert Buffer to ArrayBuffer
 	const arrayBuffer = buffer.buffer.slice(
 		buffer.byteOffset,

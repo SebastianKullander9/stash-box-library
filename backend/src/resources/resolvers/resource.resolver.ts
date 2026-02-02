@@ -74,6 +74,8 @@ export class ResourceResolver {
 	}
 
 	@Mutation(() => ResourceType)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async uploadFiles(
 		@Args({ name: "files", type: () => [GraphQLUpload] })
 		files: Promise<FileUpload>[],

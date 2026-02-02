@@ -12,6 +12,7 @@ import {
 } from "../../graphql/inputs/resource.input";
 import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
+import { FontService } from "./font-metadata.service";
 
 interface ResourceQueryOptions {
 	categoryId?: string;
@@ -25,6 +26,7 @@ export class ResourceService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly s3Service: S3Service,
+		private readonly fontService: FontService,
 	) {}
 
 	async findMany(options: ResourceQueryOptions): Promise<ResourcePage> {
@@ -38,7 +40,12 @@ export class ResourceService {
 		const [resources, totalCount] = await Promise.all([
 			this.prisma.resource.findMany({
 				where,
-				include: { category: true, tags: true, user: true, files: true },
+				include: {
+					category: true,
+					tags: true,
+					user: true,
+					files: { include: { fontMetadata: true } },
+				},
 				take: limit,
 				skip: offset,
 			}),
@@ -57,8 +64,18 @@ export class ResourceService {
 	async findById(id: string): Promise<ResourceType | null> {
 		const resource = await this.prisma.resource.findUnique({
 			where: { id },
-			include: { category: true, tags: true, user: true, files: true },
+			include: {
+				category: true,
+				tags: true,
+				user: true,
+				files: { include: { fontMetadata: true } },
+			},
 		});
+
+		console.log("=== RAW PRISMA DATA ===");
+		console.log(JSON.stringify(resource, null, 2));
+		console.log("=== FILE 0 METADATA ===");
+		console.log(resource?.files?.[0]?.fontMetadata);
 
 		if (!resource) return null;
 
@@ -145,29 +162,72 @@ export class ResourceService {
 		fileRole: string,
 		resourceId?: string,
 	): Promise<ResourceType> {
-		const uploadedFiles = await Promise.all(
-			files.map(async ({ filename, buffer, mimetype }) => {
-				const mimeType = this.resolveMimeType(filename, mimetype);
-				const key = await this.s3Service.uploadFile(filename, buffer, mimeType);
-				return { url: key, fileType: mimeType, fileRole };
-			}),
-		);
+		const uploadedFiles: Array<{
+			url: string;
+			fileType: string;
+			fileRole: string;
+		}> = [];
+		const fontMetadataMap: Map<string, any> = new Map();
 
-		let resource;
-		if (!resourceId) {
-			resource = await this.prisma.resource.create({
-				data: {
-					title: uploadedFiles[0]?.url || "Untitled",
-					files: { create: uploadedFiles },
-				},
-				include: { files: true, category: true, tags: true, user: true },
+		for (let i = 0; i < files.length; i++) {
+			const { filename, buffer, mimetype } = files[i];
+			const mimeType = this.resolveMimeType(filename, mimetype);
+
+			const key = await this.s3Service.uploadFile(filename, buffer, mimeType);
+
+			if (mimeType.startsWith("font/")) {
+				const arrayBuffer = buffer.buffer.slice(
+					buffer.byteOffset,
+					buffer.byteOffset + buffer.byteLength,
+				) as ArrayBuffer;
+				const metadata = this.fontService.parseFont(arrayBuffer);
+
+				fontMetadataMap.set(key, metadata);
+			}
+
+			uploadedFiles.push({
+				url: key,
+				fileType: mimeType,
+				fileRole,
 			});
-		} else {
-			resource = await this.prisma.resource.update({
-				where: { id: resourceId },
-				data: { files: { create: uploadedFiles } },
-				include: { files: true, category: true, tags: true, user: true },
-			});
+		}
+
+		const resource = resourceId
+			? await this.prisma.resource.update({
+					where: { id: resourceId },
+					data: { files: { create: uploadedFiles } },
+					include: {
+						files: { include: { fontMetadata: true } },
+						category: true,
+						tags: true,
+						user: true,
+					},
+				})
+			: await this.prisma.resource.create({
+					data: {
+						title: uploadedFiles[0]?.url || "Untitled",
+						files: { create: uploadedFiles },
+					},
+					include: {
+						files: { include: { fontMetadata: true } },
+						category: true,
+						tags: true,
+						user: true,
+					},
+				});
+
+		for (const file of resource.files) {
+			const metadata = fontMetadataMap.get(file.url);
+
+			if (metadata) {
+				await this.prisma.fontMetadata.create({
+					data: {
+						fileId: file.id,
+						resourceId: resource.id,
+						...metadata,
+					},
+				});
+			}
 		}
 
 		const [resourceWithUrls] = await this.attachPresignedUrls([resource]);
@@ -208,17 +268,41 @@ export class ResourceService {
 	}
 
 	private async attachPresignedUrls(resources: any[]): Promise<any[]> {
-		return Promise.all(
+		console.log("=== BEFORE attachPresignedUrls ===");
+		console.log(
+			"First file:",
+			JSON.stringify(resources[0]?.files?.[0], null, 2),
+		);
+
+		const result = await Promise.all(
 			resources.map(async (resource) => ({
 				...resource,
 				files: await Promise.all(
-					resource.files.map(async (file: any) => ({
-						...file,
-						url: await this.s3Service.getPresignedUrl(file.url, 7000),
-					})),
+					resource.files.map(async (file: any) => {
+						const transformed = {
+							...file,
+							url: await this.s3Service.getPresignedUrl(file.url, 7000),
+						};
+						console.log("File transformation:");
+						console.log("  Original has fontMetadata?", !!file.fontMetadata);
+						console.log(
+							"  Transformed has fontMetadata?",
+							!!transformed.fontMetadata,
+						);
+						console.log(
+							"  fontMetadata length:",
+							transformed.fontMetadata?.length,
+						);
+						return transformed;
+					}),
 				),
 			})),
 		);
+
+		console.log("=== AFTER attachPresignedUrls ===");
+		console.log("First file:", JSON.stringify(result[0]?.files?.[0], null, 2));
+
+		return result;
 	}
 
 	private async deleteFilesFromS3(keys: string[]): Promise<void> {

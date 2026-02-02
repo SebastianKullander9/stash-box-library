@@ -2,6 +2,7 @@ import { ObjectType, Field, ID } from "@nestjs/graphql";
 import { CategoryType } from "./category.type";
 import { TagType } from "./tag.type";
 import { UserType } from "./user.type";
+import { FontMetadataType } from "./font-metadata.type";
 
 @ObjectType()
 export class FileType {
@@ -13,6 +14,9 @@ export class FileType {
 
 	@Field()
 	fileRole: string;
+
+	@Field(() => FontMetadataType, { nullable: true })
+	fontMetadata?: FontMetadataType | null;
 }
 
 @ObjectType()

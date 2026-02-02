@@ -1,20 +1,18 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
 	app.enableCors({
-		origin: [
-			"http://localhost:3001",
-		],
+		origin: ["http://localhost:3001"],
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 		credentials: true,
 		allowedHeaders: [
 			"Content-Type",
 			"Authorization",
 			"x-apollo-operation-name",
-      		"apollo-require-preflight",
+			"apollo-require-preflight",
 		],
 	});
 

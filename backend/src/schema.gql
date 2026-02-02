@@ -36,10 +36,26 @@ type UserType {
   resources: [ResourceType]
 }
 
+type FontAxisType {
+  tag: String!
+  min: Float!
+  max: Float!
+}
+
+type FontMetadataType {
+  family: String!
+  subfamily: String!
+  weight: Float!
+  isVariable: Boolean!
+  variableAxes: [FontAxisType!]
+  isThumbnailFace: Boolean!
+}
+
 type FileType {
   url: String!
   fileType: String!
   fileRole: String!
+  fontMetadata: FontMetadataType
 }
 
 type ResourceType {
