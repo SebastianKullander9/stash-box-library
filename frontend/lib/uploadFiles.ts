@@ -1,4 +1,4 @@
-import { getAuthorizedClient } from "./authorizedGraphqlClient";
+import { cookies } from "next/headers";
 import { UPLOAD_FILES } from "@/graphql/mutations/resourceMutations";
 
 export async function uploadFilesToServer(
@@ -9,6 +9,9 @@ export async function uploadFilesToServer(
     if (!resourceId) {
         throw new Error("resourceId is required to attach files");
     }
+
+	const cookieStore = await cookies();
+	const token = cookieStore.get("token")?.value;
 
     const endpoint = process.env.NEXT_PUBLIC_API_URL!;
     const formData = new FormData();
@@ -38,6 +41,7 @@ export async function uploadFilesToServer(
         method: "POST",
         headers: {
             "x-apollo-operation-name": "UploadFiles",
+			...(token && { Authorization: `Bearer ${token}` }),
         },
         body: formData,
         credentials: "include",

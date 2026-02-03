@@ -8,8 +8,10 @@ export default async function Images({ searchParams }: { searchParams: { page?: 
     const currentPage = Number(searchParams.page) || 1;
     const currentOffset = (currentPage - 1) * itemsPerPage;
 
-    const category = await getCategoryByName("Websites");
+    const category = await getCategoryByName("Images");
     const resources = await getResourceByCategory(category.id , itemsPerPage, currentOffset);
+
+	console.log(resources)
 
     return (
         <section className="main-x-padding container">

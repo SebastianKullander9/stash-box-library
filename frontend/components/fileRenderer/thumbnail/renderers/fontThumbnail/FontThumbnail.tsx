@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Resource } from "@/types";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 import "./cornerBorders.css";
-
+import Link from "next/link";
 
 type FontThumbnailProps = {
     resource: Resource;
@@ -43,8 +43,8 @@ export default function FontThumbnail({ resource, url }: FontThumbnailProps) {
                     <FormattedDate createdAt={resource.createdAt} />
                 </div>
             </div>
-            <a 
-                href={`/images/${resource.id}`}
+            <Link 
+                href={`/fonts/${resource.id}`}
                 className="cornerBorders p-xl !bg-surface"
             >
                 <p
@@ -53,7 +53,7 @@ export default function FontThumbnail({ resource, url }: FontThumbnailProps) {
                 >
                     The quick brown fox jumps over the lazy dog.
                 </p>
-            </a>
+            </Link>
         </div>
         
     )

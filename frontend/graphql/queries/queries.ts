@@ -77,6 +77,18 @@ export const GET_ONE_RESOURCE = gql`
                 url
                 fileType
                 fileRole
+				fontMetadata {
+						family
+						subfamily
+						weight
+						isVariable
+						isThumbnailFace
+						variableAxes {
+						tag
+						min
+						max
+					}
+				}
             }
         }
     }

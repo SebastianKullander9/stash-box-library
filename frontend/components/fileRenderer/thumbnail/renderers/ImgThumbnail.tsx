@@ -10,6 +10,18 @@ interface ImageThumbnailProps {
 
 export default function ImgThumbnail({ resource, url }: ImageThumbnailProps) {
     return (
+		<div className=" bg-red-500 ">
+			<div>
+				<p>test</p>
+			</div>
+			<div>
+
+			</div>
+		</div>
+    )
+}
+
+/*
         <a 
             className="flex flex-col p-2xl bg-surface border-1 border-border rounded-sm shadow-sm gap-xl hover:border-border-strong transition-border duration-150 cursor-pointer"
             href={`/images/${resource.id}`}
@@ -38,21 +50,5 @@ export default function ImgThumbnail({ resource, url }: ImageThumbnailProps) {
                 </div>
             </div>
         </a>
-    )
-}
 
-/* 
-    <div className="flex flex-row justify-between items-center">
-        <h1 className="text-white text-lg mb-0">{resource.title}</h1>
-        <OpenResourceButton category="images" resource={resource} />
-    </div>
-    <p className="text-white p-normal text-normal">{resource.description}</p>
-    <div className="relative rounded-sm overflow-hidden mb-4">
-        <Image src={url} alt="resource thumbnail image" width={800} height={0} />
-    </div>
-    <div className="flex flex-row gap-2">
-        {resource.tags.map((tag, index) => (
-            <p className="py-2 px-4 bg-white inline-block rounded-full" key={index}>{tag.name}</p>
-        ))}
-    </div>
 */

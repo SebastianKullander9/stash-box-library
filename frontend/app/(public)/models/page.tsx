@@ -9,7 +9,7 @@ export default async function Models() {
     console.log(resources)
 
     return (
-        <div className="main-x-padding">
+        <div className="w-screen section-x-padding grid grid-cols-12 gap-xl">
             <FileRendererThumbnail resources={resources.items} />
         </div>
     )

@@ -9,6 +9,17 @@ export const UPLOAD_FILES = gql`
 				url
 				fileType
 				fileRole
+				fontMetadata {
+					family
+					subfamily
+					weight
+					isVariable
+					variableAxes {
+						tag
+						min
+						max
+					}
+				}
 			}
 		}
 	}

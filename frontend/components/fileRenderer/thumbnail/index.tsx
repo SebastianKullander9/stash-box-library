@@ -9,7 +9,7 @@ export default function FileRendererThumbnail({ resources }: FileRendererThumbna
     return (
         <>
             {resources.map((resource) => (
-                <div key={resource.id} className="col-span-1">
+                <div key={resource.id} className="col-span-3">
                     <Renderer resource={resource} />
                 </div>
             ))}

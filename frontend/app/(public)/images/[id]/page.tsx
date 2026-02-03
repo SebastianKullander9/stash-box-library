@@ -3,7 +3,7 @@ import Img from "@/components/fileRenderer/full/renderers/Img";
 import GoBackButton from "@/components/ui/buttons/GoBackButton";
 
 export default async function ViewImage({ params }: { params: { id: string } }) {
-    const { id } = await params;
+    const { id } = params;
     const resource = await getOneResource(id);
 
     return (

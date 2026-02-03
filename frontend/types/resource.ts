@@ -1,7 +1,16 @@
+export type FontMetadata = {
+	family: string;
+	subfamily: string;
+	weight: number;
+	isThumbnailFace: boolean;
+	isVariable: boolean;
+}
+
 export type ResourceFile = {
     url: string;
     fileType: string;
     fileRole: string;
+	fontMetadata?: FontMetadata;
 }
 
 export type ResourceCategory = {

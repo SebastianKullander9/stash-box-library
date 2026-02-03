@@ -1,6 +1,6 @@
-import Image from "next/image";
-import OpenIcon from "../../../public/svgs/square-arrow-out-up-right.svg";
+import { MdViewInAr } from "react-icons/md";
 import { Resource } from "@/types";
+import Link from "next/link";
 
 type OpenResourceButtonProps = {
     category: string;
@@ -9,8 +9,11 @@ type OpenResourceButtonProps = {
 
 export default function OpenResourceButton({ category, resource }: OpenResourceButtonProps) {
     return (
-        <a href={`/${category}/${resource.id}`} className="p-2 rounded-full hover:bg-gray-600 transition-colors duration-200 cursor-pointer">
-            <Image width={20} height={20} src={OpenIcon} alt={`open ${resource.title}`} className="brightness-0 invert" />
-        </a>
+		<Link href={`/${category}/${resource.id}`}>
+			<button className="p-xs border border-text-secondary flex flex-row items-center gap-sm rounded-md cursor-pointer hover:bg-gray-800">
+				<p>View model</p>
+				<MdViewInAr size={26} color="#a3a3a3" />
+			</button>
+		</Link>
     )
 }
