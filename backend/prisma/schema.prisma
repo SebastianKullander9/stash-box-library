@@ -69,7 +69,7 @@ model FontMetadata {
   id           		String   	@id @default(cuid())
   file         		File?     	@relation(fields: [fileId], references: [id])
   fileId       		String      @unique
-  resource     		Resource 	@relation(fields: [resourceId], references: [id])
+  resource     		Resource 	@relation(fields: [resourceId], references: [id], onDelete: Cascade)
   resourceId   		String
   family       		String
   subfamily    		String

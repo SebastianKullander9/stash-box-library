@@ -13,6 +13,7 @@ import {
 import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
 import { FontService } from "./font-metadata.service";
+import opentype from "opentype.js";
 
 interface ResourceQueryOptions {
 	categoryId?: string;
@@ -71,11 +72,6 @@ export class ResourceService {
 				files: { include: { fontMetadata: true } },
 			},
 		});
-
-		console.log("=== RAW PRISMA DATA ===");
-		console.log(JSON.stringify(resource, null, 2));
-		console.log("=== FILE 0 METADATA ===");
-		console.log(resource?.files?.[0]?.fontMetadata);
 
 		if (!resource) return null;
 
@@ -167,7 +163,8 @@ export class ResourceService {
 			fileType: string;
 			fileRole: string;
 		}> = [];
-		const fontMetadataMap: Map<string, any> = new Map();
+		const fontMetadataMap: Map<string, { metadata: any; score: number }> =
+			new Map();
 
 		for (let i = 0; i < files.length; i++) {
 			const { filename, buffer, mimetype } = files[i];
@@ -180,9 +177,12 @@ export class ResourceService {
 					buffer.byteOffset,
 					buffer.byteOffset + buffer.byteLength,
 				) as ArrayBuffer;
-				const metadata = this.fontService.parseFont(arrayBuffer);
 
-				fontMetadataMap.set(key, metadata);
+				const font = opentype.parse(arrayBuffer);
+				const metadata = this.fontService.parseFont(font);
+				const score = this.fontService.scoreFontForThumbnail(font);
+
+				fontMetadataMap.set(key, { metadata, score });
 			}
 
 			uploadedFiles.push({
@@ -216,15 +216,24 @@ export class ResourceService {
 					},
 				});
 
-		for (const file of resource.files) {
-			const metadata = fontMetadataMap.get(file.url);
+		let thumbnailKey: string | null = null;
 
-			if (metadata) {
+		if (fontMetadataMap.size > 0) {
+			thumbnailKey = [...fontMetadataMap.entries()].reduce((best, current) =>
+				current[1].score < best[1].score ? current : best,
+			)[0];
+		}
+
+		for (const file of resource.files) {
+			const entry = fontMetadataMap.get(file.url);
+
+			if (entry) {
 				await this.prisma.fontMetadata.create({
 					data: {
 						fileId: file.id,
 						resourceId: resource.id,
-						...metadata,
+						...entry.metadata,
+						isThumbnailFace: file.url === thumbnailKey,
 					},
 				});
 			}
@@ -268,12 +277,6 @@ export class ResourceService {
 	}
 
 	private async attachPresignedUrls(resources: any[]): Promise<any[]> {
-		console.log("=== BEFORE attachPresignedUrls ===");
-		console.log(
-			"First file:",
-			JSON.stringify(resources[0]?.files?.[0], null, 2),
-		);
-
 		const result = await Promise.all(
 			resources.map(async (resource) => ({
 				...resource,
@@ -283,24 +286,12 @@ export class ResourceService {
 							...file,
 							url: await this.s3Service.getPresignedUrl(file.url, 7000),
 						};
-						console.log("File transformation:");
-						console.log("  Original has fontMetadata?", !!file.fontMetadata);
-						console.log(
-							"  Transformed has fontMetadata?",
-							!!transformed.fontMetadata,
-						);
-						console.log(
-							"  fontMetadata length:",
-							transformed.fontMetadata?.length,
-						);
+
 						return transformed;
 					}),
 				),
 			})),
 		);
-
-		console.log("=== AFTER attachPresignedUrls ===");
-		console.log("First file:", JSON.stringify(result[0]?.files?.[0], null, 2));
 
 		return result;
 	}
