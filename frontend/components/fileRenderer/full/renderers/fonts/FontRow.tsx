@@ -1,57 +1,38 @@
 "use client";
 
-import { Resource } from "@/types";
 import { ResourceFile } from "@/types";
-import { useEffect, useRef } from "react";
+import { useRef, memo } from "react";
+import useApplyFontFace from "@/components/hooks/useApplyFontface";
 
 interface FontRowProps {
-	resource: Resource;
 	file: ResourceFile;
+	previewText: string;
+	px: number;
 }
 
-export default function FontRow({ resource, file}: FontRowProps) {
-	const textRef = useRef<HTMLParagraphElement>(null);
+const FontRow = memo(function FontRow({ file, previewText, px }: FontRowProps) {
+	const ref = useRef<HTMLParagraphElement>(null);
+	useApplyFontFace({ ref, file });
 
-	useEffect(() => {
-		if (!file?.fontMetadata?.family) return;
-		const element = textRef.current;
-		if (!element) return;
-
-		const fontName = file.fontMetadata?.family;
-		const weight = file.fontMetadata?.weight || 400;
-		const style = file.fontMetadata?.subfamily?.toLowerCase().includes('italic') ? 'italic' : 'normal';
-
-		const fontFace = new FontFace(
-			fontName, 
-			`url(${file.url})`,
-			{
-				weight: weight.toString(),
-				style: style
-			}
-		);
-
-		fontFace.load().then((loadedFont) => {
-			document.fonts.add(loadedFont);
-			element.style.fontFamily = `"${fontName}", sans-serif`;
-			element.style.fontWeight = weight.toString();
-			element.style.fontStyle = style;
-		}).catch((err) => {
-			console.error("Error loading font: ", err);
-		});
-	}, [file, resource]);
-
-	const fontName = file.fontMetadata?.family || "Unknown";
 	const weight = file.fontMetadata?.weight || 400;
 	const subfamily = file.fontMetadata?.subfamily || "Regular";
 
 	return (
-		<div>
-			<p className="text-sm text-gray-600">
-				{fontName} - {subfamily} (Weight: {weight})
+		<div className="overflow-hidden container flex flex-col gap-xs">
+			<p className="text-sm text-text-secondary">
+				{subfamily} ({weight})
 			</p>
-			<p ref={textRef} className="heading-3">
-				The quick brown fox jumps over the lazy dog.
+			<p 
+				ref={ref}
+				style={{ fontSize: `${px}px` }}
+				className="whitespace-nowrap bg-surface px-xl rounded-xl relative"
+			>
+				{previewText || "The quick brown fox jumps over the lazy dog while the zebra grazes peacefully in the vast meadow under the bright afternoon sun, creating a perfect scene of natural harmony and beauty."}
+				<span className="bg-gradient-to-r from-transparent to-background pointer-events-none h-full w-15 absolute right-0" />
 			</p>
 		</div>
 	);
-};
+});
+
+FontRow.displayName = "FontRow";
+export default FontRow;

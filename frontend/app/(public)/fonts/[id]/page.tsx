@@ -6,10 +6,8 @@ export default async function ViewFont({ params }: { params: { id: string } }) {
 	const { id } = params;
 	const resource = await getOneResource(id);
 
-	console.log(resource);
-
 	return (
-		<section>
+		<section className="mx-auto container">
 			<FontRenderer resource={resource} />
 		</section>
 	);
