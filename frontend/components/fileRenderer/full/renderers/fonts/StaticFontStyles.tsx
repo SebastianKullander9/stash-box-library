@@ -19,23 +19,25 @@ export default function StaticFontStyles({ files }: StaticFontStylesProps) {
 
 	return (
 		<div className="flex flex-col gap-xl">
-			<div className="w-full flex items-center gap-lg">
+			<div className="w-full flex items-center gap-lg flex-col md:flex-row">
 				<FontInput 
 					state={previewText} 
 					setState={setPreviewText} 
 					className="bg-surface p-md px-xl rounded-full flex-1"
 				/>
-				<FontSizeSelect 
-					name="fontSize" 
-					options={fontSizes} 
-					state={px} 
-					setState={setPx} 
-				/>
-				<FontRangeInput 
-					options={fontSizes} 
-					state={px} 
-					setState={setPx} 
-				/>
+				<div className="flex flex-row gap-xl items-center">
+					<FontSizeSelect 
+						name="fontSize" 
+						options={fontSizes} 
+						state={px} 
+						setState={setPx} 
+					/>
+					<FontRangeInput 
+						options={fontSizes} 
+						state={px} 
+						setState={setPx} 
+					/>
+				</div>
 			</div>
 			<div className="flex flex-col gap-xl">
 				{files.map((file) => (

@@ -9,6 +9,12 @@
 	cursor: pointer;
 }
 
+@media (max-width: 767px) {
+	.range-slider {
+		min-width: 240px;
+	}
+}
+
 .range-slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;

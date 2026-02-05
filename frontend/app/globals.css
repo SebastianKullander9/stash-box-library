@@ -82,7 +82,7 @@
 	.body-small    { @apply text-sm leading-relaxed; }
 	.body-smallest { @apply text-xs leading-relaxed; }
 
-	.section-x-padding { @apply px-md sm:px-lg md:px-xl lg:px-2xl xl:px-2xl; }
+	.section-x-padding { @apply px-xs sm:px-sm md:px-md lg:px-lg xl:px-xl; }
 	.section-y-padding { @apply py-xl sm:py-2xl md:py-3xl lg:py-4xl xl:py-4xl; }
 
     .container { @apply max-w-[--container-xs] sm:max-w-[--container-sm] md:max-w-[--container-md] lg:max-w-[--container-lg] xl:max-w-[--container-xl] 2xl:max-w-[--container-2xl] mx-auto; }

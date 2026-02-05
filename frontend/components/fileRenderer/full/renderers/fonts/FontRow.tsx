@@ -18,7 +18,7 @@ const FontRow = memo(function FontRow({ file, previewText, px }: FontRowProps) {
 	const subfamily = file.fontMetadata?.subfamily || "Regular";
 
 	return (
-		<div className="overflow-hidden container flex flex-col gap-xs">
+		<div className="flex flex-col gap-xs max-w-[calc(100vw-(var(--spacing-xs)*2))] sm:container overflow-hidden">
 			<p className="text-sm text-text-secondary">
 				{subfamily} ({weight})
 			</p>

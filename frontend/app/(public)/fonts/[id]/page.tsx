@@ -7,7 +7,7 @@ export default async function ViewFont({ params }: { params: { id: string } }) {
 	const resource = await getOneResource(id);
 
 	return (
-		<section className="mx-auto container">
+		<section className="mx-auto w-full sm:container section-x-padding sm:px-0">
 			<FontRenderer resource={resource} />
 		</section>
 	);

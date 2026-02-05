@@ -36,7 +36,7 @@ export default function FontRenderer({ resource }: FontRendererProps) {
 				<FontDisplay resource={resource} />
 			</div>
 			<div className="flex flex-col gap-xl">
-				<h2 className="heading-3">
+				<h2 className="heading-3 text-center md:text-start">
 					Styles
 				</h2>
 				<StaticFontStyles files={files} />
