@@ -1,9 +1,16 @@
+export type VariableAxes = {
+	tag: string;
+	min: number;
+	max: number;
+}
+
 export type FontMetadata = {
 	family: string;
 	subfamily: string;
 	weight: number;
 	isThumbnailFace: boolean;
 	isVariable: boolean;
+	variableAxes: [VariableAxes, VariableAxes];
 }
 
 export type ResourceFile = {

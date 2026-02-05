@@ -4,6 +4,7 @@ import DownloadButton from "@/components/ui/buttons/DownloadButton";
 import Tags from "@/components/ui/tags/Tags";
 import FontDisplay from "./FontDisplay";
 import StaticFontStyles from "./StaticFontStyles";
+import VariableFontStyles from "./VariableFontStyles";
 
 interface FontRendererProps {
 	resource: Resource;
@@ -11,6 +12,8 @@ interface FontRendererProps {
 
 export default function FontRenderer({ resource }: FontRendererProps) {
 	const files: ResourceFile[] = resource.files;
+
+	const isVariable = files.some(file => file.fontMetadata?.isVariable);
 
 	return (
 		<section className="grid grid-span-12 gap-xl pb-24">
@@ -39,7 +42,12 @@ export default function FontRenderer({ resource }: FontRendererProps) {
 				<h2 className="heading-3 text-center md:text-start">
 					Styles
 				</h2>
-				<StaticFontStyles files={files} />
+				{isVariable ? (
+					<VariableFontStyles files={files} />
+				) : (
+					
+					<StaticFontStyles files={files} />
+				)}
 			</div>
 		</section>
 	);
