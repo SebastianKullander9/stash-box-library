@@ -2,53 +2,46 @@ import { Resource } from "@/types";
 import Image from "next/image";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 import Tags from "@/components/ui/tags/Tags";
+import Link from "next/link";
 
 interface ImageThumbnailProps {
     resource: Resource;
-    url: string
+    url: string,
 } 
 
 export default function ImgThumbnail({ resource, url }: ImageThumbnailProps) {
     return (
-		<div className=" bg-red-500 ">
-			<div>
-				<p>test</p>
+		<Link 
+			className="bg-surface rounded-lg p-lg w-full inline-block border-1 border-surface hover:border-text-tertiary min-h-90"
+			href={`/images/${resource.id}`}
+		>
+			<div className="flex flex-col gap-md">
+				<div className="flex flex-row items-center justify-between">
+					<div>
+						<p className="text-base">
+							{resource.title}
+						</p>
+					</div>
+					<div className="text-text-tertiary text-xs">
+						<FormattedDate createdAt={resource.createdAt} />
+					</div>
+				</div>
+				<p className="text-sm text-text-secondary line-clamp-1">
+					{resource.description}
+				</p>
+				<div className="relative w-full aspect-[4/3] overflow-hidden rounded-md">
+					<Image
+						src={url}
+						alt=""
+						fill
+						className="object-cover"
+						sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+					/>
+				</div>
+				<div className="flex flex-row gap-sm flex-wrap">
+					<Tags resource={resource}/>
+				</div>
 			</div>
-			<div>
-
-			</div>
-		</div>
+		</Link>
     )
 }
-
-/*
-        <a 
-            className="flex flex-col p-2xl bg-surface border-1 border-border rounded-sm shadow-sm gap-xl hover:border-border-strong transition-border duration-150 cursor-pointer"
-            href={`/images/${resource.id}`}
-        >
-            <div className="w-full h-55 overflow-hidden">
-                <Image src={url} alt="resource thumbnail image" width={800} height={0} className="object-cover"/>
-            </div>
-            <div className="flex flex-row gap-md">
-                <div className="w-full flex flex-col gap-lg">
-                    <div>
-                        <div className="flex flex-row justify-between items-center">
-                            <h3 className="body">
-                                {resource.title}
-                            </h3>
-                            <div className="body-smallest text-text-secondary">
-                                <FormattedDate createdAt={resource.createdAt} />
-                            </div>
-                        </div>
-                        <p className="body-small text-text-secondary">
-                            {resource.description}
-                        </p>
-                    </div>
-                    <div className="flex flex-row gap-sm">
-                        <Tags resource={resource} />
-                    </div>
-                </div>
-            </div>
-        </a>
-
-*/

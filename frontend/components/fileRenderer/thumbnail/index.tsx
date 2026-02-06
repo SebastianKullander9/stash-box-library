@@ -3,13 +3,14 @@ import Renderer from "./Renderer";
 
 type FileRendererThumbnailProps = {
     resources: Resource[];
+	colSpan?: string;
 }
 
-export default function FileRendererThumbnail({ resources }: FileRendererThumbnailProps) {
+export default function FileRendererThumbnail({ resources, colSpan }: FileRendererThumbnailProps) {
     return (
         <>
             {resources.map((resource) => (
-                <div key={resource.id} className="col-span-3">
+                <div key={resource.id} className={colSpan}>
                     <Renderer resource={resource} />
                 </div>
             ))}

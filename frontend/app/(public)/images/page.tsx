@@ -2,6 +2,8 @@ import { getResourceByCategory } from "@/actions/resource";
 import { getCategoryByName } from "@/actions/category";
 import FileRendererThumbnail from "@/components/fileRenderer/thumbnail";
 import Pagination from "@/components/ui/pagination/Pagination";
+import { getRendererType } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
+import { rendererConfig } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 
 export default async function Images({ searchParams }: { searchParams: { page?: string }}) {
     const itemsPerPage = 20;
@@ -10,22 +12,23 @@ export default async function Images({ searchParams }: { searchParams: { page?: 
 
     const category = await getCategoryByName("Images");
     const resources = await getResourceByCategory(category.id , itemsPerPage, currentOffset);
-
-	console.log(resources)
+	
+	const rendererType = getRendererType(resources.items[0]);
+	const layout = rendererConfig[rendererType];
 
     return (
-        <section className="main-x-padding container">
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2xl">
-                <FileRendererThumbnail resources={resources.items} />
-            </div>
+        <section className={`main-x-padding container grid ${layout.grid} section-x-padding sm:px-0`}>
+            <FileRendererThumbnail resources={resources.items} colSpan={layout.thumbnail} />
             <nav>
-                <Pagination 
-                    currentPage={currentPage}
-                    totalCount={resources.totalCount} 
-                    itemsPerPage={itemsPerPage}
-                    pathname="/images"
-                />
+
             </nav>
         </section>
     )
 }
+
+/*<Pagination 
+	currentPage={currentPage}
+	totalCount={resources.totalCount} 
+	itemsPerPage={itemsPerPage}
+	pathname="/images"
+/>*/

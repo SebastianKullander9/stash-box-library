@@ -14,7 +14,7 @@ export default async function Fonts({ searchParams }: { searchParams: { page?: s
     return (
         <section className="main-x-padding container">
             <div className="flex flex-col gap-4xl">
-                <FileRendererThumbnail  resources={resources.items} />
+                <FileRendererThumbnail resources={resources.items} />
             </div>
             <nav>
                 <Pagination 
