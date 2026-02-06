@@ -15,7 +15,7 @@ export type RendererType =
 export const rendererConfig: Record<RendererType, RendererLayoutConfig> = {
 	image: {
 		grid: "grid-cols-12 gap-xl",
-		item: "col-span-6",
+		item: "col-span-12",
 		thumbnail: "col-span-12 sm:col-span-6 xl:col-span-4",
 	},
 	font: {
