@@ -51,11 +51,17 @@ type FontMetadataType {
   isThumbnailFace: Boolean!
 }
 
+type ImageMetadataType {
+  width: Int!
+  height: Int!
+}
+
 type FileType {
   url: String!
   fileType: String!
   fileRole: String!
   fontMetadata: FontMetadataType
+  imageMetadata: ImageMetadataType
 }
 
 type ResourceType {

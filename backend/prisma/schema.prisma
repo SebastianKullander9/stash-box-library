@@ -14,29 +14,31 @@ datasource db {
 }
 
 model Resource {
-  id           String         @id @default(cuid())
-  title        String
-  description  String?
-  textContent  String?
-  category     Category?      @relation(fields: [categoryId], references: [id])
-  categoryId   String?
-  tags         Tag[]          @relation("ResourceTags")
-  user         User?          @relation(fields: [userId], references: [id])
-  userId       String?
-  files        File[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  FontMetadata FontMetadata[]
+  id               String         @id @default(cuid())
+  title            String
+  description      String?
+  textContent      String?
+  category         Category?      @relation(fields: [categoryId], references: [id])
+  categoryId       String?
+  tags             Tag[]          @relation("ResourceTags")
+  user             User?          @relation(fields: [userId], references: [id])
+  userId           String?
+  files            File[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  FontMetadata     FontMetadata[]
+  ImageMetadata    ImageMetadata[]
 }
 
 model File {
-  id           String         @id @default(cuid())
-  url          String
-  fileType     String
-  fileRole     String
-  resource     Resource       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  resourceId   String
-  fontMetadata FontMetadata?
+  id           	  String         @id @default(cuid())
+  url          	  String
+  fileType     	  String
+  fileRole     	  String
+  resource     	  Resource       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  resourceId   	  String
+  fontMetadata 	  FontMetadata?
+  imageMetadata   ImageMetadata?
 }
 
 model Category {
@@ -78,4 +80,16 @@ model FontMetadata {
   variableAxes 		Json?
   isThumbnailFace 	Boolean 	@default(false)
   createdAt    		DateTime 	@default(now())
+}
+
+model ImageMetadata {
+  id         String   @id @default(cuid())
+  file       File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId     String   @unique
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  resourceId String
+  width      Int
+  height     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

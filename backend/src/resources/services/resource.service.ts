@@ -13,6 +13,7 @@ import {
 import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
 import { FontService } from "./font-metadata.service";
+import { ImageService } from "./image-metadata.service";
 import opentype from "opentype.js";
 
 interface ResourceQueryOptions {
@@ -28,6 +29,7 @@ export class ResourceService {
 		private readonly prisma: PrismaService,
 		private readonly s3Service: S3Service,
 		private readonly fontService: FontService,
+		private readonly imageService: ImageService,
 	) {}
 
 	async findMany(options: ResourceQueryOptions): Promise<ResourcePage> {
@@ -45,7 +47,7 @@ export class ResourceService {
 					category: true,
 					tags: true,
 					user: true,
-					files: { include: { fontMetadata: true } },
+					files: { include: { fontMetadata: true, imageMetadata: true } },
 				},
 				take: limit,
 				skip: offset,
@@ -69,7 +71,7 @@ export class ResourceService {
 				category: true,
 				tags: true,
 				user: true,
-				files: { include: { fontMetadata: true } },
+				files: { include: { fontMetadata: true, imageMetadata: true } },
 			},
 		});
 
@@ -165,6 +167,8 @@ export class ResourceService {
 		}> = [];
 		const fontMetadataMap: Map<string, { metadata: any; score: number }> =
 			new Map();
+		const imageMetadataMap: Map<string, { width: number; height: number }> =
+			new Map();
 
 		for (let i = 0; i < files.length; i++) {
 			const { filename, buffer, mimetype } = files[i];
@@ -185,6 +189,11 @@ export class ResourceService {
 				fontMetadataMap.set(key, { metadata, score });
 			}
 
+			if (mimeType.startsWith("image/")) {
+				const dimensions = await this.imageService.parseImage({ buffer });
+				imageMetadataMap.set(key, dimensions);
+			}
+
 			uploadedFiles.push({
 				url: key,
 				fileType: mimeType,
@@ -197,7 +206,7 @@ export class ResourceService {
 					where: { id: resourceId },
 					data: { files: { create: uploadedFiles } },
 					include: {
-						files: { include: { fontMetadata: true } },
+						files: { include: { fontMetadata: true, imageMetadata: true } },
 						category: true,
 						tags: true,
 						user: true,
@@ -209,7 +218,7 @@ export class ResourceService {
 						files: { create: uploadedFiles },
 					},
 					include: {
-						files: { include: { fontMetadata: true } },
+						files: { include: { fontMetadata: true, imageMetadata: true } },
 						category: true,
 						tags: true,
 						user: true,
@@ -225,15 +234,27 @@ export class ResourceService {
 		}
 
 		for (const file of resource.files) {
-			const entry = fontMetadataMap.get(file.url);
+			const fontEntry = fontMetadataMap.get(file.url);
+			const imageEntry = imageMetadataMap.get(file.url);
 
-			if (entry) {
+			if (fontEntry) {
 				await this.prisma.fontMetadata.create({
 					data: {
 						fileId: file.id,
 						resourceId: resource.id,
-						...entry.metadata,
+						...fontEntry.metadata,
 						isThumbnailFace: file.url === thumbnailKey,
+					},
+				});
+			}
+
+			if (imageEntry) {
+				await this.prisma.imageMetadata.create({
+					data: {
+						fileId: file.id,
+						resourceId: resource.id,
+						width: imageEntry.width,
+						height: imageEntry.height,
 					},
 				});
 			}
