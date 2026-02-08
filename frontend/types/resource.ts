@@ -13,11 +13,17 @@ export type FontMetadata = {
 	variableAxes: [VariableAxes, VariableAxes];
 }
 
+export type ImageMetadata = {
+	width: number;
+	height: number;
+}
+
 export type ResourceFile = {
     url: string;
     fileType: string;
     fileRole: string;
 	fontMetadata?: FontMetadata;
+	imageMetadata?: ImageMetadata;
 }
 
 export type ResourceCategory = {

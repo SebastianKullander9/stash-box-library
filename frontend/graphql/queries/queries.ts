@@ -78,16 +78,20 @@ export const GET_ONE_RESOURCE = gql`
                 fileType
                 fileRole
 				fontMetadata {
-						family
-						subfamily
-						weight
-						isVariable
-						isThumbnailFace
-						variableAxes {
+					family
+					subfamily
+					weight
+					isVariable
+					isThumbnailFace
+					variableAxes {
 						tag
 						min
 						max
 					}
+				}
+				imageMetadata {
+					width
+					height
 				}
             }
         }
