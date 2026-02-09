@@ -1,10 +1,10 @@
 import { ObjectType, Field, Int } from "@nestjs/graphql";
-import { ResourceType } from "./resource.type";
+import { ColorPalette } from "./color-palette.type";
 
 @ObjectType()
-export class ResourcePage {
-	@Field(() => [ResourceType])
-	items: ResourceType[];
+export class ColorPalettePage {
+	@Field(() => [ColorPalette])
+	items: ColorPalette[];
 
 	@Field(() => Int)
 	totalCount: number;

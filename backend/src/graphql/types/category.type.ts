@@ -13,5 +13,5 @@ export class CategoryType {
 	resources?: ResourceType[] | null;
 
 	@Field()
-  	createdAt: Date;
+	createdAt: Date;
 }

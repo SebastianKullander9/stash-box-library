@@ -83,6 +83,27 @@ type ResourcePage {
   nextOffset: Int!
 }
 
+type ColorToken {
+  value: String!
+  role: String
+  order: Int
+}
+
+type ColorPalette {
+  id: ID!
+  name: String!
+  code: String!
+  tokens: [ColorToken!]
+  tags: [TagType!]
+  createdAt: DateTime!
+}
+
+type ColorPalettePage {
+  items: [ColorPalette!]!
+  totalCount: Int!
+  nextOffset: Int!
+}
+
 type Query {
   resources(categoryId: String, tagIds: [String!], limit: Int, offset: Int): ResourcePage!
   resource(id: String!): ResourceType
@@ -93,6 +114,8 @@ type Query {
   popularTags(limit: Int): [TagWithCountType!]!
   categories(orderBy: String): [CategoryType!]!
   category(id: String, name: String): CategoryType
+  colorPalettes(tagIds: [String!], limit: Int, offset: Int): ColorPalettePage!
+  colorPalette(id: String!): ColorPalette
 }
 
 type Mutation {
@@ -110,6 +133,9 @@ type Mutation {
   updateCategory(input: UpdateCategoryInput!): CategoryType!
   deleteCategory(id: String!): CategoryType!
   login(email: String!, password: String!): String!
+  createColorPalette(input: CreateColorPaletteInput!): ColorPalette!
+  updateColorPalette(id: String!, input: UpdateColorPaletteInput!): ColorPalette!
+  deleteColorPalette(id: String!): ColorPalette!
 }
 
 input CreateResourceInput {
@@ -173,4 +199,28 @@ input CreateCategoryInput {
 input UpdateCategoryInput {
   id: ID!
   name: String
+}
+
+input CreateColorPaletteInput {
+  name: String!
+  code: String
+  tokens: [ColorTokenEntryInput!]!
+  tagIds: [String!]
+}
+
+input ColorTokenEntryInput {
+  key: String!
+  token: ColorTokenInput!
+}
+
+input ColorTokenInput {
+  value: String!
+  role: String
+}
+
+input UpdateColorPaletteInput {
+  name: String
+  code: String
+  tokens: [ColorTokenEntryInput!]
+  tagIds: [String!]
 }

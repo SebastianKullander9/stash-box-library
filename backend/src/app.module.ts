@@ -10,6 +10,7 @@ import { UserModule } from "./resources/user.module";
 import { TagModule } from "./resources/tag.module";
 import { CategoryModule } from "./resources/category.module";
 import { AuthModule } from "./auth/auth.module";
+import { ColorPaletteModule } from "./resources/color-palette.module";
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from "./auth/auth.module";
 		TagModule,
 		CategoryModule,
 		AuthModule,
+		ColorPaletteModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
