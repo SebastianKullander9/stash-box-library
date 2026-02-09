@@ -1,4 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
+import { UseGuards } from "@nestjs/common";
+import { Roles } from "src/auth/roles.decorator";
 import { ColorPaletteService } from "../services/color-palette.service";
 import { ColorPalette } from "src/graphql/types/color-palette.type";
 import { ColorPalettePage } from "src/graphql/types/color-palette-page.type";
@@ -6,6 +8,8 @@ import {
 	CreateColorPaletteInput,
 	UpdateColorPaletteInput,
 } from "src/graphql/inputs/color-palette.input";
+import { GqlAuthGuard } from "src/auth/guards/graphql-auth";
+import { RolesGuard } from "src/auth/guards/roles.guard";
 
 @Resolver(() => ColorPalette)
 export class ColorPaletteResolver {
@@ -26,6 +30,8 @@ export class ColorPaletteResolver {
 	}
 
 	@Mutation(() => ColorPalette)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async createColorPalette(
 		@Args("input") input: CreateColorPaletteInput,
 	): Promise<ColorPalette> {
@@ -33,6 +39,8 @@ export class ColorPaletteResolver {
 	}
 
 	@Mutation(() => ColorPalette)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async updateColorPalette(
 		@Args("id") id: string,
 		@Args("input") input: UpdateColorPaletteInput,
@@ -41,6 +49,8 @@ export class ColorPaletteResolver {
 	}
 
 	@Mutation(() => ColorPalette)
+	@UseGuards(GqlAuthGuard, RolesGuard)
+	@Roles("ADMIN")
 	async deleteColorPalette(@Args("id") id: string): Promise<ColorPalette> {
 		return this.colorPaletteService.delete(id);
 	}

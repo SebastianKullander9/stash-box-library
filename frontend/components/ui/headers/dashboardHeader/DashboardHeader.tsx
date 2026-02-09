@@ -44,6 +44,9 @@ export default function DashboardHeader({ children }: DashboardHeaderProps) {
 					<Link href="/admin/add-resource">
 						<BaseButton label="Add resource" />
 					</Link>
+					<Link href="/admin/add-color-palette">
+						<BaseButton label="Add palette" />
+					</Link>
                 </div>
             </header>
 
