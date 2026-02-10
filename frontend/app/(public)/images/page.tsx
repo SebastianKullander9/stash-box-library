@@ -1,6 +1,6 @@
 import { getResourceByCategory } from "@/actions/resource";
 import { getCategoryByName } from "@/actions/category";
-import FileRendererThumbnail from "@/components/fileRenderer/thumbnail";
+import Renderer from "@/components/fileRenderer/thumbnail";
 import Pagination from "@/components/ui/pagination/Pagination";
 import { getRendererType } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 import { rendererConfig } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
@@ -18,7 +18,7 @@ export default async function Images({ searchParams }: { searchParams: { page?: 
 
     return (
         <section className={`main-x-padding container grid ${layout.grid} section-x-padding sm:px-0`}>
-            <FileRendererThumbnail resources={resources.items} colSpan={layout.thumbnail} />
+            <Renderer resources={resources.items} colSpan={layout.thumbnail} />
             <nav>
 
             </nav>

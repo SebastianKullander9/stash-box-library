@@ -122,4 +122,40 @@ export const GET_CATEGORY_BY_NAME = gql`
             id
         }
     }
-`
+`;
+
+export const GET_COLOR_PALETTES = gql`
+	query GetColorPalettes($limit: Int, $offset: Int) {
+		colorPalettes(limit: $limit, offset: $offset) {
+			items {
+				id
+				name
+				code
+				createdAt
+				tokens {
+					value
+					role
+					order
+				}
+			}
+			totalCount
+			nextOffset
+		}
+	}
+`;
+
+export const GET_ONE_COLOR_PALETTE = gql`
+	query GetOneColorPalette($id: String!) {
+		colorPalette(id: $id) {
+			id
+			name
+			code
+			createdAt
+			tokens {
+				value
+				role
+				order
+			}
+		}
+	}
+`;

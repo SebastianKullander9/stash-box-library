@@ -3,7 +3,7 @@
 import BaseButton from "../ui/buttons/BaseButton";
 import Input from "../ui/inputs/Input";
 import TokenInputs from "../ui/inputs/TokenInputs";
-import { createColorPalette } from "@/actions/asset";
+import { createColorPalette } from "@/actions/colorPalette";
 
 export default async function AddColorPaletteForm() {
 	return (
