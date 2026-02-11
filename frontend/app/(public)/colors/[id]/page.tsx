@@ -1,13 +1,8 @@
-import { getOneColorPalette } from "@/actions/colorPalette";
+import ColorPaletteRendererHome from "@/components/fileRenderer/full/renderers/ColorPaletteRenderer/ColorPaletteRendererHome";
+import { ColorPalette } from "@/types/colorPalette";
 
-export default async function ViewColor({ params }: { params: { id: string } }) {
-	const colorPalette = await getOneColorPalette(params.id);
-
-	console.log(colorPalette);
-
+export default async function ViewColorHome({ colorPalette }: { colorPalette: ColorPalette }) {
 	return (
-		<div>
-			<p>color palette</p>
-		</div>
+		<ColorPaletteRendererHome colorPalette={colorPalette} />
 	);
 };
