@@ -1,6 +1,6 @@
 import { ColorPalette } from "@/types/colorPalette";
 import FormattedDate from "@/components/ui/date/FormattedDate";
-import { getColorHeightWeight } from "@/lib/colorPaletteDisplay";
+import { getColorHeightWeightThumbnail } from "@/lib/colorPalette/colorPaletteDisplay";
 import Link from "next/link";
 
 interface ColorPaletteThumbnail {
@@ -9,7 +9,7 @@ interface ColorPaletteThumbnail {
 
 export default function ColorPaletteThumbnail({ colorPalette }: ColorPaletteThumbnail) {
 	const totalWeight = colorPalette.tokens.reduce((sum, token) => 
-		sum + getColorHeightWeight(token.role), 0
+		sum + getColorHeightWeightThumbnail(token.role), 0
 	);
 
 	const sortedTokens = [...colorPalette.tokens].sort(
@@ -30,11 +30,9 @@ export default function ColorPaletteThumbnail({ colorPalette }: ColorPaletteThum
 				</div>
 				<p className="">{colorPalette.code}</p>
 			</div>
-			
-
 			<div className="flex-1 flex-col">
 				{sortedTokens.map((token, index) => {
-					const weight = getColorHeightWeight(token.role);
+					const weight = getColorHeightWeightThumbnail(token.role);
 					const heightPercentage = (weight / totalWeight) * 100;
 
 					return (
