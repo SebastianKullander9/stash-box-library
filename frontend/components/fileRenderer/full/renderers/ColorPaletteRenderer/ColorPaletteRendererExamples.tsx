@@ -31,7 +31,9 @@ export default function ColorPaletteRendererExamples({ colorPalette }: ColorPale
 	return (
 		<div className="col-span-12 min-h-screen bg-surface p-md rounded-lg">
 			<div className="grid grid-cols-12">
-				{availableContexts[4].render(paletteMap)}
+				{availableContexts.map((context) => (
+					context.render(paletteMap, context.id)
+				))}
 			</div>
 		</div>
 	);
