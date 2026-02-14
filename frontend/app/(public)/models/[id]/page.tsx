@@ -1,17 +1,17 @@
 import { getOneResource } from "@/actions/resource";
-import Model from "@/components/fileRenderer/full/renderers/Model";
-import GoBackButton from "@/components/ui/buttons/GoBackButton";
+import ModelRenderer from "@/components/fileRenderer/full/renderers/ModelRenderer";
+import { getRendererType, rendererConfig } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 
 export default async function ViewModel({ params }: { params: { id: string } }) {
     const { id } = await params;
     const resource = await getOneResource(id);
 
+	const rendererType = getRendererType(resource);
+	const layout = rendererConfig[rendererType];
+
     return (
-        <div className="main-x-padding">
-            <div className="inline-block">
-                <GoBackButton label="Go back" href="/models" />
-            </div>
-            <Model resource={resource} />
+        <div className={`grid ${layout.grid} container`}>
+            <ModelRenderer resource={resource} colSpan={layout.item} />
         </div>
     )
 }

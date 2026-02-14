@@ -1,7 +1,10 @@
+import Hero from "@/components/hero/Hero";
+
 export default function Home() {
     return (
-        <div>
-			<h1>Hello Home</h1>
-        </div>
+		<section className="container grid grid-cols-12">
+			<Hero />
+		</section>
+        
     );
 }

@@ -1,4 +1,4 @@
-import OpenResourceButton from "@/components/ui/buttons/OpenResourceButton";
+import Link from "next/link";
 import { Resource } from "@/types";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 
@@ -8,27 +8,25 @@ type ModelRendererProps = {
 } 
 
 export default function ModelThumbnail({ resource, url }: ModelRendererProps) {
-	console.log("test")
-
     return (
-        <div className="bg-surface p-md rounded-md w-full flex flex-col gap-xl ">
-			<div className="flex flex-col gap-md">
-				<div className="flex flex-row justify-between items-center">
-					<h6>
-						{resource.title}
-					</h6>
-					<div className="text-xs text-text-secondary">
-						<FormattedDate createdAt={resource.createdAt} />
-					</div>
+        <Link 
+			className="w-full bg-surface rounded-lg p-md flex flex-col gap-md border-1 border-surface hover:border-border-strong"
+			href={`/models/${resource.id}`}
+		>
+			<div className="flex flex-row justify-between">
+				<h2 className="heading-6">
+					{resource.title}
+				</h2>
+				<div className="text-text-tertiary text-xs">
+					<FormattedDate createdAt={resource.createdAt} />
 				</div>
-
-				
-				<p className="text-text-secondary">
-					{resource.description}
-				</p>
 			</div>
-
-			<OpenResourceButton category="models" resource={resource}/>
-        </div>
-    )
+			<p className="text-text-secondary">
+				{resource.description}
+			</p>
+			<div className="h-60 bg-border rounded-lg flex justify-center items-center">
+				<p>PLACEHOLDER</p>
+			</div>
+        </Link>
+    );
 }

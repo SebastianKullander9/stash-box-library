@@ -25,7 +25,7 @@ export const rendererConfig: Record<RendererType, RendererLayoutConfig> = {
 	},
 	model: {
 		grid: "grid-cols-12",
-		item: "col-span-3",
+		item: "col-span-12",
 		thumbnail: "col-span-3",
 	},
 	default: {
