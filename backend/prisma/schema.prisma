@@ -54,6 +54,7 @@ model Tag {
   name          String         @unique
   resources     Resource[]     @relation("ResourceTags")
   colorPalettes ColorPalette[] @relation("ColorPaletteTags")
+  codeTags      Code[]         @relation("CodeTags")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -112,4 +113,34 @@ model ColorToken {
   order     Int?
   palette   ColorPalette @relation(fields: [paletteId], references: [id], onDelete: Cascade)
   paletteId String
+}
+
+model Code {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  codeFiles   CodeFile[] @relation("CodeFiles")
+  tags        Tag[]      @relation("CodeTags")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model CodeFile {
+  id           String        @id @default(cuid())
+  title        String
+  content      String        @db.Text
+  language     String
+  code         Code          @relation("CodeFiles", fields: [codeId], references: [id], onDelete: Cascade)
+  codeId       String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  codeVersions CodeVersion[]
+}
+
+model CodeVersion {
+  id         String   @id @default(cuid())
+  code       CodeFile @relation(fields: [codeFileId], references: [id], onDelete: Cascade)
+  codeFileId String
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
 }

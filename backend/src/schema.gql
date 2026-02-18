@@ -104,6 +104,38 @@ type ColorPalettePage {
   nextOffset: Int!
 }
 
+type CodeVersion {
+  id: ID!
+  content: String!
+  createdAt: DateTime!
+}
+
+type CodeFile {
+  id: ID!
+  title: String!
+  language: String!
+  content: String!
+  codeVersions: [CodeVersion!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Code {
+  id: ID!
+  title: String!
+  description: String
+  codeFiles: [CodeFile!]!
+  tags: [TagType!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type CodePage {
+  items: [Code!]!
+  totalCount: Int!
+  nextOffset: Int!
+}
+
 type Query {
   resources(categoryId: String, tagIds: [String!], limit: Int, offset: Int): ResourcePage!
   resource(id: String!): ResourceType
@@ -116,6 +148,8 @@ type Query {
   category(id: String, name: String): CategoryType
   colorPalettes(tagIds: [String!], limit: Int, offset: Int): ColorPalettePage!
   colorPalette(id: String!): ColorPalette
+  codes(tagIds: [String!], limit: Int, offset: Int): CodePage!
+  code(id: ID!): Code
 }
 
 type Mutation {
@@ -136,6 +170,9 @@ type Mutation {
   createColorPalette(input: CreateColorPaletteInput!): ColorPalette!
   updateColorPalette(id: String!, input: UpdateColorPaletteInput!): ColorPalette!
   deleteColorPalette(id: String!): ColorPalette!
+  createCode(input: CreateCodeInput!): Code!
+  updateCode(id: ID!, input: UpdateCodeInput!): Code!
+  deleteCode(id: ID!): Code!
 }
 
 input CreateResourceInput {
@@ -223,4 +260,31 @@ input UpdateColorPaletteInput {
   code: String
   tokens: [ColorTokenEntryInput!]
   tagIds: [String!]
+}
+
+input CreateCodeInput {
+  title: String!
+  description: String
+  codeFiles: [CreateCodeFileInput!]!
+  tagIds: [String!]
+}
+
+input CreateCodeFileInput {
+  title: String!
+  language: String!
+  content: String!
+}
+
+input UpdateCodeInput {
+  title: String
+  description: String
+  codeFiles: [UpdateCodeFileInput!]
+  tagIds: [String!]
+}
+
+input UpdateCodeFileInput {
+  id: String
+  title: String
+  language: String
+  content: String
 }

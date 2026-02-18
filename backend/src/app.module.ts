@@ -11,6 +11,7 @@ import { TagModule } from "./resources/tag.module";
 import { CategoryModule } from "./resources/category.module";
 import { AuthModule } from "./auth/auth.module";
 import { ColorPaletteModule } from "./resources/color-palette.module";
+import { CodeModule } from "./resources/code.module";
 
 @Module({
 	imports: [
@@ -27,6 +28,7 @@ import { ColorPaletteModule } from "./resources/color-palette.module";
 		CategoryModule,
 		AuthModule,
 		ColorPaletteModule,
+		CodeModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
