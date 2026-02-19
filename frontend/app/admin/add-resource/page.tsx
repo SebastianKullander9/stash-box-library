@@ -1,5 +1,5 @@
 import AddResourceForm from "@/components/forms/AddResourceForm";
-import CardWrapper from "@/components/ui/dashboard/cardWrapper/CardWrapper";
+import CardWrapper from "@/components/ui/admin/dashboard/cardWrapper/CardWrapper";
 
 export default function AddResource() {
 	return (

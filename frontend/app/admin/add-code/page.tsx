@@ -1,5 +1,5 @@
 import AddCodeForm from "@/components/forms/AddCodeForm";
-import CardWrapper from "@/components/ui/dashboard/cardWrapper/CardWrapper";
+import CardWrapper from "@/components/ui/admin/dashboard/cardWrapper/CardWrapper";
 
 export default function AddCode() {
 	return (

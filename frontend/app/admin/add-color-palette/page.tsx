@@ -1,5 +1,5 @@
 import AddColorPaletteForm from "@/components/forms/AddColorPaletteForm";
-import CardWrapper from "@/components/ui/dashboard/cardWrapper/CardWrapper";
+import CardWrapper from "@/components/ui/admin/dashboard/cardWrapper/CardWrapper";
 
 export default function AddColorPalette() {
 	return (

@@ -12,7 +12,7 @@ interface HeaderClientProps {
     categories: Category[];
 }
 
-export default function HeaderClient({ categories }: HeaderClientProps) {
+export default function Header({ categories }: HeaderClientProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [headerHeight, setHeaderHeight] = useState(64);
     const [scrollY, setScrollY] = useState(0);

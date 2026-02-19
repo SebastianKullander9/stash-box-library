@@ -6,7 +6,7 @@ import { ClientError } from "graphql-request";
 import { GET_TAGS, GET_POPULAR_TAGS } from "@/graphql/queries/queries";
 import { UPDATE_TAG, CREATE_TAG, DELETE_TAG } from "@/graphql/mutations/tagMutations";
 import { revalidatePath } from "next/cache";
-import { PopularTag } from "@/components/ui/dashboard/cards/popularTagsCard/PopularTagsCard";
+import { PopularTag } from "@/components/ui/admin/dashboard/cards/popularTagsCard/PopularTagsCard";
 
 export type Tag = {
     id: string;

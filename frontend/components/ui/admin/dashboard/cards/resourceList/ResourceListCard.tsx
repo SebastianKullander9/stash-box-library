@@ -1,4 +1,4 @@
-import CardWrapper from "@/components/ui/dashboard/cardWrapper/CardWrapper";
+import CardWrapper from "@/components/ui/admin/dashboard/cardWrapper/CardWrapper";
 import { ResourcePage } from "@/types";
 import ResourceRow from "./ResourceRow";
 
