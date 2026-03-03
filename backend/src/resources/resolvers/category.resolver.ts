@@ -22,6 +22,11 @@ export class CategoryResolver {
 		return this.categoryService.findAll(orderBy);
 	}
 
+	@Query(() => [CategoryType])
+	async categoriesWithCount(): Promise<CategoryType[]> {
+		return this.categoryService.findAllWithCount();
+	}
+
 	@Query(() => CategoryType, { nullable: true })
 	async category(
 		@Args("id", { nullable: true }) id?: string,

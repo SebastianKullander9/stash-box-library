@@ -26,6 +26,9 @@ export class CreateColorPaletteInput {
 	@Field({ nullable: true })
 	code?: string;
 
+	@Field({ nullable: true })
+	categoryName?: string;
+
 	@Field(() => [ColorTokenEntryInput])
 	tokens: ColorTokenEntryInput[];
 

@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "@nestjs/graphql";
+import { ObjectType, Field, ID, Int } from "@nestjs/graphql";
 import { ResourceType } from "./resource.type";
 
 @ObjectType()
@@ -11,6 +11,9 @@ export class CategoryType {
 
 	@Field(() => [ResourceType], { nullable: "itemsAndList" })
 	resources?: ResourceType[] | null;
+
+	@Field(() => Int, { nullable: true })
+	resourceCount?: number;
 
 	@Field()
 	createdAt: Date;

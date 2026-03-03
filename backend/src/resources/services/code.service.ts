@@ -31,10 +31,16 @@ export class CodeService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async create(input: CreateCodeInput): Promise<Code> {
+		const categoryId = await this.resolveCategoryId(
+			undefined,
+			input.categoryName,
+		);
+
 		const code = await this.prisma.code.create({
 			data: {
 				title: input.title,
 				description: input.description ?? null,
+				category: categoryId ? { connect: { id: categoryId } } : undefined,
 				codeFiles: {
 					create: input.codeFiles.map((file) => ({
 						title: file.title,
@@ -174,5 +180,24 @@ export class CodeService {
 			createdAt: code.createdAt,
 			updatedAt: code.updatedAt,
 		};
+	}
+
+	private async resolveCategoryId(
+		categoryId?: string,
+		categoryName?: string,
+	): Promise<string | undefined> {
+		if (categoryId) return categoryId;
+		if (!categoryName) return undefined;
+
+		const existing = await this.prisma.category.findUnique({
+			where: { name: categoryName },
+		});
+
+		if (existing) return existing.id;
+
+		const newCategory = await this.prisma.category.create({
+			data: { name: categoryName },
+		});
+		return newCategory.id;
 	}
 }

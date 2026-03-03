@@ -20,6 +20,9 @@ export class CreateCodeInput {
 	@Field({ nullable: true })
 	description?: string;
 
+	@Field({ nullable: true })
+	categoryName?: string;
+
 	@Field(() => [CreateCodeFileInput])
 	codeFiles: CreateCodeFileInput[];
 

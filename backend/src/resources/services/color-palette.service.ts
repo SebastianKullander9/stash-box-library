@@ -42,11 +42,16 @@ export class ColorPaletteService {
 		this.tokenValidator.validate(tokensObject);
 
 		const code = input.code ?? this.generateCode(tokensObject);
+		const categoryId = await this.resolveCategoryId(
+			undefined,
+			input.categoryName,
+		);
 
 		const palette = await this.prisma.colorPalette.create({
 			data: {
 				name: input.name,
 				code,
+				category: categoryId ? { connect: { id: categoryId } } : undefined,
 				tokens: {
 					create: input.tokens.map((entry) => ({
 						value: entry.token.value ?? "",
@@ -225,5 +230,24 @@ export class ColorPaletteService {
 		const count = Object.keys(tokens).length;
 
 		return `${firstLetters}-C${count}`;
+	}
+
+	private async resolveCategoryId(
+		categoryId?: string,
+		categoryName?: string,
+	): Promise<string | undefined> {
+		if (categoryId) return categoryId;
+		if (!categoryName) return undefined;
+
+		const existing = await this.prisma.category.findUnique({
+			where: { name: categoryName },
+		});
+
+		if (existing) return existing.id;
+
+		const newCategory = await this.prisma.category.create({
+			data: { name: categoryName },
+		});
+		return newCategory.id;
 	}
 }

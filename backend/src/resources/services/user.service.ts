@@ -7,7 +7,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
 	CreateUserInput,
 	UpdateUserInput,
-} from "../../graphql/inputs/user.input";
+} from "../../graphql/types/user.input";
 import { UserType } from "../../graphql/types/user.type";
 import * as bcrypt from "bcrypt";
 

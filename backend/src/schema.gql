@@ -6,6 +6,7 @@ type CategoryType {
   id: ID!
   name: String!
   resources: [ResourceType]
+  resourceCount: Int
   createdAt: DateTime!
 }
 
@@ -145,6 +146,7 @@ type Query {
   tag(id: String!): TagType
   popularTags(limit: Int): [TagWithCountType!]!
   categories(orderBy: String): [CategoryType!]!
+  categoriesWithCount: [CategoryType!]!
   category(id: String, name: String): CategoryType
   colorPalettes(tagIds: [String!], limit: Int, offset: Int): ColorPalettePage!
   colorPalette(id: String!): ColorPalette
@@ -241,6 +243,7 @@ input UpdateCategoryInput {
 input CreateColorPaletteInput {
   name: String!
   code: String
+  categoryName: String
   tokens: [ColorTokenEntryInput!]!
   tagIds: [String!]
 }
@@ -265,6 +268,7 @@ input UpdateColorPaletteInput {
 input CreateCodeInput {
   title: String!
   description: String
+  categoryName: String
   codeFiles: [CreateCodeFileInput!]!
   tagIds: [String!]
 }

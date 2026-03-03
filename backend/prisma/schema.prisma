@@ -42,11 +42,13 @@ model File {
 }
 
 model Category {
-  id        String     @id @default(cuid())
-  name      String     @unique
-  resources Resource[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id            String         @id @default(cuid())
+  name          String         @unique
+  resources     Resource[]
+  colorPalettes ColorPalette[]
+  codes         Code[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Tag {
@@ -97,13 +99,15 @@ model ImageMetadata {
 }
 
 model ColorPalette {
-  id        String       @id @default(cuid())
-  name      String
-  code      String
-  tokens    ColorToken[]
-  tags      Tag[]        @relation("ColorPaletteTags")
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id         String       @id @default(cuid())
+  name       String
+  code       String
+  tokens     ColorToken[]
+  tags       Tag[]        @relation("ColorPaletteTags")
+  category   Category?    @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model ColorToken {
@@ -121,6 +125,8 @@ model Code {
   description String?
   codeFiles   CodeFile[] @relation("CodeFiles")
   tags        Tag[]      @relation("CodeTags")
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }

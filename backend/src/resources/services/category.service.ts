@@ -36,6 +36,26 @@ export class CategoryService {
 		});
 	}
 
+	async findAllWithCount() {
+		const categories = await this.prisma.category.findMany({
+			include: {
+				_count: {
+					select: {
+						resources: true,
+						colorPalettes: true,
+						codes: true,
+					},
+				},
+			},
+			orderBy: { resources: { _count: "desc" } },
+		});
+
+		return categories.map(({ _count, ...category }) => ({
+			...category,
+			resourceCount: _count.resources + _count.colorPalettes + _count.codes,
+		}));
+	}
+
 	async findOne(id?: string, name?: string): Promise<CategoryType | null> {
 		if (!id && !name) {
 			return null;

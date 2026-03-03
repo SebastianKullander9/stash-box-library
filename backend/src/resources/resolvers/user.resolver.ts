@@ -4,7 +4,7 @@ import { UserType } from "../../graphql/types/user.type";
 import {
 	CreateUserInput,
 	UpdateUserInput,
-} from "../../graphql/inputs/user.input";
+} from "../../graphql/types/user.input";
 import { GqlAuthGuard } from "../../auth/guards/graphql-auth";
 import { RolesGuard } from "../../auth/guards/roles.guard";
 import { Roles } from "../../auth/roles.decorator";
