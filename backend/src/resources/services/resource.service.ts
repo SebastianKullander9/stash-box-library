@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
+import { CategoryLookupService } from "./category-lookup.service";
 import { S3Service } from "../../s3/s3.service";
 import {
 	CreateResourceInput,
@@ -30,6 +31,7 @@ export class ResourceService {
 		private readonly s3Service: S3Service,
 		private readonly fontService: FontService,
 		private readonly imageService: ImageService,
+		private readonly categoryLookup: CategoryLookupService,
 	) {}
 
 	async findMany(options: ResourceQueryOptions): Promise<ResourcePage> {
@@ -85,10 +87,11 @@ export class ResourceService {
 		input: CreateResourceInput,
 		userId: string,
 	): Promise<ResourceType> {
-		const categoryId = await this.resolveCategoryId(
-			input.categoryId,
+		const categoryId = await this.categoryLookup.resolveId(
+			undefined,
 			input.categoryName,
 		);
+
 		const tagIds = await this.resolveTagIds(input.tagNames);
 
 		const resource = await this.prisma.resource.create({
@@ -110,10 +113,11 @@ export class ResourceService {
 	}
 
 	async update(input: UpdateResourceInput): Promise<ResourceType> {
-		const categoryId = await this.resolveCategoryId(
-			input.categoryId,
+		const categoryId = await this.categoryLookup.resolveId(
+			undefined,
 			input.categoryName,
 		);
+
 		const tagIds = input.tagNames
 			? await this.resolveTagIds(input.tagNames)
 			: null;
@@ -262,25 +266,6 @@ export class ResourceService {
 
 		const [resourceWithUrls] = await this.attachPresignedUrls([resource]);
 		return resourceWithUrls;
-	}
-
-	private async resolveCategoryId(
-		categoryId?: string,
-		categoryName?: string,
-	): Promise<string | undefined> {
-		if (categoryId) return categoryId;
-		if (!categoryName) return undefined;
-
-		const existing = await this.prisma.category.findUnique({
-			where: { name: categoryName },
-		});
-
-		if (existing) return existing.id;
-
-		const newCategory = await this.prisma.category.create({
-			data: { name: categoryName },
-		});
-		return newCategory.id;
 	}
 
 	private async resolveTagIds(tagNames?: string[]): Promise<string[]> {

@@ -4,6 +4,7 @@ import {
 	UpdateCodeInput,
 } from "src/graphql/inputs/code.input";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CategoryLookupService } from "./category-lookup.service";
 import { Code } from "src/graphql/types/code.type";
 import {
 	Code as PrismaCode,
@@ -28,10 +29,13 @@ export interface CodeQueryOptions {
 
 @Injectable()
 export class CodeService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly categoryLookup: CategoryLookupService,
+	) {}
 
 	async create(input: CreateCodeInput): Promise<Code> {
-		const categoryId = await this.resolveCategoryId(
+		const categoryId = await this.categoryLookup.resolveId(
 			undefined,
 			input.categoryName,
 		);
@@ -180,24 +184,5 @@ export class CodeService {
 			createdAt: code.createdAt,
 			updatedAt: code.updatedAt,
 		};
-	}
-
-	private async resolveCategoryId(
-		categoryId?: string,
-		categoryName?: string,
-	): Promise<string | undefined> {
-		if (categoryId) return categoryId;
-		if (!categoryName) return undefined;
-
-		const existing = await this.prisma.category.findUnique({
-			where: { name: categoryName },
-		});
-
-		if (existing) return existing.id;
-
-		const newCategory = await this.prisma.category.create({
-			data: { name: categoryName },
-		});
-		return newCategory.id;
 	}
 }

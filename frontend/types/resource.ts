@@ -29,6 +29,8 @@ export type ResourceFile = {
 export type ResourceCategory = {
     id: string;
     name: string;
+	resourceCount?: number;
+	createdAt: Date;
 }
 
 export type ResourceTag = {

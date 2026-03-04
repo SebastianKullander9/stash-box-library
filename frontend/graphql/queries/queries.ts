@@ -124,6 +124,17 @@ export const GET_CATEGORY_BY_NAME = gql`
     }
 `;
 
+export const GET_CATEGORIES_WITH_COUNT = gql`
+	query CategoriesWithCount {
+		categoriesWithCount {
+			id
+			name
+			resourceCount
+			createdAt
+		}
+	}
+`;
+
 export const GET_COLOR_PALETTES = gql`
 	query GetColorPalettes($limit: Int, $offset: Int) {
 		colorPalettes(limit: $limit, offset: $offset) {

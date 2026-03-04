@@ -35,7 +35,8 @@ export async function createCode(formData: FormData) {
 			input: {
 				title,
 				description,
-				codeFiles: codeBlocks
+				codeFiles: codeBlocks,
+				categoryName: "Code",
 			}
 		});
 

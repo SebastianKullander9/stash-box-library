@@ -1,4 +1,5 @@
 import { TokenValidationService } from "./token-validation.service";
+import { CategoryLookupService } from "./category-lookup.service";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import {
@@ -35,6 +36,7 @@ export class ColorPaletteService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly tokenValidator: TokenValidationService,
+		private readonly categoryLookup: CategoryLookupService,
 	) {}
 
 	async create(input: CreateColorPaletteInput): Promise<ColorPalette> {
@@ -42,7 +44,8 @@ export class ColorPaletteService {
 		this.tokenValidator.validate(tokensObject);
 
 		const code = input.code ?? this.generateCode(tokensObject);
-		const categoryId = await this.resolveCategoryId(
+
+		const categoryId = await this.categoryLookup.resolveId(
 			undefined,
 			input.categoryName,
 		);
@@ -230,24 +233,5 @@ export class ColorPaletteService {
 		const count = Object.keys(tokens).length;
 
 		return `${firstLetters}-C${count}`;
-	}
-
-	private async resolveCategoryId(
-		categoryId?: string,
-		categoryName?: string,
-	): Promise<string | undefined> {
-		if (categoryId) return categoryId;
-		if (!categoryName) return undefined;
-
-		const existing = await this.prisma.category.findUnique({
-			where: { name: categoryName },
-		});
-
-		if (existing) return existing.id;
-
-		const newCategory = await this.prisma.category.create({
-			data: { name: categoryName },
-		});
-		return newCategory.id;
 	}
 }

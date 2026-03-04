@@ -43,6 +43,7 @@ export async function createColorPalette(formData: FormData) {
 			input: {
 				name,
 				tokens,
+				categoryName: "Colors",
 			},
 		});
 

@@ -3,7 +3,7 @@
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
 import { CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from "@/graphql/mutations/categoryMutations";
-import { GET_CATEGORIES, GET_CATEGORY_BY_NAME } from "@/graphql/queries/queries";
+import { GET_CATEGORIES, GET_CATEGORIES_WITH_COUNT, GET_CATEGORY_BY_NAME } from "@/graphql/queries/queries";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
 import { ResourceCategory } from "@/types";
@@ -29,12 +29,27 @@ export async function createCategoryAction(formData: FormData) {
 
 export async function getCategories() {
     try {
-        const data = await graphqlClient.request<{ categories: ResourceCategory[]}>(
+        const data = await graphqlClient.request<{ categories: ResourceCategory[] }>(
             GET_CATEGORIES
         );
 
         return data.categories;
     } catch (err: unknown) {
+        if (err instanceof ClientError) {
+            throw new Error(err?.message || "Something went wrong");
+        }
+        throw err;
+    }
+}
+
+export async function getCategoriesWithCount() {
+	try {
+		const data = await graphqlClient.request<{ categoriesWithCount: ResourceCategory[] }>(
+			GET_CATEGORIES_WITH_COUNT
+		);
+
+		return data.categoriesWithCount;
+	} catch (err: unknown) {
         if (err instanceof ClientError) {
             throw new Error(err?.message || "Something went wrong");
         }
