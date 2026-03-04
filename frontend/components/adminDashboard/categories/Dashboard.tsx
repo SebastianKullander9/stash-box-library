@@ -8,12 +8,16 @@ interface DashboardProps {
 	categoriesWithCount: ResourceCategory[];
 }
 
-export default function Dashboard({ categories, categoriesWithCount }: DashboardProps ) {
-	return (
+export default function Dashboard({ categories, categoriesWithCount }: DashboardProps) {
+  return (
 		<div className="grid grid-cols-12 section-x-padding section-y-padding gap-xl">
-			<AddCategory />
-			<ListCardCategories categories={categories} />
-			<ResourcesPerCategory categoriesWithCount={categoriesWithCount}/>
+			<div className="col-span-2 flex flex-col gap-xl">
+				<AddCategory />
+				<ResourcesPerCategory categoriesWithCount={categoriesWithCount} />
+			</div>
+			<div className="col-span-10">
+				<ListCardCategories categories={categories} />
+			</div>
 		</div>
-	);
-};
+  );
+}
