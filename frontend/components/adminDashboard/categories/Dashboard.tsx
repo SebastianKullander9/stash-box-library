@@ -9,15 +9,15 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ categories, categoriesWithCount }: DashboardProps) {
-  return (
-		<div className="grid grid-cols-12 section-x-padding section-y-padding gap-xl">
-			<div className="col-span-2 flex flex-col gap-xl">
-				<AddCategory />
-				<ResourcesPerCategory categoriesWithCount={categoriesWithCount} />
+	return (
+			<div className="grid grid-cols-12 section-x-padding section-y-padding gap-xl">
+				<div className="col-span-2 flex flex-col gap-xl">
+					<AddCategory />
+					<ResourcesPerCategory categoriesWithCount={categoriesWithCount} />
+				</div>
+				<div className="col-span-10">
+					<ListCardCategories categories={categories} />
+				</div>
 			</div>
-			<div className="col-span-10">
-				<ListCardCategories categories={categories} />
-			</div>
-		</div>
-  );
+	);
 }

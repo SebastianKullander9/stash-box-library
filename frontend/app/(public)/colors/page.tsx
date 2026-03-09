@@ -1,5 +1,4 @@
 import { getColorPalettes } from "@/actions/colorPalette";
-import { ColorPalettesPage } from "@/types/colorPalette";
 import ColorPaletteRenderer from "@/components/fileRenderer/thumbnail/ColorPaletteRenderer";
 
 export default async function Colors({ searchParams }: { searchParams: { page?: string }}) {

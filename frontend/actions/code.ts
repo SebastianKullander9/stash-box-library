@@ -6,6 +6,9 @@ import { ClientError } from "graphql-request";
 import { CREATE_CODE } from "@/graphql/mutations/codeMutations";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { graphqlClient } from "@/lib/graphqlClient";
+import { CodePage } from "@/types/code";
+import { GET_CODES } from "@/graphql/queries/queries";
 
 export async function createCode(formData: FormData) {
 	try {
@@ -42,6 +45,26 @@ export async function createCode(formData: FormData) {
 
 		revalidatePath("/admin/");
 		redirect("/admin");
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const graphQLError = err.response.errors?.[0];
+			throw new Error(graphQLError?.message || "Something went wrong");
+		}
+		throw err;
+	}
+}
+
+export async function getCodes(limit?: number, offset?: number) {
+	try {
+		const data = await graphqlClient.request<{ codes: CodePage }>(
+			GET_CODES,
+			{
+				limit,
+				offset
+			}
+		);
+
+		return data.codes;
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
 			const graphQLError = err.response.errors?.[0];

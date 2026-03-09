@@ -1,12 +1,14 @@
 type option = {
     id?: string;
-    name: string;
+    name?: string;
+	label?: string;
+	value?: string;
 }
 
 interface SelectProps  {
     label: string;
     name: string;
-    options: option[];
+    options: readonly option[];
     defaultValue?: option[] | string;
 }
 
@@ -24,11 +26,11 @@ export default function Select({ label="", name, options }: SelectProps) {
                 >
                     {options.map((option) => (
                         <option 
-                            key={option.name}
-                            value={option.name}
+                            key={option.value ? option.value : option.name}
+                            value={option.value ? option.value : option.name}
                             className="text-sm"
                         >
-                            {option.name}
+                            {option.label ? option.label : option.name}
                         </option>
                     ))}
                 </select>

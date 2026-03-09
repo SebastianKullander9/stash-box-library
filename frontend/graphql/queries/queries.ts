@@ -170,3 +170,26 @@ export const GET_ONE_COLOR_PALETTE = gql`
 		}
 	}
 `;
+
+export const GET_CODES = gql`
+	query GetCodes($limit: Int, $offset: Int) {
+		codes(limit: $limit, offset: $offset) {
+			items {
+				id
+				title
+				description
+				tags { id name }
+				codeFiles {
+					id
+					title
+					language
+					content
+				}
+				createdAt
+				updatedAt
+			}
+			totalCount
+			nextOffset
+		}
+	}
+`

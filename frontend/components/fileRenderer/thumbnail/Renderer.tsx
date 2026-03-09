@@ -1,7 +1,6 @@
 import { Resource } from "@/types";
 import Default from "./renderers/Default";
 import ImgThumbnail from "./renderers/ImgThumbnail";
-import Video from "./renderers/Video";
 import FontThumbnail from "./renderers/fontThumbnail/FontThumbnail";
 import ModelThumbnail from "./renderers/ModelThumbnail";
 

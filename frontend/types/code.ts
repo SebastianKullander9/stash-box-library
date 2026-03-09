@@ -25,3 +25,9 @@ export type Code = {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export type CodePage = {
+	items: Code[],
+	totalCount: number;
+	nextOffset: number;
+}

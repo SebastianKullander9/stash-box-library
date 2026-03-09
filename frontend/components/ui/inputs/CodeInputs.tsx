@@ -5,14 +5,7 @@ import { useState } from "react";
 import Select from "./Select";
 import Input from "./Input";
 import CodeBlockInput from "./CodeBlockInput";
-
-const languages = [
-	{ name: "JSX" },
-	{ name: "Javascript" },
-	{ name: "Typescript" },
-	{ name: "Css" },
-	{ name: "Html" },
-]
+import { LANGUAGES } from "@/lib/code/languages";
 
 export default function CodeInputs() {
 	const id = crypto.randomUUID();
@@ -58,7 +51,7 @@ export default function CodeInputs() {
 							<Select 
 								label="Language"
 								name={`language[${index}]`}
-								options={languages}
+								options={LANGUAGES}
 							/>
 						</div>
 					</div>
