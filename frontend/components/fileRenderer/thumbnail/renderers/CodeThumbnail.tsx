@@ -22,7 +22,7 @@ export default async function CodeThumbnail({ code }: CodeThumbnailProps) {
 	return (
 		<Link
 			href={`/codes/${code.id}`}
-			className="col-span-4 bg-surface p-md rounded-lg flex flex-col gap-md border border-surface hover:border-border-strong"
+			className="col-span-4 bg-surface p-md rounded-lg flex flex-col gap-md border border-surface hover:border-border-strong justify-between"
 			aria-label={`View code: ${code.title}`}
 		>
 			<div className="flex flex-row justify-between">
@@ -37,14 +37,15 @@ export default async function CodeThumbnail({ code }: CodeThumbnailProps) {
 				{code.description}
 			</p>
 			<div>
-				<p className="text-text-secondary">
-					Languages:
-				</p>
-				{code.codeFiles.map((codeFile) => (
-					<p key={codeFile.id}>
-						{LANGUAGES.find(l => l.value === codeFile.language)?.label ?? codeFile.language}
-					</p>
-				))}
+				<div className="flex flex-row gap-xs">
+					{code.codeFiles.map((codeFile) => {
+						const lang = LANGUAGES.find(l => l.value === codeFile.language);
+						const Icon = lang?.icon;
+						return Icon 
+							? <Icon key={codeFile.language} />
+							: <span key={codeFile.language}>{codeFile.language}</span>;
+					})}
+				</div>
 			</div>
 			<div className="flex flex-col gap-1">
 				<div className="flex flex-row justify-between text-xs">
