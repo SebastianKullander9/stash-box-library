@@ -1,6 +1,6 @@
 "use server";
 
-import { CodeFile } from "@/types/code";
+import { Code, CodeFile } from "@/types/code";
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
 import { CREATE_CODE } from "@/graphql/mutations/codeMutations";
@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { CodePage } from "@/types/code";
-import { GET_CODES } from "@/graphql/queries/queries";
+import { GET_CODES, GET_ONE_CODE } from "@/graphql/queries/queries";
 
 export async function createCode(formData: FormData) {
 	try {
@@ -65,6 +65,23 @@ export async function getCodes(limit?: number, offset?: number) {
 		);
 
 		return data.codes;
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const graphQLError = err.response.errors?.[0];
+			throw new Error(graphQLError?.message || "Something went wrong");
+		}
+		throw err;
+	}
+}
+
+export async function getOneCode(id: string) {
+	try {
+		const data = await graphqlClient.request<{ code: Code }>(
+			GET_ONE_CODE,
+			{ id }
+		);
+
+		return data.code;
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
 			const graphQLError = err.response.errors?.[0];

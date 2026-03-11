@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Query, Args, ID, Int } from "@nestjs/graphql";
+import { Resolver, Mutation, Query, Args, Int } from "@nestjs/graphql";
 import { CodeService } from "../services/code.service";
 import { Code, CodePage } from "src/graphql/types/code.type";
 import {
@@ -24,7 +24,7 @@ export class CodeResolver {
 	}
 
 	@Query(() => Code, { nullable: true })
-	async code(@Args("id", { type: () => ID }) id: string): Promise<Code | null> {
+	async code(@Args("id") id: string): Promise<Code | null> {
 		return this.codeService.findById(id);
 	}
 
@@ -39,7 +39,7 @@ export class CodeResolver {
 	@UseGuards(GqlAuthGuard, RolesGuard)
 	@Roles("ADMIN")
 	async updateCode(
-		@Args("id", { type: () => ID }) id: string,
+		@Args("id") id: string,
 		@Args("input") input: UpdateCodeInput,
 	): Promise<Code> {
 		return this.codeService.update(id, input);
@@ -48,7 +48,7 @@ export class CodeResolver {
 	@Mutation(() => Code)
 	@UseGuards(GqlAuthGuard, RolesGuard)
 	@Roles("ADMIN")
-	async deleteCode(@Args("id", { type: () => ID }) id: string): Promise<Code> {
+	async deleteCode(@Args("id") id: string): Promise<Code> {
 		return this.codeService.delete(id);
 	}
 }

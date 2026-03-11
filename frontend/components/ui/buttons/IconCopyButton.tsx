@@ -1,0 +1,58 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Copy } from "lucide-react";
+import { CopyCheck } from "lucide-react";
+
+interface IconCopyButtonProps {
+	code: string;
+	fileTitle: string;
+}
+
+export default function IconCopyButton({ code, fileTitle }: IconCopyButtonProps) {
+	const [copied, setCopied] = useState(false);
+	const [shrink, setShrink] = useState(false);
+	const Icon = copied ? CopyCheck : Copy;
+
+	const handleClick = async () => {
+		if (copied) return;
+
+		await navigator.clipboard.writeText(code);
+
+		setCopied(true);
+		setShrink(true);
+    	setTimeout(() => setShrink(false), 100);
+	}
+ 
+	useEffect(() => {
+		if (!copied) return;
+
+		const id = setTimeout(() => {
+			setCopied(false);
+		}, 700);
+
+		return () => clearTimeout(id);
+	}, [copied]);
+
+	return (
+		<div className="relative">
+			{copied && (
+				<div
+					role="status"
+					aria-live="polite"
+					className="absolute right-8  text-xs text-center"
+				>
+					<p>Copied!</p>
+				</div>
+			)}
+			<button
+				aria-label={`Copy ${fileTitle} to clipboard`}
+				onClick={handleClick}
+				className={`transition-transform duration-150 ${shrink ? "scale-85" : "scale-100"}`}
+			>
+				<Icon size={22} aria-hidden="true" />
+			</button>
+		</div>
+		
+	);
+};

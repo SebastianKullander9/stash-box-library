@@ -21,7 +21,7 @@ export default async function CodeThumbnail({ code }: CodeThumbnailProps) {
 
 	return (
 		<Link
-			href={`/codes/${code.id}`}
+			href={`/code/${code.id}`}
 			className="col-span-4 bg-surface p-md rounded-lg flex flex-col gap-md border border-surface hover:border-border-strong justify-between"
 			aria-label={`View code: ${code.title}`}
 		>

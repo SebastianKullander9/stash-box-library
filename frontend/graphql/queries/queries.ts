@@ -192,4 +192,23 @@ export const GET_CODES = gql`
 			nextOffset
 		}
 	}
-`
+`;
+
+export const GET_ONE_CODE = gql`
+	query GetOneCode($id: String!) {
+		code(id: $id) {
+			id
+			title
+			description
+			tags { id name }
+			codeFiles {
+				id
+				title
+				language
+				content
+			}
+			createdAt
+			updatedAt
+		}
+	}
+`;

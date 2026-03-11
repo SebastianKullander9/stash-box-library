@@ -151,7 +151,7 @@ type Query {
   colorPalettes(tagIds: [String!], limit: Int, offset: Int): ColorPalettePage!
   colorPalette(id: String!): ColorPalette
   codes(tagIds: [String!], limit: Int, offset: Int): CodePage!
-  code(id: ID!): Code
+  code(id: String!): Code
 }
 
 type Mutation {
@@ -173,8 +173,8 @@ type Mutation {
   updateColorPalette(id: String!, input: UpdateColorPaletteInput!): ColorPalette!
   deleteColorPalette(id: String!): ColorPalette!
   createCode(input: CreateCodeInput!): Code!
-  updateCode(id: ID!, input: UpdateCodeInput!): Code!
-  deleteCode(id: ID!): Code!
+  updateCode(id: String!, input: UpdateCodeInput!): Code!
+  deleteCode(id: String!): Code!
 }
 
 input CreateResourceInput {
