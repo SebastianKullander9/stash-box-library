@@ -108,6 +108,8 @@ type ColorPalettePage {
 type CodeVersion {
   id: ID!
   content: String!
+  message: String!
+  versionNumber: Float!
   createdAt: DateTime!
 }
 
@@ -284,6 +286,7 @@ input UpdateCodeInput {
   description: String
   codeFiles: [UpdateCodeFileInput!]
   tagIds: [String!]
+  deletedFileIds: [String!]
 }
 
 input UpdateCodeFileInput {
@@ -291,4 +294,5 @@ input UpdateCodeFileInput {
   title: String
   language: String
   content: String
+  versionMessage: String
 }

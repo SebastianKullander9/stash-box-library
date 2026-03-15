@@ -10,6 +10,12 @@ export class CodeVersion {
 	content: string;
 
 	@Field()
+	message: string;
+
+	@Field()
+	versionNumber: number;
+
+	@Field()
 	createdAt: Date;
 }
 

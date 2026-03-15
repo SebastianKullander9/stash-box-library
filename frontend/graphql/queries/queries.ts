@@ -206,6 +206,13 @@ export const GET_ONE_CODE = gql`
 				title
 				language
 				content
+				codeVersions {
+					id
+					content
+					message
+					versionNumber
+					createdAt
+				}
 			}
 			createdAt
 			updatedAt

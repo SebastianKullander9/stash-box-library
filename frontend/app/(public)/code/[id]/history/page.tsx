@@ -4,6 +4,8 @@ import HistoryRenderer from "@/components/fileRenderer/full/renderers/codeRender
 export default async function CodeHistory({ params }: { params: { id: string } }) {
 	const resource = await getCachedCode(params.id);
 
+	console.log(resource)
+
 	return (
 		<HistoryRenderer resource={resource} />
 	);

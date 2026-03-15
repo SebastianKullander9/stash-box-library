@@ -94,35 +94,38 @@ export class CodeService {
 				tags: input.tagIds
 					? { set: input.tagIds.map((id) => ({ id })) }
 					: undefined,
-				codeFiles: input.codeFiles
-					? {
-							upsert: input.codeFiles.map((file) => ({
-								where: { id: file.id ?? "" },
-								update: {
-									title: file.title,
-									language: file.language,
-									content: file.content,
-									...(file.content && {
-										codeVersions: {
-											create: [
-												{
-													content: file.content,
-													message:
-														file.versionMessage ?? "No message was provided.",
-													versionNumber: getNextVersion(file.id!),
-												},
-											],
-										},
-									}),
-								},
-								create: {
-									title: file.title ?? "",
-									language: file.language ?? "",
-									content: file.content ?? "",
-								},
-							})),
-						}
-					: undefined,
+				codeFiles: {
+					...(input.deletedFileIds?.length && {
+						delete: input.deletedFileIds.map((id) => ({ id })),
+					}),
+					...(input.codeFiles?.length && {
+						upsert: input.codeFiles.map((file) => ({
+							where: { id: file.id ?? "" },
+							update: {
+								title: file.title,
+								language: file.language,
+								content: file.content,
+								...(file.content && {
+									codeVersions: {
+										create: [
+											{
+												content: file.content,
+												message:
+													file.versionMessage ?? "No message was provided.",
+												versionNumber: getNextVersion(file.id!),
+											},
+										],
+									},
+								}),
+							},
+							create: {
+								title: file.title ?? "",
+								language: file.language ?? "",
+								content: file.content ?? "",
+							},
+						})),
+					}),
+				},
 			},
 			include: {
 				tags: true,
@@ -201,6 +204,8 @@ export class CodeService {
 				codeVersions: file.codeVersions.map((version) => ({
 					id: version.id,
 					content: version.content,
+					message: version.message,
+					versionNumber: version.versionNumber,
 					createdAt: version.createdAt,
 				})),
 				createdAt: file.createdAt,

@@ -3,7 +3,7 @@
 import { Code, CodeFile } from "@/types/code";
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
-import { CREATE_CODE } from "@/graphql/mutations/codeMutations";
+import { CREATE_CODE, UPDATE_CODE_FILES } from "@/graphql/mutations/codeMutations";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { graphqlClient } from "@/lib/graphqlClient";
@@ -45,6 +45,47 @@ export async function createCode(formData: FormData) {
 
 		revalidatePath("/admin/");
 		redirect("/admin");
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const graphQLError = err.response.errors?.[0];
+			throw new Error(graphQLError?.message || "Something went wrong");
+		}
+		throw err;
+	}
+}
+
+export async function updateCodeResource(formData: FormData) {
+	try {
+
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const graphQLError = err.response.errors?.[0];
+			throw new Error(graphQLError?.message || "Something went wrong");
+		}
+		throw err;
+	}
+}
+
+export async function updateCodeFiles(id: string, formData: FormData) {
+  	try {
+		const fileIds = formData.getAll("fileIds") as string[];
+		const deletedFileIds = fileIds.filter((id) => formData.get(`delete_${id}`) === "on");
+		const activeFileIds = fileIds.filter((id) => !deletedFileIds.includes(id));
+
+		const codeFiles = activeFileIds.map((fileId) => ({
+			id: fileId,
+			title: formData.get(`title_${fileId}`) as string,
+			content: formData.get(`content_${fileId}`) as string,
+		}));
+
+		const client = await getAuthorizedClient();
+			await client.request(UPDATE_CODE_FILES, {
+			id,
+			input: { codeFiles, deletedFileIds },
+		});
+
+		revalidatePath(`/code/${id}`);
+		redirect(`/code/${id}`);
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
 			const graphQLError = err.response.errors?.[0];

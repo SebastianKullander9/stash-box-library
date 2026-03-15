@@ -61,4 +61,7 @@ export class UpdateCodeInput {
 
 	@Field(() => [String], { nullable: true })
 	tagIds?: string[];
+
+	@Field(() => [String], { nullable: true })
+	deletedFileIds?: string[];
 }
