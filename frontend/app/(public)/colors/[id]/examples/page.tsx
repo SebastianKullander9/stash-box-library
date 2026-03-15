@@ -1,8 +1,8 @@
 import ColorPaletteRendererExamples from "@/components/fileRenderer/full/renderers/ColorPaletteRenderer/ColorPaletteRendererExamples";
-import { getOneColorPalette } from "@/actions/colorPalette";
+import { getCachedColorPalette } from "@/lib/cache/colorPalette";
 
 export default async function ViewColorExamples({ params }: { params: { id: string } }) {
-	const colorPalette = await getOneColorPalette(params.id);
+	const colorPalette = await getCachedColorPalette(params.id);
 
 	return (
 		<ColorPaletteRendererExamples colorPalette={colorPalette} />

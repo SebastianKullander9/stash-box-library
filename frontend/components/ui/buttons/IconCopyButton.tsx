@@ -35,7 +35,7 @@ export default function IconCopyButton({ code, fileTitle }: IconCopyButtonProps)
 	}, [copied]);
 
 	return (
-		<div className="relative">
+		<div className="relative flex flex-row items-center">
 			{copied && (
 				<div
 					role="status"
@@ -48,7 +48,7 @@ export default function IconCopyButton({ code, fileTitle }: IconCopyButtonProps)
 			<button
 				aria-label={`Copy ${fileTitle} to clipboard`}
 				onClick={handleClick}
-				className={`transition-transform duration-150 ${shrink ? "scale-85" : "scale-100"}`}
+				className={`transition-transform duration-150 cursor-pointer ${shrink ? "scale-85" : "scale-100"}`}
 			>
 				<Icon size={22} aria-hidden="true" />
 			</button>

@@ -1,37 +1,34 @@
 import "./CodeBlock.css";
 import { getHighlighter } from "@/lib/code/highlighter";
-import { Code } from "@/types/code";
+import { CodeFile } from "@/types/code";
 import { LANGUAGES } from "@/lib/code/languages";
 import IconCopyButton from "@/components/ui/buttons/IconCopyButton";
 
 
 interface CodeBlockProps {
-	resource: Code;
+	file: CodeFile;
 }
 
-export default async function CodeBlock({ resource }: CodeBlockProps) {
-	console.log(resource.codeFiles[0])
-
-	const primaryFile = resource.codeFiles[0];
-	const primaryLang = LANGUAGES.find(l => l.value === primaryFile.language)?.value ?? "javascript";
+export default async function CodeBlock({ file }: CodeBlockProps) {
+	const lang = LANGUAGES.find(l => l.value === file.language)?.value ?? "javascript";
 	const codeHighlighter = await getHighlighter();
 
 	return (
-		<div className="col-span-6">
-			<div className="flex flex-row items-center justify-between">
+		<div className="col-span-10">
+			<div className="flex flex-row items-center justify-between bg-surface p-md rounded-t-lg border-x border-t border-border-strong">
 				<p>
-					{primaryFile.title}
+					{file.title}
 				</p>
-				<IconCopyButton code={primaryFile.content} fileTitle={primaryFile.title} />
+				<IconCopyButton code={file.content} fileTitle={file.title} />
 			</div>
 			<div 
 				dangerouslySetInnerHTML={{ 
-					__html: codeHighlighter.codeToHtml(primaryFile.content, { 
+					__html: codeHighlighter.codeToHtml(file.content, { 
 						theme: "vitesse-dark", 
-						lang: primaryLang
+						lang
 					}) 
 				}}
-				className="text-xs [&_pre]:overflow-x-auto [&_pre]:p-md [&_pre]:rounded-lg"
+				className="text-[12px] [&_pre]:overflow-x-auto [&_pre]:p-md [&_pre]:rounded-lg border-b border-x border-border-strong rounded-b-lg"
 			/>
 		</div>
 	);
