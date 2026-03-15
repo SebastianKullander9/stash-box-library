@@ -144,9 +144,11 @@ model CodeFile {
 }
 
 model CodeVersion {
-  id         String   @id @default(cuid())
-  code       CodeFile @relation(fields: [codeFileId], references: [id], onDelete: Cascade)
-  codeFileId String
-  content    String   @db.Text
-  createdAt  DateTime @default(now())
+  id            String   @id @default(cuid())
+  code          CodeFile @relation(fields: [codeFileId], references: [id], onDelete: Cascade)
+  codeFileId    String
+  content       String   @db.Text
+  message       String
+  versionNumber Int
+  createdAt     DateTime @default(now())
 }

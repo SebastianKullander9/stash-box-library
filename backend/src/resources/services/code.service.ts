@@ -68,6 +68,24 @@ export class CodeService {
 	}
 
 	async update(id: string, input: UpdateCodeInput): Promise<Code> {
+		const versionCounts = input.codeFiles
+			? await Promise.all(
+					input.codeFiles
+						.filter((file) => file.id && file.content)
+						.map(async (file) => ({
+							fileId: file.id,
+							count: await this.prisma.codeVersion.count({
+								where: { codeFileId: file.id! },
+							}),
+						})),
+				)
+			: [];
+
+		const getNextVersion = (fileId: string) => {
+			const entry = versionCounts.find((version) => version.fileId === fileId);
+			return (entry?.count ?? 0) + 1;
+		};
+
 		const code = await this.prisma.code.update({
 			where: { id },
 			data: {
@@ -86,7 +104,14 @@ export class CodeService {
 									content: file.content,
 									...(file.content && {
 										codeVersions: {
-											create: [{ content: file.content }],
+											create: [
+												{
+													content: file.content,
+													message:
+														file.versionMessage ?? "No message was provided.",
+													versionNumber: getNextVersion(file.id!),
+												},
+											],
 										},
 									}),
 								},

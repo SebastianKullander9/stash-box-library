@@ -43,6 +43,9 @@ export class UpdateCodeFileInput {
 
 	@Field({ nullable: true })
 	content?: string;
+
+	@Field({ nullable: true })
+	versionMessage?: string;
 }
 
 @InputType()
