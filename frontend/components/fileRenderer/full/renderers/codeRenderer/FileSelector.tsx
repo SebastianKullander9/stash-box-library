@@ -1,7 +1,7 @@
 "use client";
 
 import { CodeFile } from "@/types/code";
-import { File } from "lucide-react";
+import { File, SmilePlus } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -10,9 +10,11 @@ interface FileSelectorProps {
 	resource: CodeFile[];
 	children: React.ReactNode[];
 	editMode?: boolean;
+	onAddFile?: () => void;
+	pendingDeletes?: string[];
 }
 
-export default function FileSelector({ id, resource, children, editMode=false }: FileSelectorProps) {
+export default function FileSelector({ id, resource, children, editMode=false, onAddFile, pendingDeletes }: FileSelectorProps) {
 	const files = resource;
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -33,6 +35,7 @@ export default function FileSelector({ id, resource, children, editMode=false }:
 								className={`
 									flex flex-row items-center gap-1 text-xs text-text-secondary px-md py-xs cursor-pointer hover:bg-surface rounded-lg
 									${selectedIndex === index ? "bg-surface text-white" : ""}
+									${pendingDeletes && pendingDeletes.includes(file.id) ? "!text-red-500 !line-through" : ""}
 								`}
 							>
 								<File size={16} />
@@ -41,6 +44,14 @@ export default function FileSelector({ id, resource, children, editMode=false }:
 								</p>
 							</div>
 						))}
+						{onAddFile && (
+							<div onClick={onAddFile} className="cursor-pointer flex flex-row gap-1 items-center px-md py-xs hover:bg-surface rounded-lg">
+								<SmilePlus size={18} />
+								<p className="text-xs">
+									Add file
+								</p>
+							</div>
+						)}
 					</div>
 				</div>
 				{editMode && (
@@ -52,6 +63,7 @@ export default function FileSelector({ id, resource, children, editMode=false }:
 							<textarea 
 								className="w-full border-x border-b border-border-strong rounded-b-lg p-md resize-none outline-none" 
 								rows={5}
+								name="changeMessage"
 								placeholder="Your change message here..."
 							/>
 						</div>

@@ -69,19 +69,27 @@ export async function updateCodeResource(formData: FormData) {
 export async function updateCodeFiles(id: string, formData: FormData) {
   	try {
 		const fileIds = formData.getAll("fileIds") as string[];
+		const changeMessage = formData.get("changeMessage") as string | null;
+
 		const deletedFileIds = fileIds.filter((id) => formData.get(`delete_${id}`) === "on");
 		const activeFileIds = fileIds.filter((id) => !deletedFileIds.includes(id));
 
 		const codeFiles = activeFileIds.map((fileId) => ({
-			id: fileId,
+			id: fileId.startsWith("new_") ? undefined : fileId,
 			title: formData.get(`title_${fileId}`) as string,
 			content: formData.get(`content_${fileId}`) as string,
+			language: formData.get(`language_${fileId}`) as string,
+			versionMessage: changeMessage ?? undefined,
 		}));
 
+		const sanitizedDeletedFileIds = deletedFileIds
+      		.filter((fileId) => !fileId.startsWith("new_"));
+
 		const client = await getAuthorizedClient();
-			await client.request(UPDATE_CODE_FILES, {
+
+		await client.request(UPDATE_CODE_FILES, {
 			id,
-			input: { codeFiles, deletedFileIds },
+			input: { codeFiles, deletedFileIds: sanitizedDeletedFileIds },
 		});
 
 		revalidatePath(`/code/${id}`);

@@ -24,7 +24,7 @@ export default async function CodeBlock({ file, resource }: CodeBlockProps) {
 	return (
 		<div>
 			<div className="flex flex-row items-center justify-between bg-surface rounded-t-lg border-x border-t border-border-strong px-md py-xs">
-				<p>
+				<p className="border border-surface">
 					{file.title}
 				</p>
 				<div className="flex flex-row">
