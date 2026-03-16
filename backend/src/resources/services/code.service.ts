@@ -68,12 +68,33 @@ export class CodeService {
 	}
 
 	async update(id: string, input: UpdateCodeInput): Promise<Code> {
+		const currentFiles = input.codeFiles?.filter((file) => file.id)
+			? await this.prisma.codeFile.findMany({
+					where: {
+						id: {
+							in: input.codeFiles
+								.filter((file) => file.id)
+								.map((file) => file.id!),
+						},
+					},
+					select: { id: true, content: true },
+				})
+			: [];
+
+		const hasChanged = (fileId: string, newContent: string) => {
+			const current = currentFiles.find((file) => file.id === fileId);
+			return !current || current.content !== newContent;
+		};
+
 		const versionCounts = input.codeFiles
 			? await Promise.all(
 					input.codeFiles
-						.filter((file) => file.id && file.content)
+						.filter(
+							(file) =>
+								file.id && file.content && hasChanged(file.id, file.content),
+						)
 						.map(async (file) => ({
-							fileId: file.id,
+							fileId: file.id!,
 							count: await this.prisma.codeVersion.count({
 								where: { codeFileId: file.id! },
 							}),
@@ -105,18 +126,20 @@ export class CodeService {
 								title: file.title,
 								language: file.language,
 								content: file.content,
-								...(file.content && {
-									codeVersions: {
-										create: [
-											{
-												content: file.content,
-												message:
-													file.versionMessage ?? "No message was provided.",
-												versionNumber: getNextVersion(file.id!),
-											},
-										],
-									},
-								}),
+								...(file.content &&
+									file.id &&
+									hasChanged(file.id, file.content) && {
+										codeVersions: {
+											create: [
+												{
+													content: file.content,
+													message:
+														file.versionMessage ?? "No message was provided.",
+													versionNumber: getNextVersion(file.id),
+												},
+											],
+										},
+									}),
 							},
 							create: {
 								title: file.title ?? "",
