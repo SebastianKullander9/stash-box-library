@@ -28,6 +28,12 @@ export class CreateCodeInput {
 
 	@Field(() => [String], { nullable: true })
 	tagIds?: string[];
+
+	@Field(() => [String], { nullable: true })
+	deletedFileIds?: string[];
+
+	@Field({ nullable: true })
+	versionMessage?: string;
 }
 
 @InputType()
@@ -43,9 +49,6 @@ export class UpdateCodeFileInput {
 
 	@Field({ nullable: true })
 	content?: string;
-
-	@Field({ nullable: true })
-	versionMessage?: string;
 }
 
 @InputType()
@@ -64,4 +67,7 @@ export class UpdateCodeInput {
 
 	@Field(() => [String], { nullable: true })
 	deletedFileIds?: string[];
+
+	@Field({ nullable: true })
+	versionMessage?: string;
 }

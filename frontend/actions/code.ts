@@ -79,7 +79,6 @@ export async function updateCodeFiles(id: string, formData: FormData) {
 			title: formData.get(`title_${fileId}`) as string,
 			content: formData.get(`content_${fileId}`) as string,
 			language: formData.get(`language_${fileId}`) as string,
-			versionMessage: changeMessage ?? undefined,
 		}));
 
 		const sanitizedDeletedFileIds = deletedFileIds
@@ -89,7 +88,11 @@ export async function updateCodeFiles(id: string, formData: FormData) {
 
 		await client.request(UPDATE_CODE_FILES, {
 			id,
-			input: { codeFiles, deletedFileIds: sanitizedDeletedFileIds },
+			input: { 
+				codeFiles, 
+				deletedFileIds: sanitizedDeletedFileIds, 
+				versionMessage: changeMessage || undefined
+			},
 		});
 
 		revalidatePath(`/code/${id}`);

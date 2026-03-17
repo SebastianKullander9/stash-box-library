@@ -108,8 +108,23 @@ type ColorPalettePage {
 type CodeVersion {
   id: ID!
   content: String!
-  message: String!
   versionNumber: Float!
+  createdAt: DateTime!
+}
+
+type DeletedFile {
+  id: ID!
+  title: String!
+  language: String!
+  createdAt: DateTime!
+}
+
+type CodeSnapshot {
+  id: ID!
+  message: String!
+  fileVersions: [CodeVersion!]!
+  addedFiles: [CodeFile!]!
+  deletedFiles: [DeletedFile!]!
   createdAt: DateTime!
 }
 
@@ -128,6 +143,7 @@ type Code {
   title: String!
   description: String
   codeFiles: [CodeFile!]!
+  snapshots: [CodeSnapshot!]!
   tags: [TagType!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -273,6 +289,8 @@ input CreateCodeInput {
   categoryName: String
   codeFiles: [CreateCodeFileInput!]!
   tagIds: [String!]
+  deletedFileIds: [String!]
+  versionMessage: String
 }
 
 input CreateCodeFileInput {
@@ -287,6 +305,7 @@ input UpdateCodeInput {
   codeFiles: [UpdateCodeFileInput!]
   tagIds: [String!]
   deletedFileIds: [String!]
+  versionMessage: String
 }
 
 input UpdateCodeFileInput {
@@ -294,5 +313,4 @@ input UpdateCodeFileInput {
   title: String
   language: String
   content: String
-  versionMessage: String
 }

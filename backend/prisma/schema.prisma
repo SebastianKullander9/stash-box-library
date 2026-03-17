@@ -120,35 +120,59 @@ model ColorToken {
 }
 
 model Code {
-  id          String     @id @default(cuid())
-  title       String
-  description String?
-  codeFiles   CodeFile[] @relation("CodeFiles")
-  tags        Tag[]      @relation("CodeTags")
-  category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            String          @id @default(cuid())
+  title         String
+  description   String?
+  codeFiles     CodeFile[]      @relation("CodeFiles")
+  tags          Tag[]           @relation("CodeTags")
+  category      Category?       @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  snapshots     CodeSnapshot[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 model CodeFile {
-  id           String        @id @default(cuid())
-  title        String
-  content      String        @db.Text
-  language     String
-  code         Code          @relation("CodeFiles", fields: [codeId], references: [id], onDelete: Cascade)
-  codeId       String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  codeVersions CodeVersion[]
+  id                  String        @id @default(cuid())
+  title               String
+  content             String        @db.Text
+  language            String
+  code                Code          @relation("CodeFiles", fields: [codeId], references: [id], onDelete: Cascade)
+  codeId              String
+  codeVersions        CodeVersion[]
+  addedInSnapshot     CodeSnapshot? @relation("AddedFiles", fields: [addedInSnapshotId], references: [id])
+  addedInSnapshotId   String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 model CodeVersion {
-  id            String   @id @default(cuid())
-  code          CodeFile @relation(fields: [codeFileId], references: [id], onDelete: Cascade)
+  id            String        @id @default(cuid())
+  code          CodeFile      @relation(fields: [codeFileId], references: [id], onDelete: Cascade)
   codeFileId    String
-  content       String   @db.Text
-  message       String
+  content       String        @db.Text
   versionNumber Int
-  createdAt     DateTime @default(now())
+  snapshot      CodeSnapshot? @relation(fields: [snapshotId], references: [id])
+  snapshotId    String?
+  createdAt     DateTime      @default(now())
+}
+
+model CodeSnapshot {
+  id            String        @id @default(cuid())
+  message       String
+  code          Code          @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  codeId        String
+  fileVersions  CodeVersion[]
+  addedFiles    CodeFile[]    @relation("AddedFiles")
+  deletedFiles  DeletedFile[]
+  createdAt     DateTime      @default(now())
+}
+
+model DeletedFile {
+  id          String       @id @default(cuid())
+  title       String
+  language    String
+  snapshot    CodeSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  snapshotId  String
+  createdAt   DateTime     @default(now())
 }

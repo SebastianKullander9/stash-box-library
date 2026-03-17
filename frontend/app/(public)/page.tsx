@@ -5,6 +5,5 @@ export default function Home() {
 		<section className="container grid grid-cols-12">
 			<Hero />
 		</section>
-        
     );
 }

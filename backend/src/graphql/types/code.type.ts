@@ -10,10 +10,43 @@ export class CodeVersion {
 	content: string;
 
 	@Field()
-	message: string;
+	versionNumber: number;
 
 	@Field()
-	versionNumber: number;
+	createdAt: Date;
+}
+
+@ObjectType()
+export class DeletedFile {
+	@Field(() => ID)
+	id: string;
+
+	@Field()
+	title: string;
+
+	@Field()
+	language: string;
+
+	@Field()
+	createdAt: Date;
+}
+
+@ObjectType()
+export class CodeSnapshot {
+	@Field(() => ID)
+	id: string;
+
+	@Field()
+	message: string;
+
+	@Field(() => [CodeVersion])
+	fileVersions: CodeVersion[];
+
+	@Field(() => [CodeFile])
+	addedFiles: CodeFile[];
+
+	@Field(() => [DeletedFile])
+	deletedFiles: DeletedFile[];
 
 	@Field()
 	createdAt: Date;
@@ -56,6 +89,9 @@ export class Code {
 
 	@Field(() => [CodeFile])
 	codeFiles: CodeFile[];
+
+	@Field(() => [CodeSnapshot])
+	snapshots: CodeSnapshot[];
 
 	@Field(() => [TagType], { nullable: true })
 	tags: TagType[] | null;

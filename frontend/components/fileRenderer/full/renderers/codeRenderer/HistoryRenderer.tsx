@@ -5,11 +5,22 @@ interface HistoryRendererProps {
 }
 
 export default function HistoryRenderer({ resource }: HistoryRendererProps) {
-	const singleResource = resource.codeFiles[0];
-
 	return (
-		<div className="col-span-12 bg-surface rounded-lg">
-			<p>test</p>
+		<div className="col-span-12 rounded-lg flex flex-col gap-md">
+			<div className="p-md border-b border-border-strong">
+				<p>
+					Changes
+				</p>
+			</div>
+
+			{resource.snapshots.map((snapshot) => (
+				<div
+					key={snapshot.id}
+					className="bg-surface rounded-lg p-md"
+				>
+					{snapshot.message}
+				</div>
+			))}
 		</div>
 	);
 };

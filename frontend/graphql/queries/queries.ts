@@ -209,8 +209,29 @@ export const GET_ONE_CODE = gql`
 				codeVersions {
 					id
 					content
-					message
 					versionNumber
+					createdAt
+				}
+			}
+			snapshots {
+				id
+				message
+				createdAt
+				fileVersions {
+					id
+					content
+					versionNumber
+					createdAt
+				}
+				addedFiles {
+					id
+					title
+					language
+				}
+				deletedFiles {
+					id
+					title
+					language
 					createdAt
 				}
 			}
