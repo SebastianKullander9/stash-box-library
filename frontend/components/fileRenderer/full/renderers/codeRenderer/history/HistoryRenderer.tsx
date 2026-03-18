@@ -1,4 +1,5 @@
 import { Code } from "@/types/code";
+import HistoryList from "./HistoryList";
 
 interface HistoryRendererProps {
 	resource: Code;
@@ -7,20 +8,12 @@ interface HistoryRendererProps {
 export default function HistoryRenderer({ resource }: HistoryRendererProps) {
 	return (
 		<div className="col-span-12 rounded-lg flex flex-col gap-md">
-			<div className="p-md border-b border-border-strong">
+			<div className="p-md">
 				<p>
-					Changes
+					History
 				</p>
 			</div>
-
-			{resource.snapshots.map((snapshot) => (
-				<div
-					key={snapshot.id}
-					className="bg-surface rounded-lg p-md"
-				>
-					{snapshot.message}
-				</div>
-			))}
+			<HistoryList resource={resource}/>
 		</div>
 	);
 };
