@@ -44,14 +44,15 @@ export async function createCode(formData: FormData) {
 		});
 
 		revalidatePath("/admin/");
-		redirect("/admin");
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
-			const graphQLError = err.response.errors?.[0];
-			throw new Error(graphQLError?.message || "Something went wrong");
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			redirect(`/admin/add-code?status=error&message=${encodeURIComponent(message)}`);
 		}
-		throw err;
+		redirect("admin/add-code?status=error");
 	}
+
+	redirect(`/admin/code?status=success`);
 }
 
 export async function updateCodeResource(formData: FormData) {

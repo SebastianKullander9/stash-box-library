@@ -1,16 +1,18 @@
-import { CodeSnapshot } from "@/types/code";
+import { Code, CodeSnapshot } from "@/types/code";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 import { 
 	CircleDot, 
 	FileDiff, 
 	Files,
 } from "lucide-react";
+import Link from "next/link";
 
 interface HistoryRowProps {
 	snapshot: CodeSnapshot;
+	resource: Code;
 }
 
-export default function HistoryRow({ snapshot }: HistoryRowProps) {
+export default function HistoryRow({ snapshot, resource }: HistoryRowProps) {
 	return (
 		<div
 			key={snapshot.id}
@@ -30,9 +32,12 @@ export default function HistoryRow({ snapshot }: HistoryRowProps) {
 					</div>
 				</div>
 				<div className="flex rounded-lg overflow-hidden border border-border-strong">
-					<div className="p-xs bg-hover border-r border-border-strong hover:bg-surface-hover cursor-pointer active:bg-surface-active">
+					<Link 
+						href={`/code/${resource.id}/diff/${snapshot.id}`}
+						className="p-xs bg-hover border-r border-border-strong hover:bg-surface-hover cursor-pointer active:bg-surface-active"
+					>
 						<FileDiff size={20} />
-					</div>
+					</Link>
 					<div className="p-xs bg-hover hover:bg-surface-hover cursor-pointer active:bg-surface-active">
 						<Files size={20} />
 					</div>

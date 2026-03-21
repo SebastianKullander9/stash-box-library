@@ -343,6 +343,7 @@ export class CodeService {
 					id: version.id,
 					content: version.content,
 					versionNumber: version.versionNumber,
+					codeFileId: version.codeFileId,
 					createdAt: version.createdAt,
 				})),
 				addedFiles: snapshot.addedFiles.map((file) => ({

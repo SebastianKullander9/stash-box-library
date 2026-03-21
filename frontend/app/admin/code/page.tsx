@@ -1,7 +1,21 @@
-export default function CodePage() {
+import ToastNotification from "@/components/ui/admin/toast/ToastNotification";
+
+export default async function CodePage({
+	searchParams
+}: {
+	searchParams: Promise<{ status: "success" | "error"}>
+}) {
+	const { status } = await searchParams;
+
 	return (
-		<div>
-			<h1>Code</h1>
-		</div>
+		<>
+			{status && (
+				<ToastNotification status={status} redirectTo="/admin/code"/>
+			)}
+
+			<div>
+				<h1>Code</h1>
+			</div>
+		</>
 	);
 };

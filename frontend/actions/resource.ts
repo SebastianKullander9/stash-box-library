@@ -9,7 +9,7 @@ import { GET_RESOURCES, GET_ONE_RESOURCE, GET_RESOURCES_BY_CATEGORY } from "@/gr
 import { revalidatePath } from "next/cache";
 import { Resource } from "@/types";
 import { ResourcePage } from "@/types";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function createResourceAction(formData: FormData) {
     try {
@@ -42,14 +42,16 @@ export async function createResourceAction(formData: FormData) {
         }
 
         revalidatePath("/admin/");
-		redirect("/admin/?status=success");
     } catch (err: unknown) {
         if (err instanceof ClientError) {
-            const graphQLError = err.response.errors?.[0];
-            throw new Error(graphQLError?.message || "Something went wrong");
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			redirect(`/admin/?status=error&message=${encodeURIComponent(message)}`);
         }
-        throw err;
+
+		redirect('/admin/?status=error');
     }
+
+	redirect("/admin/?status=success");
 }
 
 export async function getResources(limit?: number, offset?: number) {
@@ -100,9 +102,14 @@ export async function getOneResource(id: string) {
         return data.resource;
     } catch(err: unknown) {
         if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong")
-        }
-        throw err;
+			const code = err.response.errors?.[0]?.extensions?.code as string;
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+
+			if (code === "NOT_FOUND") return notFound();
+
+			throw new Error(message);
+		}
+		throw err;
     }
 }
 

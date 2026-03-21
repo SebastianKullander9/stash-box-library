@@ -16,6 +16,7 @@ export default function CodeBlockInput({ index }: CodeBlockInputProps) {
                 placeholder="Enter your code"
                 rows={6}
                 className="border p-2 w-full font-mono rounded-lg"
+				required
             />
         </div>
     );

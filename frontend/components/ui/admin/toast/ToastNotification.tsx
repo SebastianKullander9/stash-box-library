@@ -2,23 +2,27 @@
 
 import "./toast.css";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toastContents } from "../config/toast.config";
 import { X } from "lucide-react";
 
 interface ToastNotificationProps {
 	status?: "success" | "error";
+	redirectTo: string;
 }
 
-export default function ToastNotification({ status }: ToastNotificationProps) {
+export default function ToastNotification({ status, redirectTo }: ToastNotificationProps) {
 	const toast = status ? toastContents[status] : null;
 	const Icon = toast.icon;
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const message = searchParams.get("message");
+	const displayText = message ? decodeURIComponent(message) : toast.text;
 	const [animate, setAnimate] = useState(false);
 
 	const handleClickToast = () => {
 		setAnimate(false);
-		router.replace("/admin");
+		router.replace(redirectTo);
 	}
 
 	useEffect(() => {
@@ -26,7 +30,7 @@ export default function ToastNotification({ status }: ToastNotificationProps) {
 
 		const id = setTimeout(() => {
 			setAnimate(false);
-			router.replace("/admin");
+			router.replace(redirectTo);
 		}, toast.timer);
 
 		return () => clearTimeout(id);
@@ -48,7 +52,7 @@ export default function ToastNotification({ status }: ToastNotificationProps) {
 					<Icon />
 				</div>
 				<div >
-					{toast.text}
+					{displayText}
 				</div>
 			</div>
 			<div 

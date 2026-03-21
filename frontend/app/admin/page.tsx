@@ -18,7 +18,7 @@ export default async function Admin({
     return (
 		<>
 			{status && (
-				<ToastNotification status={status} />
+				<ToastNotification status={status} redirectTo="/admin" />
 			)}
 
 			<section>

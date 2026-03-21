@@ -1,5 +1,6 @@
 import { Resolver, Mutation, Query, Args, Int } from "@nestjs/graphql";
 import { UseGuards } from "@nestjs/common";
+import { NotFoundException } from "src/exceptions/app.exception";
 import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
 import {
@@ -37,14 +38,16 @@ export class ResourceResolver {
 		return this.resourceService.findMany({
 			categoryId,
 			tagIds,
-			limit,
-			offset,
+			limit: Math.min(limit ?? 20, 100),
+			offset: Math.max(offset ?? 0, 0),
 		});
 	}
 
-	@Query(() => ResourceType, { nullable: true })
-	async resource(@Args("id") id: string): Promise<ResourceType | null> {
-		return this.resourceService.findById(id);
+	@Query(() => ResourceType)
+	async resource(@Args("id") id: string): Promise<ResourceType> {
+		const resource = await this.resourceService.findById(id);
+		if (!resource) throw new NotFoundException("Resource");
+		return resource;
 	}
 
 	@Mutation(() => ResourceType)

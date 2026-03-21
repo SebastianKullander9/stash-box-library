@@ -11,7 +11,11 @@ export default function HistoryList({ resource }: HistoryListProps ) {
 	return (
 		<div className="flex flex-col gap-xl">
 			{resource.snapshots.map((snapshot) => (
-				<HistoryRow snapshot={snapshot} key={snapshot.id} />
+				<HistoryRow 
+					snapshot={snapshot} 
+					key={snapshot.id} 
+					resource={resource} 
+				/>
 			))}
 			<div className="p-md text-text-secondary flex flex-row gap-md">
 				<div className="">

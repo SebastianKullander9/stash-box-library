@@ -1,8 +1,10 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
+import { GqlExceptionFilter } from "./exceptions/gql-exception.filter";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+	app.useGlobalFilters(new GqlExceptionFilter());
 
 	app.enableCors({
 		origin: ["http://localhost:3001"],

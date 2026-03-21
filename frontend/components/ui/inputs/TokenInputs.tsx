@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Input from "./Input";
 import Select from "./Select";
 
 const roleOptions = [
@@ -20,15 +19,38 @@ const roleOptions = [
 	{ name: "border" },
 ];
 
-export default function TokenInputs() {
+interface TokenInputsProps {
+	onErrorsChange?: (errors: Record<number, string>) => void;
+}
+
+export default function TokenInputs({ onErrorsChange }: TokenInputsProps) {
 	const [tokenCount, setTokenCount] = useState(1);
+	const [errors, setErrors] = useState<Record<number, string>>({});
+
+	const validateHex = (value: string, index: number) => {
+		const isValid = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value);
+
+		const newErrors = {
+			...errors,
+			[index]: isValid || !value ? '' : 'Must be a valid hex color.'
+		};
+
+		setErrors(newErrors);
+		onErrorsChange?.(newErrors);
+	}
 
 	const addToken = () => {
 		setTokenCount((prev) => prev + 1);
 	}
 
 	const removeToken = () => {
-		setTokenCount(prev => Math.max(1, prev - 1));
+		const newCount = Math.min(1, tokenCount - 1);
+		setTokenCount(newCount);
+
+		const newErrors = { ...errors };
+		delete newErrors[tokenCount - 1];
+		setErrors(newErrors);
+		onErrorsChange?.(newErrors);
 	}
 
 	return (
@@ -44,12 +66,20 @@ export default function TokenInputs() {
 							options={roleOptions}
 						/>
 					</div>
-					<div className="flex-1">
-						<Input
-							label="Color"
+					<div className="flex-1 flex flex-col text-sm">
+						<label>
+							Color
+						</label>
+						<input
+							className="p-xs rounded-lg bg-white text-black"
 							name={`tokens[${index}].value`}
 							type="text"
+							onChange={(e) => validateHex(e.target.value, index)}
+							required
 						/>
+						<p className="text-xs text-red-500">
+							{errors[index] && errors[index]}
+						</p>
 					</div>
 
 				</div>

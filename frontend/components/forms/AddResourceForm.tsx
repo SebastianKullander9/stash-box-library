@@ -1,24 +1,64 @@
-"use server";
+"use client";
 
-import { getTags } from "@/actions/tag";
-import { getCategories } from "@/actions/category";
+import { ResourceTag, ResourceCategory } from "@/types";
 import { createResourceAction } from "@/actions/resource";
 import FileInput from "../ui/inputs/FileInput";
 import TagInput from "../ui/inputs/TagInput";
 import Select from "../ui/inputs/Select";
 import Input from "../ui/inputs/Input";
 import BaseButton from "../ui/buttons/BaseButton";
+import { useRouter } from "next/navigation";
 
-export default async function AddResourceForm() {
-    const [tags, categories] = await Promise.all([
-        getTags(),
-        getCategories(),
-    ]);
+interface AddResourceFormInterface {
+	tags: ResourceTag[];
+	categories: ResourceCategory[];
+}
+
+const noFilesErrorParams = new URLSearchParams({
+	status: "error",
+	message: "You need to upload at least one file."
+});
+
+const fileTooLargeErrorParams = new URLSearchParams({
+	status: "error",
+	message: "File(s) is too large (max 4mb)"
+})
+
+export default function AddResourceForm({ tags, categories }: AddResourceFormInterface) {
+	const router = useRouter();
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		const form = e.currentTarget;
+		const files = form.querySelectorAll("input[type='file']");
+		let totalFiles = 0;
+		let totalSize = 0;
+		const maxSize = 4 * 1024 * 1024
+
+		files.forEach((input) => {
+			const fileInput = input as HTMLInputElement;
+			Array.from(fileInput.files ?? []).forEach((file) => {
+				totalSize += file.size;
+				totalFiles++;
+			});
+		});
+
+		if (totalFiles === 0) {
+			e.preventDefault();
+			router.push(`/admin/add-resource?${noFilesErrorParams}`);
+			return;
+		}
+
+		if (totalSize > maxSize) {
+			e.preventDefault();
+			router.push(`/admin/add-resource?${fileTooLargeErrorParams }`)
+		}
+	}
 
     return (
         <form
             id="addResourceForm"
             action={createResourceAction}
+			onSubmit={handleSubmit}
             className="flex flex-col py-xl gap-3xl max-w-[750px]"
         >
 			<div className="text-center flex flex-col gap-md">

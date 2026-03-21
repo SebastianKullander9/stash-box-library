@@ -1,15 +1,36 @@
-"use server";
+"use client";
 
 import BaseButton from "../ui/buttons/BaseButton";
 import Input from "../ui/inputs/Input";
 import TokenInputs from "../ui/inputs/TokenInputs";
 import { createColorPalette } from "@/actions/colorPalette";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default async function AddColorPaletteForm() {
+const invalidHexColorParams = new URLSearchParams({
+	status: "error",
+	message: "Please fix invalid hex colors",
+});
+
+export default function AddColorPaletteForm() {
+	const router = useRouter();
+	const [tokenErrors, setTokenErrors] = useState<Record<number, string>>({});
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		const hasErrors = Object.values(tokenErrors).some(err => err !== "");
+
+		if (hasErrors) {
+			e.preventDefault();
+			router.push(`/admin/add-color-palette?${invalidHexColorParams}`);
+			return;
+		}
+	}
+
 	return (
 		<form
 			id="addColorPaletteForm"
 			action={createColorPalette}
+			onSubmit={handleSubmit}
 			className="flex flex-col py-xl gap-3xl max-w-[750px]"
 		>
 			<div className="text-center flex flex-col gap-md">
@@ -28,7 +49,7 @@ export default async function AddColorPaletteForm() {
 				defaultValue=""
 			/>
 
-			<TokenInputs />
+			<TokenInputs onErrorsChange={setTokenErrors} />
 
 			<BaseButton 
 				label="Add asset"

@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { BadRequestException } from "src/exceptions/app.exception";
 
 export interface ColorToken {
 	value?: string;
