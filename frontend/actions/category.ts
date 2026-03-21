@@ -7,6 +7,7 @@ import { GET_CATEGORIES, GET_CATEGORIES_WITH_COUNT, GET_CATEGORY_BY_NAME } from 
 import { graphqlClient } from "@/lib/graphqlClient";
 import { revalidatePath } from "next/cache";
 import { ResourceCategory } from "@/types";
+import { redirect } from "next/navigation";
 
 export async function createCategoryAction(formData: FormData) {
     try {
@@ -19,12 +20,14 @@ export async function createCategoryAction(formData: FormData) {
 
         revalidatePath("/admin/categories");
     } catch (err: unknown) {
-        if (err instanceof ClientError) {
-            const graphQLError = err.response.errors?.[0];
-            throw new Error(graphQLError?.message || "Something went wrong");
-        }
-        throw err;
-    }
+		if (err instanceof ClientError) {
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			redirect(`/admin/categories?status=error&message=${encodeURIComponent(message)}`);
+		}
+		redirect("admin/categories?status=error");
+	}
+
+	redirect(`/admin/categories?status=success&message=Category+was+added+successfully.`);
 }
 
 export async function getCategories() {
@@ -88,12 +91,15 @@ export async function deleteCategory(formData: FormData) {
         }>(DELETE_CATEGORY, { id: id});
 
         revalidatePath("/admin/categories");
-    } catch(err: unknown) {
-        if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong");
-        }
-        throw err;
-    }
+    } catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			redirect(`/admin/categories?status=error&message=${encodeURIComponent(message)}`);
+		}
+		redirect("admin/categories?status=error");
+	}
+
+	redirect("/admin/categories?status=success&message=Category+was+deleted+successfully.")
 }
 
 export async function getCategoryByName(categoryName: string) {

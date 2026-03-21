@@ -19,3 +19,9 @@ export class BadRequestException extends AppException {
 		super(message, "BAD_REQUEST", 400);
 	}
 }
+
+export class ConflictException extends AppException {
+	constructor(message: string) {
+		super(message, "CONFLICT", 409);
+	}
+}

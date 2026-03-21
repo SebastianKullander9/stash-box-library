@@ -7,7 +7,7 @@ import { toastContents } from "../config/toast.config";
 import { X } from "lucide-react";
 
 interface ToastNotificationProps {
-	status?: "success" | "error";
+	status?: "success" | "error" | "deleted";
 	redirectTo: string;
 }
 

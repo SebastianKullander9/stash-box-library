@@ -1,6 +1,7 @@
 import { Resource } from "@/types";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 import ActionsButton from "./ActionsButton";
+import { deleteResource } from "@/actions/resource";
 
 interface ResourceRowProps {
     resource: Resource;
@@ -14,7 +15,7 @@ export default function ResourceRow({ resource }: ResourceRowProps) {
             <div>{resource.title}</div>
             <div>{resource.files[0] && resource.files[0].fileType}</div>
             <div><FormattedDate createdAt={resource.createdAt} /></div>
-            <ActionsButton id={resource.id} />
+            <ActionsButton id={resource.id} action={deleteResource} />
         </div>
     );
 }

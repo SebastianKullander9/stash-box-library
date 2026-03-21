@@ -83,13 +83,16 @@ export async function deleteResource(formData: FormData) {
             deleteResource: { id: string };
         }>(DELETE_RESOURCE, { id: id});
 
-        revalidatePath("/admin/resources");
+        revalidatePath("/admin/");
     } catch(err: unknown) {
         if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong")
-        }
-        throw err;
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			redirect(`/admin?status=error&message=${encodeURIComponent(message)}`);
+		}
+		redirect("/admin?status=error")
     }
+
+	redirect("/admin?status=deleted");
 }
 
 export async function getOneResource(id: string) {

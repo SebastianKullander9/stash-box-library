@@ -7,7 +7,7 @@ import ToastNotification from "@/components/ui/admin/toast/ToastNotification";
 export default async function Admin({ 
 	searchParams 
 }:{ 
-	searchParams: Promise<{ status?: "success" | "error" }>
+	searchParams: Promise<{ status?: "success" | "error" | "deleted" }>
 }) {
     const resources = await getResources(20, 0);
 	const categories = await getCategories();

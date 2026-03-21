@@ -1,6 +1,7 @@
 import { ResourceCategory } from "@/types";
 import FormattedDate from "@/components/ui/date/FormattedDate";
 import ActionsButton from "../../resourceList/ActionsButton";
+import { deleteCategory } from "@/actions/category";
 
 interface CategoryRowProps {
 	category: ResourceCategory;
@@ -15,7 +16,7 @@ export default function CategoryRow({ category }: CategoryRowProps) {
 			<div>
 				<FormattedDate createdAt={category.createdAt} />
 			</div>
-			<ActionsButton id={category.id} />
+			<ActionsButton id={category.id} action={deleteCategory} />
 		</div>
 	);
 };

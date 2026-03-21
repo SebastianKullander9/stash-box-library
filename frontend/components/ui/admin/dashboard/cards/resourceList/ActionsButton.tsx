@@ -1,14 +1,14 @@
 "use client";
 
 import { Ellipsis } from "lucide-react";
-import { deleteResource } from "@/actions/resource";
 import { useState, useRef, useEffect } from "react";
 
 interface ActionsButtonProps {
    id: string;
+   action: (formData: FormData) => Promise<void>;
 }
 
-export default function ActionsButton({ id }: ActionsButtonProps) {
+export default function ActionsButton({ id, action }: ActionsButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,7 @@ export default function ActionsButton({ id }: ActionsButtonProps) {
                     <form 
                         action={async (formData) => {
                             if (confirm("Are you sure you want to delete this resource?")) {
-                                await deleteResource(formData);
+                                await action(formData);
                             }
                         }}
                     >

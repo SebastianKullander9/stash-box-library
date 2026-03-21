@@ -1,6 +1,9 @@
 import { Resolver, Mutation, Query, Args, Int } from "@nestjs/graphql";
 import { UseGuards } from "@nestjs/common";
-import { NotFoundException } from "src/exceptions/app.exception";
+import {
+	BadRequestException,
+	NotFoundException,
+} from "src/exceptions/app.exception";
 import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
 import {
@@ -66,6 +69,8 @@ export class ResourceResolver {
 	async updateResource(
 		@Args("input") input: UpdateResourceInput,
 	): Promise<ResourceType> {
+		const resource = await this.resourceService.findById(input.id);
+		if (!resource) throw new NotFoundException("Resource");
 		return this.resourceService.update(input);
 	}
 
@@ -73,6 +78,8 @@ export class ResourceResolver {
 	@UseGuards(GqlAuthGuard, RolesGuard)
 	@Roles("ADMIN")
 	async deleteResource(@Args("id") id: string): Promise<ResourceType> {
+		const resource = await this.resourceService.findById(id);
+		if (!resource) throw new NotFoundException("Resource");
 		return this.resourceService.delete(id);
 	}
 
@@ -85,6 +92,13 @@ export class ResourceResolver {
 		@Args("fileRole", { type: () => String }) fileRole: string,
 		@Args("resourceId", { nullable: true }) resourceId?: string,
 	): Promise<ResourceType> {
+		if (!files?.length) throw new BadRequestException("No files provided.");
+
+		if (resourceId) {
+			const resource = await this.resourceService.findById(resourceId);
+			if (!resource) throw new NotFoundException("Resource");
+		}
+
 		const processedFiles = await this.fileUploadService.processUploads(files);
 		return this.resourceService.uploadFiles(
 			processedFiles,

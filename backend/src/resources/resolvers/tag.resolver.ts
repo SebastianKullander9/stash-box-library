@@ -6,6 +6,7 @@ import { GqlAuthGuard } from "../../auth/guards/graphql-auth";
 import { RolesGuard } from "../../auth/guards/roles.guard";
 import { Roles } from "../../auth/roles.decorator";
 import { TagService } from "../services/tag.service";
+import { NotFoundException } from "src/exceptions/app.exception";
 
 @Resolver()
 export class TagResolver {
@@ -19,9 +20,11 @@ export class TagResolver {
 		return this.tagService.findAll(orderBy);
 	}
 
-	@Query(() => TagType, { nullable: true })
-	async tag(@Args("id") id: string): Promise<TagType | null> {
-		return this.tagService.findById(id);
+	@Query(() => TagType)
+	async tag(@Args("id") id: string): Promise<TagType> {
+		const tag = await this.tagService.findById(id);
+		if (!tag) throw new NotFoundException("Tag");
+		return tag;
 	}
 
 	@Mutation(() => TagType)

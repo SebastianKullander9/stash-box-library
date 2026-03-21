@@ -22,9 +22,10 @@ export async function getTags() {
         return data.tags
     } catch (err: unknown) {
         if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong")
-        }
-        throw err;
+			const message = err.response.errors?.[0]?.message ?? 'Something went wrong';
+			throw new Error(message);
+		}
+		throw err;
     }
 }
 
@@ -38,7 +39,8 @@ export async function getPopularTags(limit: number = 9) {
 		return data.popularTags;
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
-			throw new Error(err?.message || "Something went wrong")
+			const message = err.response.errors?.[0]?.message ?? 'Something went wrong';
+			throw new Error(message);
 		}
 		throw err;
 	}

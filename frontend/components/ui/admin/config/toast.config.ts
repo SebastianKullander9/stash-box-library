@@ -15,5 +15,11 @@ export const toastContents = {
 		icon: CircleCheckBig,
 		text: "File uploaded successfully",
 		timer: 1500,
+	},
+	deleted: {
+		color: "var(--color-success)",
+		icon: CircleCheckBig,
+		text: "File was deleted successfully",
+		timer: 1500,
 	}
 }

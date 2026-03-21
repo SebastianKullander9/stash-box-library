@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
-import {
-	Injectable,
-	NotFoundException,
-	ConflictException,
-} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { NotFoundException, ConflictException } from "src/exceptions/app.exception";
 import { PrismaService } from "../../prisma/prisma.service";
 import {
 	CreateTagInput,
