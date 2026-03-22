@@ -4,8 +4,12 @@ import GoBackButton from "@/components/ui/buttons/GoBackButton";
 import { rendererConfig } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 import { getRendererType } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 
-export default async function ViewImage({ params }: { params: { id: string } }) {
-    const { id } = params;
+export default async function ViewImage({ 
+	params 
+}: { 
+	params: Promise<{ id: string }>
+}) {
+    const { id } = await params;
     const resource = await getOneResource(id);
 
 	const rendererType = getRendererType(resource);

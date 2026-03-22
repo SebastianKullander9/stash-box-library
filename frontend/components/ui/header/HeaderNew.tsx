@@ -32,7 +32,7 @@ export default function HeaderNew({ categories }: HeaderNewProps) {
 	return (
 		<>
 			<header className="
-				fixed left-1/2 -translate-x-1/2 container flex flex-row justify-between
+				w-full container flex flex-row justify-between
 				bg-surface/50 backdrop-blur-sm shadow-xs shadow-border rounded-full items-center p-xs my-xs border border-border
 			">
 				<div className="pl-md">

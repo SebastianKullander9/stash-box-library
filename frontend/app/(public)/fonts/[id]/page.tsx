@@ -2,7 +2,11 @@ import { getOneResource } from "@/actions/resource";
 import FontRenderer from "@/components/fileRenderer/full/renderers/fonts/FontRenderer";
 import GoBackButton from "@/components/ui/buttons/GoBackButton";
 
-export default async function ViewFont({ params }: { params: Promise<{ id: string }> }) {
+export default async function ViewFont({ 
+	params 
+}: { 
+	params: Promise<{ id: string }> 
+}) {
 	const { id } = await params;
 	const resource = await getOneResource(id);
 
