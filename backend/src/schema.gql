@@ -158,8 +158,9 @@ type CodePage {
 type SearchResultType {
   id: String!
   title: String!
+  description: String
   type: String!
-  categoryId: String
+  categoryName: String
   rank: Float!
 }
 

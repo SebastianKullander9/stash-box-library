@@ -8,11 +8,14 @@ export class SearchResultType {
 	@Field()
 	title: string;
 
+	@Field(() => String, { nullable: true })
+	description: string | null;
+
 	@Field()
 	type: string;
 
 	@Field(() => String, { nullable: true })
-	categoryId: string | null;
+	categoryName: string | null;
 
 	@Field(() => Float)
 	rank: number;

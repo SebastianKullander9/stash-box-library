@@ -4,8 +4,9 @@ import { PrismaService } from "../../prisma/prisma.service";
 export interface SearchResult {
 	id: string;
 	title: string;
+	description: string;
 	type: "resource" | "code" | "colorPalette";
-	categoryId: string | null;
+	categoryName: string | null;
 	rank: number;
 }
 
@@ -28,17 +29,19 @@ export class SearchService {
 	private async searchResources(query: string): Promise<SearchResult[]> {
 		return this.prisma.$queryRaw<SearchResult[]>`
             SELECT
-                id,
-                title,
+                r.id,
+                r.title,
+				r.description,
                 'resource' as type,
-                "categoryId",
+                c.name as "categoryName",
                 ts_rank(
-                    coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector('')),
+                    coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector('')),
                     plainto_tsquery('english', ${query})
                 ) as rank
-            FROM "Resource"
+            FROM "Resource" r
+            LEFT JOIN "Category" c ON c.id = r."categoryId"
             WHERE
-                coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector(''))
+                coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector(''))
                 @@ plainto_tsquery('english', ${query})
             ORDER BY rank DESC
         `;
@@ -47,17 +50,19 @@ export class SearchService {
 	private async searchCodes(query: string): Promise<SearchResult[]> {
 		return this.prisma.$queryRaw<SearchResult[]>`
             SELECT
-                id,
-                title,
+                r.id,
+                r.title,
+				r.description,
                 'code' as type,
-                "categoryId",
+                c.name as "categoryName",
                 ts_rank(
-                    coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector('')),
+                    coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector('')),
                     plainto_tsquery('english', ${query})
                 ) as rank
-            FROM "Code"
+            FROM "Code" r
+            LEFT JOIN "Category" c ON c.id = r."categoryId"
             WHERE
-                coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector(''))
+                coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector(''))
                 @@ plainto_tsquery('english', ${query})
             ORDER BY rank DESC
         `;
@@ -66,17 +71,19 @@ export class SearchService {
 	private async searchPalettes(query: string): Promise<SearchResult[]> {
 		return this.prisma.$queryRaw<SearchResult[]>`
             SELECT
-                id,
-                name as title,
+                r.id,
+                r.name as title,
+				r.code as description,
                 'colorPalette' as type,
-                "categoryId",
+                c.name as "categoryName",
                 ts_rank(
-                    coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector('')),
+                    coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector('')),
                     plainto_tsquery('english', ${query})
                 ) as rank
-            FROM "ColorPalette"
+            FROM "ColorPalette" r
+            LEFT JOIN "Category" c ON c.id = r."categoryId"
             WHERE
-                coalesce("searchVector", to_tsvector('')) || coalesce("tagsVector", to_tsvector(''))
+                coalesce(r."searchVector", to_tsvector('')) || coalesce(r."tagsVector", to_tsvector(''))
                 @@ plainto_tsquery('english', ${query})
             ORDER BY rank DESC
         `;
