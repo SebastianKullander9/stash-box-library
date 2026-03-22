@@ -6,6 +6,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { FontService } from "./services/font-metadata.service";
 import { ImageService } from "./services/image-metadata.service";
 import { CategoryLookupService } from "./services/category-lookup.service";
+import { SearchVectorService } from "./services/search-vector.service";
 import { S3Module } from "../s3/s3.module";
 
 @Module({
@@ -18,6 +19,7 @@ import { S3Module } from "../s3/s3.module";
 		FontService,
 		ImageService,
 		CategoryLookupService,
+		SearchVectorService,
 	],
 	exports: [ResourceService],
 })

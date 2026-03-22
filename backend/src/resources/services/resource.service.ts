@@ -15,6 +15,7 @@ import { ResourceType } from "../../graphql/types/resource.type";
 import { ResourcePage } from "../../graphql/types/resourcePage.type";
 import { FontService } from "./font-metadata.service";
 import { ImageService } from "./image-metadata.service";
+import { SearchVectorService } from "./search-vector.service";
 import opentype from "opentype.js";
 
 interface ResourceQueryOptions {
@@ -32,6 +33,7 @@ export class ResourceService {
 		private readonly fontService: FontService,
 		private readonly imageService: ImageService,
 		private readonly categoryLookup: CategoryLookupService,
+		private readonly searchVectorService: SearchVectorService,
 	) {}
 
 	async findMany(options: ResourceQueryOptions): Promise<ResourcePage> {
@@ -109,6 +111,10 @@ export class ResourceService {
 			include: { category: true, tags: true, user: true, files: true },
 		});
 
+		if (tagIds.length) {
+			await this.searchVectorService.rebuildTagsVector("Resource", resource.id);
+		}
+
 		return resource;
 	}
 
@@ -122,7 +128,7 @@ export class ResourceService {
 			? await this.resolveTagIds(input.tagNames)
 			: null;
 
-		return this.prisma.resource.update({
+		const resource = await this.prisma.resource.update({
 			where: { id: input.id },
 			data: {
 				title: input.title,
@@ -135,6 +141,12 @@ export class ResourceService {
 			},
 			include: { category: true, tags: true, user: true, files: true },
 		});
+
+		if (tagIds) {
+			await this.searchVectorService.rebuildTagsVector("Resource", resource.id);
+		}
+
+		return resource;
 	}
 
 	async delete(id: string): Promise<ResourceType> {

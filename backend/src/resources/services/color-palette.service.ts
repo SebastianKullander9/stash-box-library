@@ -1,5 +1,6 @@
 import { TokenValidationService } from "./token-validation.service";
 import { CategoryLookupService } from "./category-lookup.service";
+import { SearchVectorService } from "./search-vector.service";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import {
@@ -37,6 +38,7 @@ export class ColorPaletteService {
 		private readonly prisma: PrismaService,
 		private readonly tokenValidator: TokenValidationService,
 		private readonly categoryLookup: CategoryLookupService,
+		private readonly searchVectorService: SearchVectorService,
 	) {}
 
 	async create(input: CreateColorPaletteInput): Promise<ColorPalette> {
@@ -73,6 +75,13 @@ export class ColorPaletteService {
 				tags: true,
 			},
 		});
+
+		if (input.tagIds) {
+			await this.searchVectorService.rebuildTagsVector(
+				"ColorPalette",
+				palette.id,
+			);
+		}
 
 		return this.mapToGraphQLType(palette);
 	}
@@ -160,6 +169,13 @@ export class ColorPaletteService {
 				tags: true,
 			},
 		});
+
+		if (input.tagIds) {
+			await this.searchVectorService.rebuildTagsVector(
+				"ColorPalette",
+				palette.id,
+			);
+		}
 
 		return this.mapToGraphQLType(palette);
 	}

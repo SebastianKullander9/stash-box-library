@@ -5,6 +5,7 @@ import {
 } from "src/graphql/inputs/code.input";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CategoryLookupService } from "./category-lookup.service";
+import { SearchVectorService } from "./search-vector.service";
 import { Code } from "src/graphql/types/code.type";
 import {
 	Code as PrismaCode,
@@ -39,6 +40,7 @@ export class CodeService {
 	constructor(
 		private readonly prisma: PrismaService,
 		private readonly categoryLookup: CategoryLookupService,
+		private readonly searchVectorService: SearchVectorService,
 	) {}
 
 	async create(input: CreateCodeInput): Promise<Code> {
@@ -75,6 +77,10 @@ export class CodeService {
 				},
 			},
 		});
+
+		if (input.tagIds?.length) {
+			await this.searchVectorService.rebuildTagsVector("Code", code.id);
+		}
 
 		return this.mapToGraphQLType(code);
 	}
@@ -223,6 +229,10 @@ export class CodeService {
 					: undefined,
 			},
 		});
+
+		if (input.tagIds) {
+			await this.searchVectorService.rebuildTagsVector("Code", code.id);
+		}
 
 		return this.mapToGraphQLType(code);
 	}

@@ -12,6 +12,7 @@ import { CategoryModule } from "./resources/category.module";
 import { AuthModule } from "./auth/auth.module";
 import { ColorPaletteModule } from "./resources/color-palette.module";
 import { CodeModule } from "./resources/code.module";
+import { SearchModule } from "./resources/search.module";
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { CodeModule } from "./resources/code.module";
 		AuthModule,
 		ColorPaletteModule,
 		CodeModule,
+		SearchModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

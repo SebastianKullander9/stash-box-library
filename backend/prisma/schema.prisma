@@ -14,18 +14,20 @@ datasource db {
 }
 
 model Resource {
-  id            String          @id @default(cuid())
+  id            String                   @id @default(cuid())
   title         String
   description   String?
   textContent   String?
-  category      Category?       @relation(fields: [categoryId], references: [id])
+  category      Category?                @relation(fields: [categoryId], references: [id])
   categoryId    String?
-  tags          Tag[]           @relation("ResourceTags")
-  user          User?           @relation(fields: [userId], references: [id])
+  tags          Tag[]                    @relation("ResourceTags")
+  user          User?                    @relation(fields: [userId], references: [id])
   userId        String?
   files         File[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  searchVector  Unsupported("tsvector")?
+  tagsVector    Unsupported("tsvector")?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
   FontMetadata  FontMetadata[]
   ImageMetadata ImageMetadata[]
 }
@@ -99,15 +101,17 @@ model ImageMetadata {
 }
 
 model ColorPalette {
-  id         String       @id @default(cuid())
-  name       String
-  code       String
-  tokens     ColorToken[]
-  tags       Tag[]        @relation("ColorPaletteTags")
-  category   Category?    @relation(fields: [categoryId], references: [id])
-  categoryId String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id           String                   @id @default(cuid())
+  name         String
+  code         String
+  tokens       ColorToken[]
+  tags         Tag[]                    @relation("ColorPaletteTags")
+  category     Category?                @relation(fields: [categoryId], references: [id])
+  categoryId   String?
+  searchVector Unsupported("tsvector")?
+  tagsVector   Unsupported("tsvector")?
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
 }
 
 model ColorToken {
@@ -120,30 +124,32 @@ model ColorToken {
 }
 
 model Code {
-  id            String          @id @default(cuid())
-  title         String
-  description   String?
-  codeFiles     CodeFile[]      @relation("CodeFiles")
-  tags          Tag[]           @relation("CodeTags")
-  category      Category?       @relation(fields: [categoryId], references: [id])
-  categoryId    String?
-  snapshots     CodeSnapshot[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id           String                   @id @default(cuid())
+  title        String
+  description  String?
+  codeFiles    CodeFile[]               @relation("CodeFiles")
+  tags         Tag[]                    @relation("CodeTags")
+  category     Category?                @relation(fields: [categoryId], references: [id])
+  categoryId   String?
+  snapshots    CodeSnapshot[]
+  searchVector Unsupported("tsvector")?
+  tagsVector   Unsupported("tsvector")?
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
 }
 
 model CodeFile {
-  id                  String        @id @default(cuid())
-  title               String
-  content             String        @db.Text
-  language            String
-  code                Code          @relation("CodeFiles", fields: [codeId], references: [id], onDelete: Cascade)
-  codeId              String
-  codeVersions        CodeVersion[]
-  addedInSnapshot     CodeSnapshot? @relation("AddedFiles", fields: [addedInSnapshotId], references: [id])
-  addedInSnapshotId   String?
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  id                String        @id @default(cuid())
+  title             String
+  content           String        @db.Text
+  language          String
+  code              Code          @relation("CodeFiles", fields: [codeId], references: [id], onDelete: Cascade)
+  codeId            String
+  codeVersions      CodeVersion[]
+  addedInSnapshot   CodeSnapshot? @relation("AddedFiles", fields: [addedInSnapshotId], references: [id])
+  addedInSnapshotId String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model CodeVersion {
@@ -158,21 +164,21 @@ model CodeVersion {
 }
 
 model CodeSnapshot {
-  id            String        @id @default(cuid())
-  message       String
-  code          Code          @relation(fields: [codeId], references: [id], onDelete: Cascade)
-  codeId        String
-  fileVersions  CodeVersion[]
-  addedFiles    CodeFile[]    @relation("AddedFiles")
-  deletedFiles  DeletedFile[]
-  createdAt     DateTime      @default(now())
+  id           String        @id @default(cuid())
+  message      String
+  code         Code          @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  codeId       String
+  fileVersions CodeVersion[]
+  addedFiles   CodeFile[]    @relation("AddedFiles")
+  deletedFiles DeletedFile[]
+  createdAt    DateTime      @default(now())
 }
 
 model DeletedFile {
-  id          String       @id @default(cuid())
-  title       String
-  language    String
-  snapshot    CodeSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
-  snapshotId  String
-  createdAt   DateTime     @default(now())
+  id         String       @id @default(cuid())
+  title      String
+  language   String
+  snapshot   CodeSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  snapshotId String
+  createdAt  DateTime     @default(now())
 }

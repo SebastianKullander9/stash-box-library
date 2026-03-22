@@ -2,6 +2,7 @@
 import { Injectable } from "@nestjs/common";
 import { NotFoundException, ConflictException } from "src/exceptions/app.exception";
 import { PrismaService } from "../../prisma/prisma.service";
+import { SearchVectorService } from "./search-vector.service";
 import {
 	CreateTagInput,
 	UpdateTagInput,
@@ -19,7 +20,10 @@ type OrderDirection = "ASC" | "DESC";
 
 @Injectable()
 export class TagService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(
+		private readonly prisma: PrismaService,
+		private readonly searchVectorService: SearchVectorService,
+	) {}
 
 	async findAll(orderBy: OrderDirection = "DESC"): Promise<TagType[]> {
 		return this.prisma.tag.findMany({
@@ -99,7 +103,7 @@ export class TagService {
 			}
 		}
 
-		return this.prisma.tag.update({
+		const tag = await this.prisma.tag.update({
 			where: { id: input.id },
 			data: { name: input.name },
 			include: {
@@ -108,6 +112,12 @@ export class TagService {
 				},
 			},
 		});
+
+		if (input.name && input.name !== existingTag.name) {
+			await this.searchVectorService.rebuildTagsVectorForTag(tag.id);
+		}
+
+		return tag;
 	}
 
 	async delete(id: string): Promise<TagType> {
