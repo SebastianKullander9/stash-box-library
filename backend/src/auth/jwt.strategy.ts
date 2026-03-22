@@ -11,9 +11,12 @@ interface JwtPayload {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor() {
+		if (!process.env.JWT_SECRET) {
+			throw new Error("JWT_SECRET is not defined");
+		}
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: process.env.JWT_SECRET || "super-secret-key",
+			secretOrKey: process.env.JWT_SECRET,
 		});
 	}
 

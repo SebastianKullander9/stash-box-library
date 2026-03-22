@@ -161,7 +161,7 @@ type Query {
   users: [UserType!]!
   user(id: String!): UserType
   tags(orderBy: String): [TagType!]!
-  tag(id: String!): TagType
+  tag(id: String!): TagType!
   popularTags(limit: Int): [TagWithCountType!]!
   categories(orderBy: String): [CategoryType!]!
   categoriesWithCount: [CategoryType!]!

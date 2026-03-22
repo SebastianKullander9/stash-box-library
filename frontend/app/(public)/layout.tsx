@@ -1,4 +1,5 @@
 import Header from "@/components/ui/header/Header";
+import HeaderNew from "@/components/ui/header/HeaderNew";
 import { ReactNode } from "react";
 import { getCategories } from "@/actions/category";
 
@@ -7,7 +8,7 @@ export default async function PublicLayout({ children }: { children: ReactNode }
 	
     return (
         <div className="flex flex-col min-h-screen">
-            <Header categories={categories} />
+            <HeaderNew categories={categories} />
             <main className="flex h-full">
                 {children}
             </main>

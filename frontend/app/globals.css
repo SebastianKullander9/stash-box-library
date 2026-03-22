@@ -2,21 +2,21 @@
 @import "tailwindcss";
 
 :root {
-	
+	--header-height: 84px;
 }
 
 
 @theme {
 	/* font clamping from screen sizes 400px -> 1600px */
-	--text-xs: clamp(0.75rem, 0.6667rem + 0.3333vw, 0.875rem); 		/* 12px - 14px */
-	--text-sm: clamp(0.875rem, 0.7917rem + 0.3333vw, 1.0625rem); 	/* 14px - 17px */
-	--text-base: clamp(1rem, 0.9167rem + 0.3333vw, 1.1875rem); 		/* 16px - 19px */
-	--text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.5rem); 				/* 18px - 24px */
-	--text-xl: clamp(1.5rem, 1.3333rem + 0.6667vw, 2rem); 			/* 24px - 32px */
-	--text-2xl: clamp(2rem, 1.75rem + 1vw, 2.75rem); 				/* 32px - 44px */
-	--text-3xl: clamp(2.5rem, 2.0833rem + 1.6667vw, 3.75rem); 		/* 40px - 60px */
-	--text-4xl: clamp(3rem, 2.5rem + 2vw, 4.5rem); 					/* 48px - 72px */
-	--text-5xl: clamp(3.5rem, 2.9167rem + 2.3333vw, 5.25rem); 		/* 56px - 84px */
+	--text-xs:   clamp(0.75rem,  0.6667rem + 0.3333vw, 0.875rem);   /* 12px → 14px */
+	--text-sm:   clamp(0.875rem, 0.7917rem + 0.3333vw, 1.0625rem);  /* 14px → 17px */
+	--text-base: clamp(1rem,     0.9167rem + 0.3333vw, 1.1875rem);  /* 16px → 19px */
+	--text-lg:   clamp(1.125rem, 1rem      + 0.5vw,    1.5rem);     /* 18px → 24px */
+	--text-xl:   clamp(1.1875rem, 1.125rem  + 0.25vw,   1.3125rem); /* 19px → 21px */
+	--text-2xl:  clamp(1.3125rem, 1.2292rem + 0.3333vw, 1.5625rem); /* 21px → 25px */
+	--text-3xl:  clamp(1.5625rem, 1.4583rem + 0.4167vw, 1.875rem);  /* 25px → 30px */
+	--text-4xl:  clamp(1.75rem,   1.625rem  + 0.5vw,    2.125rem);  /* 28px → 34px */
+	--text-5xl:  clamp(1.875rem,  1.75rem   + 0.5vw,    2rem);      /* 30px → 32px */
 
 	/* spacing system */
 	--spacing-2xs: 0.25rem;  /* 4px  */
@@ -71,12 +71,12 @@
 }
 
 @layer base {
-	h1, .heading-1 { @apply text-5xl font-bold tracking-tight leading-tight; }
-	h2, .heading-2 { @apply text-4xl font-bold tracking-tight leading-tight; }
-	h3, .heading-3 { @apply text-3xl font-semibold tracking-tight; }
-	h4, .heading-4 { @apply text-2xl font-semibold tracking-tight; }
-	h5, .heading-5 { @apply text-xl font-medium tracking-tight; }
-	h6, .heading-6 { @apply text-lg font-medium tracking-tight; }
+	h1, .heading-1 { @apply text-5xl font-semibold tracking-tight leading-snug; }
+	h2, .heading-2 { @apply text-4xl font-semibold tracking-tight leading-snug; }
+	h3, .heading-3 { @apply text-3xl font-medium  tracking-tight leading-snug; }
+	h4, .heading-4 { @apply text-2xl font-medium  tracking-normal; }
+	h5, .heading-5 { @apply text-xl  font-medium  tracking-normal; }
+	h6, .heading-6 { @apply text-lg  font-normal  tracking-normal; }
 
 	.body-large    { @apply text-lg leading-relaxed; }
 	.body          { @apply text-base leading-relaxed; }
