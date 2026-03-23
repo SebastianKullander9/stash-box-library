@@ -5,22 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
 	ArrowUpRight,
-	Box,
-	Code,
-	FileType,
-	Image,
-	Palette,
-	LucideIcon,
 	File
 } from "lucide-react";
+import { CATEGORY_ICONS } from "@/lib/categoryIcons/iconMap";
 
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-	models: Box,
-	code: Code,
-	fonts: FileType,
-	images: Image,
-	colors: Palette
-};
 
 interface HeaderNewProps {
 	categories: ResourceCategory[];	

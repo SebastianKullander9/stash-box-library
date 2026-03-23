@@ -240,3 +240,16 @@ export const GET_ONE_CODE = gql`
 		}
 	}
 `;
+
+export const SEARCH = gql`
+	query ($query: String!) {
+		search(query: $query) {
+			id
+			title
+			description
+			type
+			categoryName
+			rank
+		}
+	}
+`;
