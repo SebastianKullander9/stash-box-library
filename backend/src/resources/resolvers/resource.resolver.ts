@@ -34,13 +34,18 @@ export class ResourceResolver {
 	@Query(() => ResourcePage)
 	async resources(
 		@Args("categoryId", { nullable: true }) categoryId?: string,
-		@Args("tagIds", { type: () => [String], nullable: true }) tagIds?: string[],
+		@Args("tagNames", { type: () => [String], nullable: true })
+		tagNames?: string[],
+		@Args("isVariable", { nullable: true }) isVariable?: boolean,
+		@Args("orderAsc", { nullable: true }) orderAsc?: boolean,
 		@Args("limit", { type: () => Int, nullable: true }) limit = 20,
 		@Args("offset", { type: () => Int, nullable: true }) offset = 0,
 	): Promise<ResourcePage> {
 		return this.resourceService.findMany({
 			categoryId,
-			tagIds,
+			tagNames,
+			isVariable,
+			orderAsc,
 			limit: Math.min(limit ?? 20, 100),
 			offset: Math.max(offset ?? 0, 0),
 		});

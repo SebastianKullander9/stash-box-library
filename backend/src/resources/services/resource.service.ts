@@ -20,7 +20,9 @@ import opentype from "opentype.js";
 
 interface ResourceQueryOptions {
 	categoryId?: string;
-	tagIds?: string[];
+	tagNames?: string[];
+	isVariable?: boolean;
+	orderAsc?: boolean;
 	limit?: number;
 	offset?: number;
 }
@@ -37,11 +39,21 @@ export class ResourceService {
 	) {}
 
 	async findMany(options: ResourceQueryOptions): Promise<ResourcePage> {
-		const { categoryId, tagIds, limit = 20, offset = 0 } = options;
+		const {
+			categoryId,
+			tagNames,
+			isVariable,
+			orderAsc,
+			limit = 20,
+			offset = 0,
+		} = options;
 
 		const where = {
 			...(categoryId && { categoryId }),
-			...(tagIds?.length && { tags: { some: { id: { in: tagIds } } } }),
+			...(tagNames?.length && { tags: { some: { id: { in: tagNames } } } }),
+			...(isVariable !== undefined && {
+				FontMetadata: { some: { isVariable } },
+			}),
 		};
 
 		const [resources, totalCount] = await Promise.all([
@@ -53,6 +65,7 @@ export class ResourceService {
 					user: true,
 					files: { include: { fontMetadata: true, imageMetadata: true } },
 				},
+				orderBy: { createdAt: orderAsc ? "asc" : "desc" },
 				take: limit,
 				skip: offset,
 			}),
