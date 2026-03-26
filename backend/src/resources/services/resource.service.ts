@@ -50,10 +50,8 @@ export class ResourceService {
 
 		const where = {
 			...(categoryId && { categoryId }),
-			...(tagNames?.length && { tags: { some: { id: { in: tagNames } } } }),
-			...(isVariable !== undefined && {
-				FontMetadata: { some: { isVariable } },
-			}),
+			...(tagNames?.length && { tags: { some: { name: { in: tagNames } } } }),
+			...(isVariable != null && { FontMetadata: { some: { isVariable } } }),
 		};
 
 		const [resources, totalCount] = await Promise.all([

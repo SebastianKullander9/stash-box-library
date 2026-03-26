@@ -108,8 +108,22 @@ export const GET_ONE_RESOURCE = gql`
 `
 
 export const GET_RESOURCES_BY_CATEGORY = gql`
-    query GetResourcesByCategory($categoryId: String, $limit: Int, $offset: Int) {
-        resources(categoryId: $categoryId, limit: $limit, offset: $offset) {
+    query GetResourcesByCategory(
+		$categoryId: String, 
+		$tagNames: [String!],
+		$isVariable: Boolean
+		$orderAsc: Boolean
+		$limit: Int, 
+		$offset: Int
+	) {
+        resources(
+			categoryId: $categoryId,
+			tagNames: $tagNames
+			isVariable: $isVariable
+			orderAsc: $orderAsc
+			limit: $limit, 
+			offset: $offset
+		) {
             items {
                 id
                 title

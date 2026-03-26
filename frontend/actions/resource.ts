@@ -152,16 +152,28 @@ export async function updateResource(formData: FormData) {
     }
 }
             
-export async function getResourceByCategory(categoryId: string, limit = 20, offset = 0) {
+export async function getResourceByCategory(
+	categoryId: string,
+	limit = 20, 
+	offset = 0,
+	filters?: {
+		tagNames?: string[];
+		isVariable?: boolean;
+		orderAsc?: boolean;
+    }
+) {
     try {
-        const data = await graphqlClient.request<{ resources: ResourcePage }>(
-            GET_RESOURCES_BY_CATEGORY,
-            {
-                categoryId,
-                limit,
-                offset,
-            }
-        );
+		const data = await graphqlClient.request<{ resources: ResourcePage }>(
+			GET_RESOURCES_BY_CATEGORY,
+			{
+				categoryId,
+				limit,
+				offset,
+				tagNames: filters?.tagNames?.length ? filters.tagNames : null,
+				isVariable: filters?.isVariable || null,
+				orderAsc: filters?.orderAsc ?? null,
+			}
+		);
 
         return data.resources;
     } catch (err: unknown) {

@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { Resource } from "@/types";
 import FormattedDate from "@/components/ui/date/FormattedDate";
-import "./cornerBorders.css";
 import Link from "next/link";
 
 type FontThumbnailProps = {
@@ -32,20 +31,19 @@ export default function FontThumbnail({ resource, url }: FontThumbnailProps) {
     }, [url, resource]);
 
     return (
-        <div className="flex flex-col gap-xs">
-            <div className="flex flex-row items-center gap-xl justify-between">
-                <div className="flex flex-row items-center gap-xl">
-                    <h3 className="body-large">{resource.title}</h3>
-                    <span>-</span>
-                    <p className="body-small text-text-secondary">{resource.description}</p>
+        <div className="flex flex-col">
+            <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center gap-md">
+                    <p className="text-sm">{resource.title}</p>
+                    <p className="text-xs text-text-secondary">{resource.description}</p>
                 </div>
-                <div className="body-smallest text-text-secondary">
+                <div className="text-xs text-text-secondary">
                     <FormattedDate createdAt={resource.createdAt} />
                 </div>
             </div>
             <Link 
                 href={`/fonts/${resource.id}`}
-                className="cornerBorders p-xl !bg-surface"
+                className="p-xl bg-surface rounded-lg hover:bg-surface-hover"
             >
                 <p
                     ref={textRef}
