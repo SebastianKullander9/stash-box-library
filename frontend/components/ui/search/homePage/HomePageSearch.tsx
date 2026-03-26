@@ -89,22 +89,25 @@ export default function HomePageSearch() {
     const showDropdown = isOpen && (results.length > 0 || (query && !isLoading));
 
     return (
-        <div ref={containerRef} className="relative m-xs">
-            <div className="absolute h-full p-md">
-                <div className="rounded-full text-text-secondary">
+        <div ref={containerRef} className="relative h-[68px]">
+            <div className="absolute h-full pl-md">
+                <div className="rounded-full text-text-secondary h-full relative">
                     {isLoading ? (
-                        <div className="animate-spin [animation-duration:3s] text-text-secondary">
+                        <div className="absolute top-1/2 -translate-y-1/2 animate-spin [animation-duration:3s] text-text-secondary">
                             <Loader />
                         </div>
                     ) : (
-                        <Search size={24} />
+						<div className="absolute top-1/2 -translate-y-1/2">
+							<Search size={24} />
+						</div>
+                        
                     )}
                 </div>
             </div>
             <input
                 className={`
-                    bg-surface text-white p-md pl-2xl w-full border-border shadow-xs shadow-border-border outline-none
-                    ${showDropdown ? "rounded-t-3xl border" : "rounded-3xl border"}
+                    bg-surface text-white p-md pl-2xl w-full border-border shadow-xs shadow-border-border outline-none h-[68px]
+                    ${showDropdown ? "rounded-t-4xl border" : "rounded-4xl border"}
                 `}
                 type="text"
                 placeholder="Search for resources"

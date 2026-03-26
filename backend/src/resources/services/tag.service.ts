@@ -162,4 +162,18 @@ export class TagService {
 			resourceCount: tag._count.resources,
 		}));
 	}
+
+	async tagsByCategory(categoryName: string): Promise<Array<TagType>> {
+		return this.prisma.tag.findMany({
+			where: {
+				resources: {
+					some: {
+						category: {
+							name: categoryName
+						}
+					}
+				}
+			}
+		})
+	}
 }

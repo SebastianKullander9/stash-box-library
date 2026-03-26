@@ -54,4 +54,11 @@ export class TagResolver {
 	): Promise<Array<TagType & { resourceCount: number }>> {
 		return this.tagService.findPopular(limit);
 	}
+
+	@Query(() => [TagType])
+	async tagsByCategory(
+		@Args("categoryName") categoryName: string,
+	): Promise<Array<TagType>> {
+		return this.tagService.tagsByCategory(categoryName);
+	}
 }

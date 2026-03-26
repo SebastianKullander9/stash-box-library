@@ -3,10 +3,11 @@
 import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { ClientError } from "graphql-request";
-import { GET_TAGS, GET_POPULAR_TAGS } from "@/graphql/queries/queries";
+import { GET_TAGS, GET_POPULAR_TAGS, GET_TAGS_BY_CATEGORY } from "@/graphql/queries/queries";
 import { UPDATE_TAG, CREATE_TAG, DELETE_TAG } from "@/graphql/mutations/tagMutations";
 import { revalidatePath } from "next/cache";
 import { PopularTag } from "@/components/ui/admin/dashboard/cards/popularTagsCard/PopularTagsCard";
+import { ResourceTag } from "@/types";
 
 export type Tag = {
     id: string;
@@ -22,7 +23,7 @@ export async function getTags() {
         return data.tags
     } catch (err: unknown) {
         if (err instanceof ClientError) {
-			const message = err.response.errors?.[0]?.message ?? 'Something went wrong';
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
 			throw new Error(message);
 		}
 		throw err;
@@ -39,7 +40,25 @@ export async function getPopularTags(limit: number = 9) {
 		return data.popularTags;
 	} catch (err: unknown) {
 		if (err instanceof ClientError) {
-			const message = err.response.errors?.[0]?.message ?? 'Something went wrong';
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			throw new Error(message);
+		}
+		throw err;
+	}
+}
+
+export async function getTagsByCategory(categoryName: string) {
+	try {
+		const data = await graphqlClient.request<{ tagsByCategory: ResourceTag[] }>(
+			GET_TAGS_BY_CATEGORY,
+			{ categoryName }
+		);
+
+		return data.tagsByCategory;
+	} catch (err: unknown) {
+		if (err instanceof ClientError) {
+			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+			console.log(err.response)
 			throw new Error(message);
 		}
 		throw err;

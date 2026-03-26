@@ -30,6 +30,15 @@ export const GET_POPULAR_TAGS = gql`
 	}
 `;
 
+export const GET_TAGS_BY_CATEGORY = gql`
+	query TagsByCategory($categoryName: String!) {
+		tagsByCategory(categoryName: $categoryName) {
+			id
+			name
+		}
+	}
+`;
+
 export const GET_RESOURCES = gql`
     query GetAllResources($limit: Int, $offset: Int) {
         resources(limit: $limit, offset: $offset) {

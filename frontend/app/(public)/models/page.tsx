@@ -1,6 +1,6 @@
 import { getResourceByCategory } from "@/actions/resource";
 import { getCategoryByName } from "@/actions/category";
-import Renderer from "@/components/fileRenderer/thumbnail/";
+import Renderer from "@/components/fileRenderer/thumbnail";
 import { getRendererType, rendererConfig } from "@/components/fileRenderer/thumbnail/rendererLayoutConfig";
 import EmptyState from "@/components/ui/emptyState/EmptyState";
 

@@ -172,6 +172,7 @@ type Query {
   tags(orderBy: String): [TagType!]!
   tag(id: String!): TagType!
   popularTags(limit: Int): [TagWithCountType!]!
+  tagsByCategory(categoryName: String!): [TagType!]!
   categories(orderBy: String): [CategoryType!]!
   categoriesWithCount: [CategoryType!]!
   category(id: String, name: String): CategoryType
