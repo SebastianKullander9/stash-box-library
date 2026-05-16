@@ -21,13 +21,16 @@ export default function FontThumbnail({ resource, url }: FontThumbnailProps) {
         const fontName = resource.title;
         const fontFace = new FontFace(fontName, `url(${url})`);
 
-        fontFace.load().then((loadedFont) => {
-            document.fonts.add(loadedFont);
+        fontFace
+            .load()
+            .then((loadedFont) => {
+                document.fonts.add(loadedFont);
 
-            element.style.fontFamily = `"${fontName}", sans-serif`;
-        }).catch((err) => {
-            console.error("Error loading font: ", err);
-        });
+                element.style.fontFamily = `"${fontName}", sans-serif`;
+            })
+            .catch((err) => {
+                console.error("Error loading font: ", err);
+            });
     }, [url, resource]);
 
     return (
@@ -41,18 +44,14 @@ export default function FontThumbnail({ resource, url }: FontThumbnailProps) {
                     <FormattedDate createdAt={resource.createdAt} />
                 </div>
             </div>
-            <Link 
+            <Link
                 href={`/fonts/${resource.id}`}
                 className="p-xl bg-surface rounded-lg hover:bg-surface-hover"
             >
-                <p
-                    ref={textRef}
-                    className="heading-3 !font-normal"
-                >
+                <p ref={textRef} className="heading-3 !font-normal">
                     The quick brown fox jumps over the lazy dog.
                 </p>
             </Link>
         </div>
-        
-    )
+    );
 }

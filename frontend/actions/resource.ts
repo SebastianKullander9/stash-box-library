@@ -4,8 +4,16 @@ import { getAuthorizedClient } from "@/lib/authorizedGraphqlClient";
 import { ClientError } from "graphql-request";
 import { graphqlClient } from "@/lib/graphqlClient";
 import { uploadFilesToServer } from "@/lib/uploadFiles";
-import { CREATE_RESOURCE, DELETE_RESOURCE, UPDATE_RESOURCE } from "@/graphql/mutations/resourceMutations";
-import { GET_RESOURCES, GET_ONE_RESOURCE, GET_RESOURCES_BY_CATEGORY } from "@/graphql/queries/queries";
+import {
+    CREATE_RESOURCE,
+    DELETE_RESOURCE,
+    UPDATE_RESOURCE,
+} from "@/graphql/mutations/resourceMutations";
+import {
+    GET_RESOURCES,
+    GET_ONE_RESOURCE,
+    GET_RESOURCES_BY_CATEGORY,
+} from "@/graphql/queries/queries";
 import { revalidatePath } from "next/cache";
 import { Resource } from "@/types";
 import { ResourcePage } from "@/types";
@@ -44,30 +52,27 @@ export async function createResourceAction(formData: FormData) {
         revalidatePath("/admin/");
     } catch (err: unknown) {
         if (err instanceof ClientError) {
-			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
-			redirect(`/admin/?status=error&message=${encodeURIComponent(message)}`);
+            const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+            //redirect(`/admin/?status=error&message=${encodeURIComponent(message)}`);
         }
 
-		redirect('/admin/?status=error');
+        redirect("/admin/?status=error");
     }
 
-	redirect("/admin/?status=success");
+    redirect("/admin/?status=success");
 }
 
 export async function getResources(limit?: number, offset?: number) {
     try {
-        const data = await graphqlClient.request<{ resources: ResourcePage}>(
-            GET_RESOURCES,
-            {
-                limit,
-                offset
-            }
-        );
+        const data = await graphqlClient.request<{ resources: ResourcePage }>(GET_RESOURCES, {
+            limit,
+            offset,
+        });
 
         return data.resources;
     } catch (err: unknown) {
         if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong")
+            throw new Error(err?.message || "Something went wrong");
         }
         throw err;
     }
@@ -81,38 +86,35 @@ export async function deleteResource(formData: FormData) {
 
         await graphqlClient.request<{
             deleteResource: { id: string };
-        }>(DELETE_RESOURCE, { id: id});
+        }>(DELETE_RESOURCE, { id: id });
 
         revalidatePath("/admin/");
-    } catch(err: unknown) {
+    } catch (err: unknown) {
         if (err instanceof ClientError) {
-			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
-			redirect(`/admin?status=error&message=${encodeURIComponent(message)}`);
-		}
-		redirect("/admin?status=error")
+            const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+            redirect(`/admin?status=error&message=${encodeURIComponent(message)}`);
+        }
+        redirect("/admin?status=error");
     }
 
-	redirect("/admin?status=deleted");
+    redirect("/admin?status=deleted");
 }
 
 export async function getOneResource(id: string) {
     try {
-        const data = await graphqlClient.request<{ resource: Resource}>(
-            GET_ONE_RESOURCE,
-            { id }
-        );
+        const data = await graphqlClient.request<{ resource: Resource }>(GET_ONE_RESOURCE, { id });
 
         return data.resource;
-    } catch(err: unknown) {
+    } catch (err: unknown) {
         if (err instanceof ClientError) {
-			const code = err.response.errors?.[0]?.extensions?.code as string;
-			const message = err.response.errors?.[0]?.message ?? "Something went wrong";
+            const code = err.response.errors?.[0]?.extensions?.code as string;
+            const message = err.response.errors?.[0]?.message ?? "Something went wrong";
 
-			if (code === "NOT_FOUND") return notFound();
+            if (code === "NOT_FOUND") return notFound();
 
-			throw new Error(message);
-		}
-		throw err;
+            throw new Error(message);
+        }
+        throw err;
     }
 }
 
@@ -130,50 +132,52 @@ export async function updateResource(formData: FormData) {
         await graphqlClient.request<{
             updateResource: {
                 id: string;
-                title: string,
-                description: string,
-                additionalText: string,
-            }
-        }>(UPDATE_RESOURCE, { input: {
-            id,
-            title,
-            description,
-            textContent,
-            categoryId,
-            tagNames
-        }});
+                title: string;
+                description: string;
+                additionalText: string;
+            };
+        }>(UPDATE_RESOURCE, {
+            input: {
+                id,
+                title,
+                description,
+                textContent,
+                categoryId,
+                tagNames,
+            },
+        });
 
         return redirect(`/admin/resources/${id}`);
-    } catch(err: unknown) {
+    } catch (err: unknown) {
         if (err instanceof ClientError) {
-            throw new Error(err?.message || "Something went wrong")
+            throw new Error(err?.message || "Something went wrong");
         }
         throw err;
     }
 }
-            
+
 export async function getResourceByCategory(
-	categoryId: string,
-	limit = 20, 
-	offset = 0,
-	filters?: {
-		tagNames?: string[];
-		isVariable?: boolean;
-		orderAsc?: boolean;
-    }
+    categoryId: string,
+    limit = 20,
+    offset = 0,
+    filters?: {
+        tagNames?: string[];
+        isVariable?: boolean;
+        orderAsc?: boolean;
+    },
 ) {
     try {
-		const data = await graphqlClient.request<{ resources: ResourcePage }>(
-			GET_RESOURCES_BY_CATEGORY,
-			{
-				categoryId,
-				limit,
-				offset,
-				tagNames: filters?.tagNames?.length ? filters.tagNames : null,
-				isVariable: filters?.isVariable || null,
-				orderAsc: filters?.orderAsc ?? null,
-			}
-		);
+        const data = await graphqlClient.request<{ resources: ResourcePage }>(
+            GET_RESOURCES_BY_CATEGORY,
+            {
+                categoryId,
+                limit,
+                offset,
+                tagNames: filters?.tagNames?.length ? filters.tagNames : null,
+                isVariable: filters?.isVariable || null,
+                orderAsc: filters?.orderAsc ?? null,
+            },
+        );
 
         return data.resources;
     } catch (err: unknown) {

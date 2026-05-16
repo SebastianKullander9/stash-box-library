@@ -6,7 +6,7 @@ import ModelThumbnail from "./renderers/ModelThumbnail";
 
 type RendererProps = {
     resource: Resource;
-}
+};
 
 export default function Renderer({ resource }: RendererProps) {
     const file = resource.files[0];
@@ -14,9 +14,9 @@ export default function Renderer({ resource }: RendererProps) {
 
     const { url, fileType } = file;
 
-    if (fileType.startsWith("image/")) return <ImgThumbnail resource={resource} url={url} />
-    if (fileType.startsWith("model/")) return <ModelThumbnail resource={resource} url={url} />
-    if (fileType.startsWith("font/")) return <FontThumbnail resource={resource} url={url} />
+    if (fileType.startsWith("image/")) return <ImgThumbnail resource={resource} url={url} />;
+    if (fileType.startsWith("model/")) return <ModelThumbnail resource={resource} url={url} />;
+    if (fileType.startsWith("font/")) return <FontThumbnail resource={resource} url={url} />;
 
-    return <Default resource={resource} url={url} />
+    return <Default resource={resource} url={url} />;
 }

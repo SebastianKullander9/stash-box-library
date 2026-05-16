@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
     "graphql-request": "^7.2.0",
     "gsap": "^3.13.0",
     "hamburger-react": "^2.5.2",
@@ -34,6 +35,9 @@
     "@types/webpack": "^5.28.5",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.3",
     "shiki": "^4.0.2",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 type Category = {
     name: string;
-}
+};
 
 interface HeaderClientProps {
     categories: Category[];
@@ -18,7 +18,7 @@ export default function Header({ categories }: HeaderClientProps) {
     const [scrollY, setScrollY] = useState(0);
     const pathname = usePathname();
 
-    console.log(pathname)
+    console.log(pathname);
 
     useEffect(() => {
         let ticking = false;
@@ -28,7 +28,7 @@ export default function Header({ categories }: HeaderClientProps) {
             ticking = false;
         };
 
-          const handleScroll = () => {
+        const handleScroll = () => {
             if (!ticking) {
                 window.requestAnimationFrame(updateScrollY);
                 ticking = true;
@@ -39,7 +39,7 @@ export default function Header({ categories }: HeaderClientProps) {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", updateScrollY);
     }, []);
- 
+
     useLayoutEffect(() => {
         const updateHeight = () => {
             if (ref.current) setHeaderHeight(ref.current.clientHeight);
@@ -53,42 +53,44 @@ export default function Header({ categories }: HeaderClientProps) {
     return (
         <>
             <header ref={ref} className="fixed top-0 left-0 w-full z-50 section-x-padding">
-                <div className={`
+                <div
+                    className={`
                     container flex items-center justify-between py-md transition-all duration-150 rounded-xl border-1 border-[var(--color-border)]
                     ${scrollY > 1 ? "px-xl mt-sm bg-surface/50 backdrop-blur-sm" : "bg-background border-transparent"}
-                `}>
+                `}
+                >
                     <div>
-                        <h1 className="heading-4">
-                            Stashbox
-                        </h1>
+                        <h1 className="heading-4">Stashbox</h1>
                     </div>
                     <div className="hidden md:flex flex-row gap-xs sm:gap-md body-small">
                         {categories.map((category) => {
                             const link = category.name;
 
                             return (
-                                <Link 
-                                    key={link} 
+                                <Link
+                                    key={link}
                                     href={`/${link.toLowerCase()}`}
                                     className={`
                                         transition-colors duration-150
-                                        ${pathname === `/${link.toLowerCase()}` 
-                                        ? "text-[var(--color-text-primary)]" 
-                                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"}
+                                        ${
+                                            pathname === `/${link.toLowerCase()}`
+                                                ? "text-[var(--color-text-primary)]"
+                                                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                                        }
                                     `}
                                 >
                                     {link}
                                 </Link>
-                            )
+                            );
                         })}
                     </div>
-					<div className="md:hidden">
-						<p>MENU</p>
-					</div>
+                    <div className="md:hidden">
+                        <p>MENU</p>
+                    </div>
                 </div>
             </header>
-            
-            <div className="bg-transparent" style={{height: headerHeight}} /> 
+
+            <div className="bg-transparent" style={{ height: headerHeight }} />
         </>
-    )
+    );
 }

@@ -14,12 +14,11 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/admin", request.url));
     }
 
-    return NextResponse.next();
+    const headers = new Headers(request.headers);
+    headers.set("x-pathname", request.nextUrl.pathname);
+    return NextResponse.next({ request: { headers } });
 }
 
 export const config = {
-    matcher: [
-        "/admin/:path*",
-        "/login",
-    ],
+    matcher: ["/admin/:path*", "/login", "/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

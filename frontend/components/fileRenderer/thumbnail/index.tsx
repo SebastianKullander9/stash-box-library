@@ -3,17 +3,17 @@ import Renderer from "./Renderer";
 
 type FileRendererThumbnailProps = {
     resources: Resource[];
-	colSpan?: string;
-}
+    colSpan?: string;
+};
 
 export default function FileRendererThumbnail({ resources, colSpan }: FileRendererThumbnailProps) {
     return (
         <>
             {resources.map((resource) => (
-                <div key={resource.id} className={colSpan}>
+                <div key={resource.id} className={`${colSpan} mx-sm`}>
                     <Renderer resource={resource} />
                 </div>
             ))}
         </>
-    )
+    );
 }
