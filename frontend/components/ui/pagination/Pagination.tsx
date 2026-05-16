@@ -1,10 +1,5 @@
 import Link from "next/link";
-import { 
-	ChevronsLeft,
-	ChevronsRight,
-	ChevronLeft,
-	ChevronRight
-} from "lucide-react";
+import { ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePagination } from "@/components/hooks/usePagination";
 
 interface PaginationProps {
@@ -14,71 +9,67 @@ interface PaginationProps {
     pathname: string;
 }
 
-export default function Pagination({ currentPage, totalCount, itemsPerPage, pathname }: PaginationProps) {
-	const { pages, totalPages } = usePagination(currentPage, totalCount, itemsPerPage);
+export default function Pagination({
+    currentPage,
+    totalCount,
+    itemsPerPage,
+    pathname,
+}: PaginationProps) {
+    const { pages, totalPages } = usePagination(currentPage, totalCount, itemsPerPage);
 
     const createPageURL = (page: number) => {
-        return `${pathname}?page=${page}`;
-    }
+        const clamped = Math.max(1, Math.min(page, totalPages));
+        return `${pathname}?page=${clamped}`;
+    };
 
     return (
-		<div className="inline-flex flex-row bg-surface rounded-full overflow-hidden">
-			<div className="p-md border-r border-border cursor-pointer hover:bg-surface-hover">
-				<ChevronsLeft />
-			</div>
-			<div className="p-md border-r border-border cursor-pointer hover:bg-surface-hover">
-				<ChevronLeft />
-			</div>
-
-			<div className="flex flex-row">
-    			{pages.map((page, i) =>
-					page === "..." ? (
-						<span 
-							className="py-md px-lg cursor-pointer hover:bg-surface-hover"
-							key={`ellipsis-${i}`}
-						>
-							. . .
-						</span>
-					) : (
-						<button
-							className="py-md px-lg cursor-pointer hover:bg-surface-hover"
-							key={page}
-							disabled={page === currentPage}
-						>
-							{page}
-						</button>
-					)
-				)}
-			</div>
-
-			<div className="p-md border-l border-border cursor-pointer hover:bg-surface-hover">
-				<ChevronRight />
-			</div>
-			<div className="p-md border-l border-border cursor-pointer hover:bg-surface-hover">
-				<ChevronsRight />
-			</div>
-		</div>
-    );
-}
-
-/*
-        <div className="flex flex-row gap-lg p-2xl justify-center">
-            <Link 
-                href={createPageURL(currentPage - 1)}
-                className="p-sm bg-primary-900 rounded-sm hover:bg-primary-700 cursor-pointer transition-colors duration-150"
+        <div className="inline-flex flex-row bg-surface rounded-full overflow-hidden">
+            <Link
+                href={createPageURL(1)}
+                className={`p-md border-r border-border ${currentPage === 1 ? "pointer-events-none text-text-secondary" : "cursor-pointer hover:bg-surface-hover"}`}
             >
-                Prev
+                <ChevronsLeft />
+            </Link>
+            <Link
+                href={createPageURL(currentPage - 1)}
+                className={`p-md border-r border-border ${currentPage === 1 ? "pointer-events-none text-text-secondary" : "cursor-pointer hover:bg-surface-hover"}`}
+            >
+                <ChevronLeft />
             </Link>
 
-            <div className="p-sm bg-primary-900 rounded-sm">
-                {currentPage} / {totalPages}
+            <div className="flex flex-row">
+                {pages.map((page, i) =>
+                    page === "..." ? (
+                        <span
+                            className="py-md px-lg cursor-pointer hover:bg-surface-hover"
+                            key={`ellipsis-${i}`}
+                        >
+                            . . .
+                        </span>
+                    ) : (
+                        <Link
+                            href={createPageURL(page)}
+                            className={`py-md px-lg cursor-pointer  ${page === currentPage ? "bg-surface-active" : "hover:bg-surface-hover"}`}
+                            key={page}
+                        >
+                            {page}
+                        </Link>
+                    ),
+                )}
             </div>
 
-            <Link 
+            <Link
                 href={createPageURL(currentPage + 1)}
-                className="p-sm bg-primary-900 rounded-sm hover:bg-primary-700 cursor-pointer transition-colors duration-150"
+                className={`p-md border-l border-border ${currentPage === totalPages ? "pointer-events-none text-text-secondary" : "cursor-pointer hover:bg-surface-hover"}`}
             >
-                Next
+                <ChevronRight />
+            </Link>
+            <Link
+                href={createPageURL(totalPages)}
+                className={`p-md border-l border-border ${currentPage === totalPages ? "pointer-events-none text-text-secondary" : "cursor-pointer hover:bg-surface-hover"}`}
+            >
+                <ChevronsRight />
             </Link>
         </div>
-*/
+    );
+}
