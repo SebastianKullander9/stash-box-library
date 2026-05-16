@@ -17,6 +17,7 @@ import { FontService } from "./font-metadata.service";
 import { ImageService } from "./image-metadata.service";
 import { SearchVectorService } from "./search-vector.service";
 import opentype from "opentype.js";
+import { decompress as decompressWoff2 } from "wawoff2";
 
 interface ResourceQueryOptions {
 	categoryId?: string;
@@ -204,11 +205,7 @@ export class ResourceService {
 			const key = await this.s3Service.uploadFile(filename, buffer, mimeType);
 
 			if (mimeType.startsWith("font/")) {
-				const arrayBuffer = buffer.buffer.slice(
-					buffer.byteOffset,
-					buffer.byteOffset + buffer.byteLength,
-				) as ArrayBuffer;
-
+				const arrayBuffer = await this.toOpentypeBuffer(filename, buffer);
 				const font = opentype.parse(arrayBuffer);
 				const metadata = this.fontService.parseFont(font);
 				const score = this.fontService.scoreFontForThumbnail(font);
@@ -291,6 +288,29 @@ export class ResourceService {
 		return resourceWithUrls;
 	}
 
+	private async toOpentypeBuffer(
+		filename: string,
+		buffer: Buffer,
+	): Promise<ArrayBuffer> {
+		const ext = filename.slice(filename.lastIndexOf(".")).toLowerCase();
+
+		const arrayBuffer = buffer.buffer.slice(
+			buffer.byteOffset,
+			buffer.byteOffset + buffer.byteLength,
+		) as ArrayBuffer;
+
+		if (ext === ".woff2") {
+			const decompressed = await decompressWoff2(Buffer.from(arrayBuffer));
+
+			return decompressed.buffer.slice(
+				decompressed.byteOffset,
+				decompressed.byteOffset + decompressed.byteLength,
+			) as ArrayBuffer;
+		}
+
+		return arrayBuffer;
+	}
+
 	private async resolveTagIds(tagNames?: string[]): Promise<string[]> {
 		if (!tagNames?.length) return [];
 
@@ -333,6 +353,8 @@ export class ResourceService {
 		const extensionToMime: Record<string, string> = {
 			".ttf": "font/ttf",
 			".otf": "font/otf",
+			".woff": "font/woff",
+			".woff2": "font/woff2",
 			".glb": "model/gltf-binary",
 			".gltf": "model/gltf+json",
 			".svg": "image/svg+xml",
