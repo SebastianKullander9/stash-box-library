@@ -1,9 +1,6 @@
 "use client";
 
-import { getTagsByCategory } from "@/actions/tag";
-import { usePathname } from "next/navigation";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
 import { ResourceTag } from "@/types";
 import {
     ListFilter,
@@ -15,21 +12,17 @@ import {
 } from "lucide-react";
 import { useCallback } from "react";
 
-export default function SideBar() {
-    const pathname = usePathname();
-    const [tags, setTags] = useState<ResourceTag[]>([]);
+interface SidebarProps {
+    tags: ResourceTag[];
+}
+
+export default function SideBar({ tags }: SidebarProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const activeTags = searchParams.getAll("tag");
     const isVariable = searchParams.get("variable") === "true";
     const ascOrder = searchParams.get("asc") === "true";
     const OrderIcon = ascOrder ? CalendarArrowDown : CalendarArrowUp;
-
-    useEffect(() => {
-        const category = pathname.split("/")[1];
-        const capitalized = category.charAt(0).toUpperCase() + category.slice(1);
-        getTagsByCategory(capitalized).then(setTags);
-    }, [pathname]);
 
     const toggleTag = useCallback(
         (tagName: string) => {
